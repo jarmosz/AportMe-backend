@@ -1,4 +1,4 @@
-package com.aportme.AportMebackend;
+package com.aportme.aportme.backend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
