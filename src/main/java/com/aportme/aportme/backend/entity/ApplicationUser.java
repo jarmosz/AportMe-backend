@@ -1,18 +1,15 @@
 package com.aportme.aportme.backend.entity;
 
 import com.aportme.aportme.backend.security.Role;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity(name = "user_tbl")
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class User {
+@Getter
+@Setter
+public class ApplicationUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,7 +17,9 @@ public class User {
 
     private String username;
 
-    private String encryptedPassword;
+    private String email;
+
+    private String password;
 
     private boolean isEnabled;
 
