@@ -7,17 +7,15 @@ import javax.persistence.*;
 
 @Entity(name = "user_tbl")
 @Data
-@Getter
-@Setter
-public class ApplicationUser {
+@NoArgsConstructor
+@AllArgsConstructor
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String username;
-
-    private String email;
 
     private String password;
 
