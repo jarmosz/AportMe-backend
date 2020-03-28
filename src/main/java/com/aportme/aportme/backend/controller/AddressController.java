@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/address")
+@RequestMapping("/api/addresses")
 public class AddressController {
 }

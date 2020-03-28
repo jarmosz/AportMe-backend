@@ -10,17 +10,17 @@ import java.util.List;
 @CrossOrigin
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/pet")
+@RequestMapping("/api/pets")
 public class PetController {
 
     private final PetService petService;
 
-    @GetMapping("/all")
+    @GetMapping
     public List<Pet> getAllPets() {
         return petService.getAllPets();
     }
 
-    @GetMapping("/getById/id")
+    @GetMapping("/{id}")
     public Pet getPetById(@PathVariable Long id) {
         return petService.getPetById(id);
     }
