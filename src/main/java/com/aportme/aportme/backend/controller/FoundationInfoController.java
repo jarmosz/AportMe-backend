@@ -10,23 +10,23 @@ import java.util.List;
 @CrossOrigin
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/foundation")
+@RequestMapping("/api/foundations")
 public class FoundationInfoController {
 
     private final FoundationInfoService foundationInfoService;
 
-    @GetMapping("/getAll")
+    @GetMapping
     public List<FoundationInfo> getAllFoundations() {
         return foundationInfoService.getAll();
     }
 
-    @GetMapping("/getById/{id}")
+    @GetMapping("/{id}")
     public FoundationInfo getFoundationById(@PathVariable Long id) {
         return foundationInfoService.getFoundationById(id);
     }
 
-    @GetMapping("/getByPetId/{id}")
-    public FoundationInfo getFoundationByPetId(@PathVariable Long id) {
-        return foundationInfoService.getFoundationById(id);
+    @GetMapping("/search")
+    public FoundationInfo getFoundationByPetId(@RequestParam Long petId) {
+        return foundationInfoService.getFoundationByPetId(petId);
     }
 }

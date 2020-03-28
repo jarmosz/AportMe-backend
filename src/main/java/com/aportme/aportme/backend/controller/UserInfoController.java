@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/userInfo")
+@RequestMapping("/api/users/info")
 public class UserInfoController {
 }
