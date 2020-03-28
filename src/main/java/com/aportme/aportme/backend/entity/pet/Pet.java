@@ -4,6 +4,7 @@ import com.aportme.aportme.backend.entity.foundation.FoundationInfo;
 import com.aportme.aportme.backend.entity.pet.enums.AgeCategory;
 import com.aportme.aportme.backend.entity.pet.enums.AgeSuffix;
 import com.aportme.aportme.backend.entity.pet.enums.PetSize;
+import com.aportme.aportme.backend.entity.pet.enums.PetType;
 import com.aportme.aportme.backend.entity.user.User;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,8 @@ public class Pet {
     private String breed;
 
     private int age;
+
+    private PetType petType;
 
     private AgeSuffix ageSuffix;
 

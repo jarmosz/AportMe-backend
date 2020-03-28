@@ -2,80 +2,183 @@ package com.aportme.aportme.backend.dev;
 
 import com.aportme.aportme.backend.entity.Address;
 import com.aportme.aportme.backend.entity.foundation.FoundationInfo;
+import com.aportme.aportme.backend.entity.pet.Pet;
+import com.aportme.aportme.backend.entity.pet.enums.AgeCategory;
+import com.aportme.aportme.backend.entity.pet.enums.AgeSuffix;
+import com.aportme.aportme.backend.entity.pet.enums.PetSize;
+import com.aportme.aportme.backend.entity.pet.enums.PetType;
 import com.aportme.aportme.backend.entity.user.Role;
 import com.aportme.aportme.backend.entity.user.User;
 import com.aportme.aportme.backend.entity.user.UserInfo;
-import com.aportme.aportme.backend.repository.AddressRepository;
-import com.aportme.aportme.backend.repository.FoundationInfoRepository;
-import com.aportme.aportme.backend.repository.UserInfoRepository;
-import com.aportme.aportme.backend.repository.UserRepository;
-import lombok.AllArgsConstructor;
+import com.aportme.aportme.backend.repository.*;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-@AllArgsConstructor
-public class BootstrapData {
+import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
+
+@Component
+@RequiredArgsConstructor
+public class BootstrapData implements ApplicationListener<ContextRefreshedEvent> {
 
     private final UserRepository userRepository;
     private final FoundationInfoRepository foundationInfoRepository;
     private final UserInfoRepository userInfoRepository;
     private final AddressRepository addressRepository;
+    private final PetRepository petRepository;
 
-    public void createUsers() {
-        for (int i = 0; i < 5; i++) {
-            User user = new User();
-            user.setEmail("user@user.pl");
-            user.setPassword("user1234");
-            user.setRole(Role.USER);
-            userRepository.save(user);
-            createUserInfo(user);
+    private String[] names = {"Jacek", "Dawid", "Mateusz", "Wojciech"};
+    private String[] surnames = {"Krakowski", "Wietrzych", "Lesiecki", "Jarmosz"};
+    private String[] phoneNumbers = {"567234123", "789567345", "500400300", "567678789"};
+    private String[] foundationNames = {"Schronisko", "Fundacja", "Fundacja o nazwie schronisko", "Schronisko o nazwie fundacja"};
+
+    private String[] petNames = {"Domino", "Bogusław", "Sułtan", "Bomba", "Michał", "Mandaryna", "Marik", "Bogdan", "Pablo", "Staszek", "Frytka", "Czarek"};
+    private String[] dogBreeds = {"kundel", "Labrador", "Husky", "Golden", "Owczarek niemiecki", "Mops", "Buldog", "Pudel"};
+    private String[] catBreeds = {"dachowiec", "Kot perski", "Kot bengalski", "Sfinks", "Ragdoll"};
+    private String[] behaviors = {"przyjazny", "musi się oswoić", "trochę agresywny", "wymaga uwagi", "wychowywać, obserwować"};
+    private String[] descriptions = {"Trochę dłuższy opis dotyczący zwierzęta w którym można zawrzeć dodatkowe informacje nieuwzględnione w wyróżnionych polach"};
+
+    @Override
+    @Transactional
+    public void onApplicationEvent(@NotNull ContextRefreshedEvent event) {
+        createData();
+    }
+
+    private void createData() {
+        List<Address> addresses = createAddresses();
+        for (int i = 0; i < 4; i++) {
+            createUser("user" + i + "@gmail.com", UUID.randomUUID().toString(), phoneNumbers[i], names[i], surnames[i], addresses.get(i));
         }
-        for (int i = 0; i < 5; i++) {
-            User foundation = new User();
-            foundation.setEmail("foundation@foundation.pl");
-            foundation.setPassword("foundation1234");
-            foundation.setRole(Role.FOUNDATION);
-            userRepository.save(foundation);
-            createFoundationInfo(foundation);
+        for (int i = 0; i < 4; i++) {
+            createFoundation("foundation" + i + "@gmail.com", UUID.randomUUID().toString(), phoneNumbers[i], foundationNames[i], String.format("%10d", i), addresses.get(i));
         }
     }
 
-    private void createUserInfo(User user) {
-        UserInfo userAdditionalInfo = new UserInfo();
-        userAdditionalInfo.setPhoneNumber("123456789");
-        userAdditionalInfo.setName("Tomek");
-        userAdditionalInfo.setSurname("Nowak");
-        userAdditionalInfo.setAddress(createUserAddress());
-        userAdditionalInfo.setUser(user);
-        userInfoRepository.save(userAdditionalInfo);
+    private List<Address> createAddresses() {
+        List<Address> addresses = new ArrayList<>();
+        addresses.add(createAddress("Poznań", "Półwiejska", "20", "61-681", "12"));
+        addresses.add(createAddress("Sierpc", "Płocka", "40", "09-400", "50"));
+        addresses.add(createAddress("Warszawa", "Domaniewska", "80", "02-672", "15"));
+        addresses.add(createAddress("Płock", "Armii Krajowej", "60", "09-410", "30"));
+        return addresses;
     }
 
-    private void createFoundationInfo(User user) {
+    private void createUser(String email, String password, String phoneNumber, String name, String surname, Address address) {
+        User user = new User();
+        user.setEmail(email);
+        user.setPassword(password);
+        user.setRole(Role.USER);
+        userRepository.save(user);
+        UserInfo userInfo = new UserInfo();
+        userInfo.setPhoneNumber(phoneNumber);
+        userInfo.setName(name);
+        userInfo.setSurname(surname);
+        userInfo.setAddress(address);
+        userInfo.setUser(user);
+        userInfoRepository.save(userInfo);
+    }
+
+    private void createFoundation(String email, String password, String phoneNumber, String name, String nip, Address address) {
+        User foundation = new User();
+        foundation.setEmail(email);
+        foundation.setPassword(password);
+        foundation.setRole(Role.FOUNDATION);
+        userRepository.save(foundation);
         FoundationInfo foundationInfo = new FoundationInfo();
-        foundationInfo.setName("Koci Szczecin");
-        foundationInfo.setNip("1111222233");
-        foundationInfo.setAddress(createFoundationAddress());
-        foundationInfo.setUser(user);
+        foundationInfo.setName(name);
+        foundationInfo.setNip(nip);
+        foundationInfo.setAddress(address);
+        foundationInfo.setPhoneNumber(phoneNumber);
+        foundationInfo.setUser(foundation);
         foundationInfoRepository.save(foundationInfo);
+
+        createPets(foundationInfo);
     }
 
-    private Address createFoundationAddress() {
+    private Address createAddress(String city, String street, String houseNumber, String zipCode, String flatNumber) {
         Address address = new Address();
-        address.setCity("Szczecin");
-        address.setStreet("Krzywoustego");
-        address.setHouseNumber("76");
-        address.setZipCode("71-243");
-        address.setFlatNumber("15");
+        address.setCity(city);
+        address.setStreet(street);
+        address.setHouseNumber(houseNumber);
+        address.setZipCode(zipCode);
+        address.setFlatNumber(flatNumber);
         addressRepository.save(address);
         return address;
     }
 
-    private Address createUserAddress() {
-        Address address = new Address();
-        address.setCity("Poznan");
-        address.setStreet("Polwiejska");
-        address.setHouseNumber("24");
-        address.setZipCode("61-111");
-        address.setFlatNumber("4");
-        addressRepository.save(address);
-        return address;
+    private void createPets(FoundationInfo foundationInfo) {
+        Random random = new Random();
+
+        for(int i=1; i<6; i++) {
+            createPet(
+                    petNames[ThreadLocalRandom.current().nextInt(0, petNames.length)],
+                    dogBreeds[ThreadLocalRandom.current().nextInt(0, dogBreeds.length)],
+                    i,
+                    AgeSuffix.values()[(int)(Math.random()*AgeSuffix.values().length)],
+                    PetSize.values()[(int)(Math.random()*PetSize.values().length)],
+                    PetType.DOG,
+                    "",
+                    behaviors[ThreadLocalRandom.current().nextInt(0, behaviors.length)],
+                    behaviors[ThreadLocalRandom.current().nextInt(0, behaviors.length)],
+                    random.nextBoolean(),
+                    random.nextBoolean(),
+                    descriptions[ThreadLocalRandom.current().nextInt(0, descriptions.length)],
+                    foundationInfo
+            );
+        }
+
+        for(int i=1; i<4; i++) {
+            createPet(
+                    petNames[ThreadLocalRandom.current().nextInt(0, petNames.length)],
+                    catBreeds[ThreadLocalRandom.current().nextInt(0, catBreeds.length)],
+                    i,
+                    AgeSuffix.values()[(int)(Math.random()*AgeSuffix.values().length)],
+                    PetSize.values()[(int)(Math.random()*PetSize.values().length)],
+                    PetType.CAT,
+                    "",
+                    behaviors[ThreadLocalRandom.current().nextInt(0, behaviors.length)],
+                    behaviors[ThreadLocalRandom.current().nextInt(0, behaviors.length)],
+                    random.nextBoolean(),
+                    random.nextBoolean(),
+                    descriptions[ThreadLocalRandom.current().nextInt(0, descriptions.length)],
+                    foundationInfo
+            );
+        }
+    }
+
+    private void createPet(String name, String breed, int age, AgeSuffix ageSuffix, PetSize petSize, PetType petType, String diseases, String behaviorToChildren, String behaviorToAnimals, Boolean trainingNeeded, Boolean behavioristNeeded, String description, FoundationInfo foundationInfo) {
+        Pet pet = new Pet();
+        pet.setAge(age);
+        pet.setAgeCategory(prepareAgeCategory(age, ageSuffix));
+        pet.setAgeSuffix(ageSuffix);
+        pet.setBehavioristNeeded(behavioristNeeded);
+        pet.setBehaviorToAnimals(behaviorToAnimals);
+        pet.setBehaviorToChildren(behaviorToChildren);
+        pet.setBreed(breed);
+        pet.setDescription(description);
+        pet.setDiseases(diseases);
+        pet.setFoundationInfo(foundationInfo);
+        pet.setName(name);
+        pet.setSize(petSize);
+        pet.setPetType(petType);
+        pet.setTrainingNeeded(trainingNeeded);
+        petRepository.save(pet);
+    }
+
+    private AgeCategory prepareAgeCategory(int age, AgeSuffix ageSuffix) {
+        if (age <= 5 && ageSuffix.equals(AgeSuffix.MONTHS)) {
+            return AgeCategory.YOUNG;
+        } else if (age > 3 && ageSuffix.equals(AgeSuffix.YEARS)) {
+            return AgeCategory.SENIOR;
+        } else {
+            return AgeCategory.NORMAL;
+        }
     }
 }

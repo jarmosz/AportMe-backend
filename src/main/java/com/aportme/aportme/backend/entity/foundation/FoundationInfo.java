@@ -22,6 +22,8 @@ public class FoundationInfo {
 
     private String nip;
 
+    private String phoneNumber;
+
     @OneToOne
     private User user;
 
