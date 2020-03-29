@@ -6,7 +6,7 @@ import com.aportme.aportme.backend.entity.pet.enums.AgeSuffix;
 import com.aportme.aportme.backend.entity.pet.enums.PetSize;
 import com.aportme.aportme.backend.entity.pet.enums.PetType;
 import com.aportme.aportme.backend.entity.user.User;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -49,8 +49,7 @@ public class Pet {
 
     private String description;
 
-    // temporary
-    @JsonIgnore
+    @JsonIgnoreProperties("pets")
     @ManyToOne
     @JoinColumn(name = "foundation_info_id")
     private FoundationInfo foundationInfo;
