@@ -29,4 +29,14 @@ public class FoundationInfoController {
     public FoundationInfo getFoundationByPetId(@RequestParam Long petId) {
         return foundationInfoService.getByPetId(petId);
     }
+
+    @PutMapping("/{id}")
+    public FoundationInfo update(@PathVariable Long id, @RequestBody FoundationInfo foundationInfo) {
+        return foundationInfoService.update(id, foundationInfo);
+    }
+
+    @PostMapping
+    public FoundationInfo create(@RequestParam Long userId, @RequestBody FoundationInfo foundationInfo) {
+        return foundationInfoService.create(userId, foundationInfo);
+    }
 }
