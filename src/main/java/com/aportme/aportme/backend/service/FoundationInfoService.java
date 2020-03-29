@@ -17,11 +17,11 @@ public class FoundationInfoService {
         return foundationInfoRepository.findAll();
     }
 
-    public FoundationInfo getFoundationById(Long id) {
+    public FoundationInfo getById(Long id) {
         return foundationInfoRepository.findById(id).orElse(null);
     }
 
-    public FoundationInfo getFoundationByPetId(Long petId) {
-        return foundationInfoRepository.getFoundationInfoByPetId(petId).orElse(null);
+    public FoundationInfo getByPetId(Long petId) {
+        return foundationInfoRepository.findByPetId(petId).orElse(null);
     }
 }

@@ -22,11 +22,11 @@ public class FoundationInfoController {
 
     @GetMapping("/{id}")
     public FoundationInfo getFoundationById(@PathVariable Long id) {
-        return foundationInfoService.getFoundationById(id);
+        return foundationInfoService.getById(id);
     }
 
     @GetMapping("/search")
     public FoundationInfo getFoundationByPetId(@RequestParam Long petId) {
-        return foundationInfoService.getFoundationByPetId(petId);
+        return foundationInfoService.getByPetId(petId);
     }
 }
