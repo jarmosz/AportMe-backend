@@ -17,11 +17,11 @@ public class PetController {
 
     @GetMapping
     public List<Pet> getAllPets() {
-        return petService.getAllPets();
+        return petService.getAll();
     }
 
     @GetMapping("/{id}")
     public Pet getPetById(@PathVariable Long id) {
-        return petService.getPetById(id);
+        return petService.getById(id);
     }
 }
