@@ -24,4 +24,14 @@ public class PetController {
     public Pet getPetById(@PathVariable Long id) {
         return petService.getById(id);
     }
+
+    @PutMapping("/{id}")
+    public Pet update(@PathVariable Long id, @RequestBody Pet pet) {
+        return petService.update(id, pet);
+    }
+
+    @PostMapping
+    public Pet create(@RequestParam Long foundationId, @RequestBody Pet pet) {
+        return petService.create(foundationId, pet);
+    }
 }
