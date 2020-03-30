@@ -1,6 +1,7 @@
 package com.aportme.aportme.backend.controller;
 
-import com.aportme.aportme.backend.entity.pet.Pet;
+import com.aportme.aportme.backend.dto.DTOEntity;
+import com.aportme.aportme.backend.dto.PetDTO;
 import com.aportme.aportme.backend.service.PetService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -16,22 +17,22 @@ public class PetController {
     private final PetService petService;
 
     @GetMapping
-    public List<Pet> getAllPets() {
+    public List<DTOEntity> getAllPets() {
         return petService.getAll();
     }
 
     @GetMapping("/{id}")
-    public Pet getPetById(@PathVariable Long id) {
+    public DTOEntity getPetById(@PathVariable Long id) {
         return petService.getById(id);
     }
 
     @PutMapping("/{id}")
-    public Pet update(@PathVariable Long id, @RequestBody Pet pet) {
-        return petService.update(id, pet);
+    public DTOEntity update(@PathVariable Long id, @RequestBody PetDTO petDTO) throws Exception {
+        return petService.update(id, petDTO);
     }
 
     @PostMapping
-    public Pet create(@RequestParam Long foundationId, @RequestBody Pet pet) {
-        return petService.create(foundationId, pet);
+    public DTOEntity create(@RequestParam Long foundationId, @RequestBody PetDTO petDTO) throws Exception {
+        return petService.create(foundationId, petDTO);
     }
 }

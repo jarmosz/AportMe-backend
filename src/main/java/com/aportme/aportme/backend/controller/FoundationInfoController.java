@@ -1,6 +1,7 @@
 package com.aportme.aportme.backend.controller;
 
-import com.aportme.aportme.backend.entity.foundation.FoundationInfo;
+import com.aportme.aportme.backend.dto.DTOEntity;
+import com.aportme.aportme.backend.dto.FoundationInfoDTO;
 import com.aportme.aportme.backend.service.FoundationInfoService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -16,27 +17,27 @@ public class FoundationInfoController {
     private final FoundationInfoService foundationInfoService;
 
     @GetMapping
-    public List<FoundationInfo> getAllFoundations() {
+    public List<DTOEntity> getAllFoundations() {
         return foundationInfoService.getAll();
     }
 
     @GetMapping("/{id}")
-    public FoundationInfo getFoundationById(@PathVariable Long id) {
+    public DTOEntity getFoundationById(@PathVariable Long id) {
         return foundationInfoService.getById(id);
     }
 
     @GetMapping("/search")
-    public FoundationInfo getFoundationByPetId(@RequestParam Long petId) {
+    public DTOEntity getFoundationByPetId(@RequestParam Long petId) {
         return foundationInfoService.getByPetId(petId);
     }
 
     @PutMapping("/{id}")
-    public FoundationInfo update(@PathVariable Long id, @RequestBody FoundationInfo foundationInfo) {
-        return foundationInfoService.update(id, foundationInfo);
+    public DTOEntity update(@PathVariable Long id, @RequestBody FoundationInfoDTO foundationInfoDTO) throws Exception {
+        return foundationInfoService.update(id, foundationInfoDTO);
     }
 
     @PostMapping
-    public FoundationInfo create(@RequestParam Long userId, @RequestBody FoundationInfo foundationInfo) {
-        return foundationInfoService.create(userId, foundationInfo);
+    public DTOEntity create(@RequestParam Long userId, @RequestBody FoundationInfoDTO foundationInfoDTO) throws Exception {
+        return foundationInfoService.create(userId, foundationInfoDTO);
     }
 }
