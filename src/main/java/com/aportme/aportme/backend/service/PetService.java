@@ -1,13 +1,19 @@
 package com.aportme.aportme.backend.service;
 
+import com.aportme.aportme.backend.dto.DTOEntity;
+import com.aportme.aportme.backend.dto.PetDTO;
+import com.aportme.aportme.backend.entity.foundation.FoundationInfo;
 import com.aportme.aportme.backend.entity.pet.Pet;
 import com.aportme.aportme.backend.repository.FoundationInfoRepository;
 import com.aportme.aportme.backend.repository.PetRepository;
+import com.aportme.aportme.backend.utils.EntityDTOConverter;
 import com.aportme.aportme.backend.utils.UtilsService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -15,37 +21,53 @@ public class PetService {
 
     private final PetRepository petRepository;
     private final FoundationInfoRepository foundationInfoRepository;
+    private final EntityDTOConverter entityDTOConverter;
 
-    public List<Pet> getAll() {
-        return petRepository.findAll();
+    public List<DTOEntity> getAll() {
+        return petRepository.findAll()
+                .stream()
+                .map((pet -> entityDTOConverter.convertToDto(pet, new PetDTO())))
+                .collect(Collectors.toList());
     }
 
-    public Pet getById(Long id) {
-        return petRepository.findById(id).orElse(null);
+    public DTOEntity getById(Long id) {
+        Optional<Pet> petFromDB = petRepository.findById(id);
+        if (petFromDB.isEmpty()) {
+            return null;
+        }
+        return entityDTOConverter.convertToDto(petFromDB.get(), new PetDTO());
     }
 
-    public Pet update(Long id, Pet pet) {
-        Pet dbPet = petRepository.findById(id).get();
-        UtilsService.copyNonNullProperties(pet, dbPet);
-        return petRepository.save(dbPet);
+    public DTOEntity update(Long id, PetDTO petDTO) throws Exception {
+        Optional<Pet> petFromDB = petRepository.findById(id);
+        if (petFromDB.isEmpty()) {
+            throw new Exception("Pet not found");
+        }
+        Pet pet = petFromDB.get();
+        UtilsService.copyNonNullProperties(petDTO, pet);
+        return entityDTOConverter.convertToDto(petRepository.save(pet), new PetDTO());
     }
 
-    public Pet create(Long foundationId, Pet pet) {
-        Pet dbPet = new Pet();
-        dbPet.setAge(pet.getAge());
-        dbPet.setAgeCategory(pet.getAgeCategory());
-        dbPet.setAgeSuffix(pet.getAgeSuffix());
-        dbPet.setBehavioristNeeded(pet.getBehavioristNeeded());
-        dbPet.setBehaviorToAnimals(pet.getBehaviorToAnimals());
-        dbPet.setBehaviorToChildren(pet.getBehaviorToChildren());
-        dbPet.setBreed(pet.getBreed());
-        dbPet.setDescription(pet.getDescription());
-        dbPet.setDiseases(pet.getDiseases());
-        dbPet.setFoundationInfo(foundationInfoRepository.findById(foundationId).get());
-        dbPet.setName(pet.getName());
-        dbPet.setSize(pet.getSize());
-        dbPet.setPetType(pet.getPetType());
-        dbPet.setTrainingNeeded(pet.getTrainingNeeded());
-        return petRepository.save(dbPet);
+    public DTOEntity create(Long foundationId, PetDTO petDTO) throws Exception {
+        Pet petToDB = new Pet();
+        petToDB.setAge(petDTO.getAge());
+        petToDB.setAgeCategory(petDTO.getAgeCategory());
+        petToDB.setAgeSuffix(petDTO.getAgeSuffix());
+        petToDB.setBehavioristNeeded(petDTO.getBehavioristNeeded());
+        petToDB.setBehaviorToAnimals(petDTO.getBehaviorToAnimals());
+        petToDB.setBehaviorToChildren(petDTO.getBehaviorToChildren());
+        petToDB.setBreed(petDTO.getBreed());
+        petToDB.setDescription(petDTO.getDescription());
+        petToDB.setDiseases(petDTO.getDiseases());
+        petToDB.setName(petDTO.getName());
+        petToDB.setSize(petDTO.getSize());
+        petToDB.setPetType(petDTO.getPetType());
+        petToDB.setTrainingNeeded(petDTO.getTrainingNeeded());
+        Optional<FoundationInfo> foundationInfoFromDB = foundationInfoRepository.findById(foundationId);
+        if (foundationInfoFromDB.isEmpty()) {
+            throw new Exception("Foundation not found");
+        }
+        petToDB.setFoundationInfo(foundationInfoFromDB.get());
+        return entityDTOConverter.convertToDto(petRepository.save(petToDB), new PetDTO());
     }
 }
