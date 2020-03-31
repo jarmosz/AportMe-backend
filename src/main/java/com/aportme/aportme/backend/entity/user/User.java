@@ -27,10 +27,4 @@ public class User {
     private Role role;
 
 
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinTable(name = "user_pet",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "pet_id")
-    )
-    private List<Pet> likedPets = new ArrayList<>();
 }
