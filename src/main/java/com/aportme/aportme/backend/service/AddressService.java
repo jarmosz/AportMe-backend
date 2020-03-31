@@ -20,6 +20,13 @@ public class AddressService {
     private final AddressRepository addressRepository;
     private final EntityDTOConverter entityDTOConverter;
 
+    public List<DTOEntity> getAll() {
+        return addressRepository.findAll()
+                .stream()
+                .map((address -> entityDTOConverter.convertToDto(address, new AddressDTO())))
+                .collect(Collectors.toList());
+    }
+
     public DTOEntity getById(Long id) {
         Optional<Address> addressFromDB = addressRepository.findById(id);
         if (addressFromDB.isEmpty()) {
@@ -29,24 +36,18 @@ public class AddressService {
     }
 
     public DTOEntity update(Long id, AddressDTO addressDTO) throws Exception {
-        Optional<Address> dbAddress = addressRepository.findById(id);
-        if (dbAddress.isEmpty()) {
+        Optional<Address> addressFromDB = addressRepository.findById(id);
+        if (addressFromDB.isEmpty()) {
             throw new Exception("Address not found");
         }
-        Address address = dbAddress.get();
-        UtilsService.copyNonNullProperties(addressDTO, address);
-        return entityDTOConverter.convertToDto(addressRepository.save(address), new AddressDTO());
+        Address dbAddress = addressFromDB.get();
+        Address convertedEntity = (Address) entityDTOConverter.convertToEntity(new Address(), addressDTO);
+        UtilsService.copyNonNullProperties(convertedEntity, dbAddress);
+        return entityDTOConverter.convertToDto(addressRepository.save(dbAddress), new AddressDTO());
     }
 
     public DTOEntity create(AddressDTO addressDTO) {
         Address dbAddress = addressRepository.save((Address) entityDTOConverter.convertToEntity(new Address(), addressDTO));
         return entityDTOConverter.convertToDto(dbAddress, addressDTO);
-    }
-
-    public List<DTOEntity> getAll() {
-        return addressRepository.findAll()
-                .stream()
-                .map((address -> entityDTOConverter.convertToDto(address, new AddressDTO())))
-                .collect(Collectors.toList());
     }
 }

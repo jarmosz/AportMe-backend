@@ -1,7 +1,8 @@
 package com.aportme.aportme.backend.controller;
 
 import com.aportme.aportme.backend.dto.DTOEntity;
-import com.aportme.aportme.backend.dto.PetDTO;
+import com.aportme.aportme.backend.dto.pet.PetDTO;
+import com.aportme.aportme.backend.dto.pet.PetSimpleDTO;
 import com.aportme.aportme.backend.service.PetService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -27,8 +28,8 @@ public class PetController {
     }
 
     @PutMapping("/{id}")
-    public DTOEntity update(@PathVariable Long id, @RequestBody PetDTO petDTO) throws Exception {
-        return petService.update(id, petDTO);
+    public DTOEntity update(@PathVariable Long id, @RequestBody PetSimpleDTO petSimpleDTO) throws Exception {
+        return petService.update(id, petSimpleDTO);
     }
 
     @PostMapping

@@ -1,19 +1,17 @@
-package com.aportme.aportme.backend.dto;
+package com.aportme.aportme.backend.dto.pet;
 
-import com.aportme.aportme.backend.entity.foundation.FoundationInfo;
-import com.aportme.aportme.backend.entity.pet.PetPicture;
+import com.aportme.aportme.backend.dto.DTOEntity;
 import com.aportme.aportme.backend.entity.pet.enums.AgeCategory;
 import com.aportme.aportme.backend.entity.pet.enums.AgeSuffix;
 import com.aportme.aportme.backend.entity.pet.enums.PetSize;
 import com.aportme.aportme.backend.entity.pet.enums.PetType;
-import com.aportme.aportme.backend.entity.user.User;
 import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class PetDTO implements DTOEntity {
+public class PetSimpleDTO implements DTOEntity {
 
     private Long id;
 
@@ -43,9 +41,5 @@ public class PetDTO implements DTOEntity {
 
     private String description;
 
-    private FoundationInfo foundationInfo;
-
-    private List<PetPicture> pictures = new ArrayList<>();
-
-    private List<User> users = new ArrayList<>();
+    private List<PetPictureDTO> pictures = new ArrayList<>();
 }

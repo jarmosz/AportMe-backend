@@ -1,7 +1,8 @@
 package com.aportme.aportme.backend.service;
 
 import com.aportme.aportme.backend.dto.DTOEntity;
-import com.aportme.aportme.backend.dto.PetDTO;
+import com.aportme.aportme.backend.dto.pet.PetDTO;
+import com.aportme.aportme.backend.dto.pet.PetSimpleDTO;
 import com.aportme.aportme.backend.entity.foundation.FoundationInfo;
 import com.aportme.aportme.backend.entity.pet.Pet;
 import com.aportme.aportme.backend.repository.FoundationInfoRepository;
@@ -38,14 +39,15 @@ public class PetService {
         return entityDTOConverter.convertToDto(petFromDB.get(), new PetDTO());
     }
 
-    public DTOEntity update(Long id, PetDTO petDTO) throws Exception {
+    public DTOEntity update(Long id, PetSimpleDTO petSimpleDTO) throws Exception {
         Optional<Pet> petFromDB = petRepository.findById(id);
         if (petFromDB.isEmpty()) {
             throw new Exception("Pet not found");
         }
-        Pet pet = petFromDB.get();
-        UtilsService.copyNonNullProperties(petDTO, pet);
-        return entityDTOConverter.convertToDto(petRepository.save(pet), new PetDTO());
+        Pet dbPet = petFromDB.get();
+        Pet convertedDTO = (Pet) entityDTOConverter.convertToEntity(new Pet(), petSimpleDTO);
+        UtilsService.copyNonNullProperties(convertedDTO, dbPet);
+        return entityDTOConverter.convertToDto(petRepository.save(dbPet), new PetSimpleDTO());
     }
 
     public DTOEntity create(Long foundationId, PetDTO petDTO) throws Exception {

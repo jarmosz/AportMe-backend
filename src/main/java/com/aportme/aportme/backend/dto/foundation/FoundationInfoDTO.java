@@ -1,8 +1,9 @@
-package com.aportme.aportme.backend.dto;
+package com.aportme.aportme.backend.dto.foundation;
 
+import com.aportme.aportme.backend.dto.DTOEntity;
+import com.aportme.aportme.backend.dto.pet.PetSimpleDTO;
+import com.aportme.aportme.backend.dto.user.UserDTO;
 import com.aportme.aportme.backend.entity.Address;
-import com.aportme.aportme.backend.entity.pet.Pet;
-import com.aportme.aportme.backend.entity.user.User;
 import lombok.Data;
 
 import java.util.List;
@@ -18,9 +19,9 @@ public class FoundationInfoDTO implements DTOEntity {
 
     private String phoneNumber;
 
-    private User user;
+    private UserDTO user;
 
     private Address address;
 
-    private List<Pet> pets;
+    private List<PetSimpleDTO> pets;
 }
