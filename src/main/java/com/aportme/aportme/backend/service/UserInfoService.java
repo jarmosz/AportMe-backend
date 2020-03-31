@@ -1,7 +1,10 @@
 package com.aportme.aportme.backend.service;
 
+import com.aportme.aportme.backend.dto.AddressDTO;
 import com.aportme.aportme.backend.dto.DTOEntity;
-import com.aportme.aportme.backend.dto.UserInfoDTO;
+import com.aportme.aportme.backend.dto.user.UserInfoDTO;
+import com.aportme.aportme.backend.dto.user.UserInfoSimpleDTO;
+import com.aportme.aportme.backend.entity.Address;
 import com.aportme.aportme.backend.entity.user.User;
 import com.aportme.aportme.backend.entity.user.UserInfo;
 import com.aportme.aportme.backend.repository.UserInfoRepository;
@@ -29,14 +32,15 @@ public class UserInfoService {
         return entityDTOConverter.convertToDto(userInfoFromDB.get(), new UserInfoDTO());
     }
 
-    public DTOEntity update(Long id, UserInfoDTO userInfoDTO) throws Exception {
+    public DTOEntity update(Long id, UserInfoSimpleDTO userInfoSimpleDTO) throws Exception {
         Optional<UserInfo> userInfoFromDB = userInfoRepository.findById(id);
         if (userInfoFromDB.isEmpty()) {
             throw new Exception("UserInfo not found");
         }
-        UserInfo userInfo = userInfoFromDB.get();
-        UtilsService.copyNonNullProperties(userInfoDTO, userInfo);
-        return entityDTOConverter.convertToDto(userInfoRepository.save(userInfo), new UserInfoDTO());
+        UserInfo dbUserInfo = userInfoFromDB.get();
+        UserInfo convertedEntity = (UserInfo) entityDTOConverter.convertToEntity(new UserInfo(), userInfoSimpleDTO);
+        UtilsService.copyNonNullProperties(convertedEntity, dbUserInfo);
+        return entityDTOConverter.convertToDto(userInfoRepository.save(dbUserInfo), new UserInfoSimpleDTO());
     }
 
     public DTOEntity create(Long userId, UserInfoDTO userInfoDTO) throws Exception {
@@ -44,7 +48,7 @@ public class UserInfoService {
         dbUserInfo.setPhoneNumber(userInfoDTO.getPhoneNumber());
         dbUserInfo.setName(userInfoDTO.getName());
         dbUserInfo.setSurname(userInfoDTO.getSurname());
-        dbUserInfo.setAddress(userInfoDTO.getAddress());
+        dbUserInfo.setAddress((Address) entityDTOConverter.convertToEntity(userInfoDTO.getAddress(), new AddressDTO()));
         Optional<User> userFromDB = userRepository.findById(userId);
         if (userFromDB.isEmpty()) {
             throw new Exception("User not found");

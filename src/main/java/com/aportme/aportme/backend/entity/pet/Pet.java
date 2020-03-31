@@ -6,6 +6,7 @@ import com.aportme.aportme.backend.entity.pet.enums.AgeSuffix;
 import com.aportme.aportme.backend.entity.pet.enums.PetSize;
 import com.aportme.aportme.backend.entity.pet.enums.PetType;
 import com.aportme.aportme.backend.entity.user.User;
+import com.aportme.aportme.backend.entity.user.UserInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -55,11 +56,10 @@ public class Pet {
     private FoundationInfo foundationInfo;
 
     @OneToMany(mappedBy = "pet",
-            orphanRemoval = true,
             cascade = CascadeType.ALL
     )
     private List<PetPicture> pictures = new ArrayList<>();
 
     @ManyToMany(mappedBy = "likedPets")
-    private List<User> users = new ArrayList<>();
+    private List<UserInfo> users = new ArrayList<>();
 }

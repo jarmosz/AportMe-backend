@@ -1,7 +1,8 @@
 package com.aportme.aportme.backend.service;
 
 import com.aportme.aportme.backend.dto.DTOEntity;
-import com.aportme.aportme.backend.dto.FoundationInfoDTO;
+import com.aportme.aportme.backend.dto.foundation.FoundationInfoDTO;
+import com.aportme.aportme.backend.dto.foundation.FoundationInfoSimpleDTO;
 import com.aportme.aportme.backend.entity.foundation.FoundationInfo;
 import com.aportme.aportme.backend.entity.user.User;
 import com.aportme.aportme.backend.repository.FoundationInfoRepository;
@@ -46,14 +47,15 @@ public class FoundationInfoService {
         return entityDTOConverter.convertToDto(foundationInfoFromDB.get(), new FoundationInfoDTO());
     }
 
-    public DTOEntity update(Long id, FoundationInfoDTO foundationInfoDTO) throws Exception {
+    public DTOEntity update(Long id, FoundationInfoSimpleDTO foundationInfoSimpleDTO) throws Exception {
         Optional<FoundationInfo> foundationInfoFromDB = foundationInfoRepository.findById(id);
         if (foundationInfoFromDB.isEmpty()) {
             throw new Exception("FoundationInfo not found");
         }
-        FoundationInfo foundationInfo = foundationInfoFromDB.get();
-        UtilsService.copyNonNullProperties(foundationInfoDTO, foundationInfo);
-        return entityDTOConverter.convertToDto(foundationInfoRepository.save(foundationInfo), new FoundationInfoDTO());
+        FoundationInfo dbFoundationInfo = foundationInfoFromDB.get();
+        FoundationInfo convertedDTO = (FoundationInfo) entityDTOConverter.convertToEntity(new FoundationInfo(), foundationInfoSimpleDTO);
+        UtilsService.copyNonNullProperties(convertedDTO, dbFoundationInfo);
+        return entityDTOConverter.convertToDto(foundationInfoRepository.save(dbFoundationInfo), new FoundationInfoSimpleDTO());
     }
 
     public DTOEntity create(Long userId, FoundationInfoDTO foundationInfoDTO) throws Exception {

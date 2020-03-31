@@ -1,7 +1,8 @@
 package com.aportme.aportme.backend.controller;
 
 import com.aportme.aportme.backend.dto.DTOEntity;
-import com.aportme.aportme.backend.dto.FoundationInfoDTO;
+import com.aportme.aportme.backend.dto.foundation.FoundationInfoDTO;
+import com.aportme.aportme.backend.dto.foundation.FoundationInfoSimpleDTO;
 import com.aportme.aportme.backend.service.FoundationInfoService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -32,8 +33,8 @@ public class FoundationInfoController {
     }
 
     @PutMapping("/{id}")
-    public DTOEntity update(@PathVariable Long id, @RequestBody FoundationInfoDTO foundationInfoDTO) throws Exception {
-        return foundationInfoService.update(id, foundationInfoDTO);
+    public DTOEntity update(@PathVariable Long id, @RequestBody FoundationInfoSimpleDTO foundationInfoSimpleDTO) throws Exception {
+        return foundationInfoService.update(id, foundationInfoSimpleDTO);
     }
 
     @PostMapping

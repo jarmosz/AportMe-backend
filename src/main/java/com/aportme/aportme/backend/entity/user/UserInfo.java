@@ -1,11 +1,14 @@
 package com.aportme.aportme.backend.entity.user;
 
 import com.aportme.aportme.backend.entity.Address;
+import com.aportme.aportme.backend.entity.pet.Pet;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity(name = "user_info")
 @Data
@@ -28,4 +31,11 @@ public class UserInfo {
 
     @OneToOne
     private User user;
+
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinTable(name = "userInfo_pet",
+            joinColumns = @JoinColumn(name = "userInfo_id"),
+            inverseJoinColumns = @JoinColumn(name = "pet_id")
+    )
+    private List<Pet> likedPets = new ArrayList<>();
 }
