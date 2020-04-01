@@ -1,8 +1,9 @@
-package com.aportme.aportme.backend.dto.user;
+package com.aportme.aportme.backend.dto.user.userInfo;
 
-import com.aportme.aportme.backend.dto.AddressDTO;
+import com.aportme.aportme.backend.dto.address.AddressDTO;
 import com.aportme.aportme.backend.dto.DTOEntity;
 import com.aportme.aportme.backend.dto.pet.PetDTO;
+import com.aportme.aportme.backend.dto.user.UserDTO;
 import lombok.Data;
 
 import java.util.List;

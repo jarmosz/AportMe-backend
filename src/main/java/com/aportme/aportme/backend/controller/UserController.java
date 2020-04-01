@@ -14,7 +14,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/{id}")
-    public DTOEntity getUserById(@PathVariable Long id) {
+    public DTOEntity getById(@PathVariable Long id) {
         return  userService.getUserById(id);
     }
 }

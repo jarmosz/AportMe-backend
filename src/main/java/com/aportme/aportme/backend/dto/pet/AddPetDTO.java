@@ -1,8 +1,5 @@
 package com.aportme.aportme.backend.dto.pet;
 
-import com.aportme.aportme.backend.dto.DTOEntity;
-import com.aportme.aportme.backend.dto.foundation.FoundationInfoForPetDTO;
-import com.aportme.aportme.backend.dto.user.UserDTO;
 import com.aportme.aportme.backend.entity.pet.enums.AgeCategory;
 import com.aportme.aportme.backend.entity.pet.enums.AgeSuffix;
 import com.aportme.aportme.backend.entity.pet.enums.PetSize;
@@ -13,9 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class PetDTO implements DTOEntity {
-
-    private Long id;
+public class AddPetDTO {
 
     private String name;
 
@@ -43,9 +38,5 @@ public class PetDTO implements DTOEntity {
 
     private String description;
 
-    private FoundationInfoForPetDTO foundationInfo;
-
     private List<PetPictureDTO> pictures = new ArrayList<>();
-
-    private List<UserDTO> users = new ArrayList<>();
 }

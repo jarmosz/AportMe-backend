@@ -1,6 +1,7 @@
 package com.aportme.aportme.backend.service;
 
-import com.aportme.aportme.backend.dto.AddressDTO;
+import com.aportme.aportme.backend.dto.address.AddOrUpdateAddressDTO;
+import com.aportme.aportme.backend.dto.address.AddressDTO;
 import com.aportme.aportme.backend.dto.DTOEntity;
 import com.aportme.aportme.backend.entity.Address;
 import com.aportme.aportme.backend.repository.AddressRepository;
@@ -35,7 +36,7 @@ public class AddressService {
         return entityDTOConverter.convertToDto(addressFromDB.get(), new AddressDTO());
     }
 
-    public DTOEntity update(Long id, AddressDTO addressDTO) throws Exception {
+    public DTOEntity update(Long id, AddOrUpdateAddressDTO addressDTO) throws Exception {
         Optional<Address> addressFromDB = addressRepository.findById(id);
         if (addressFromDB.isEmpty()) {
             throw new Exception("Address not found");
@@ -46,8 +47,13 @@ public class AddressService {
         return entityDTOConverter.convertToDto(addressRepository.save(dbAddress), new AddressDTO());
     }
 
-    public DTOEntity create(AddressDTO addressDTO) {
-        Address dbAddress = addressRepository.save((Address) entityDTOConverter.convertToEntity(new Address(), addressDTO));
-        return entityDTOConverter.convertToDto(dbAddress, addressDTO);
+    Address create(AddOrUpdateAddressDTO addressDTO) {
+        Address dbAddress = new Address();
+        dbAddress.setCity(addressDTO.getCity());
+        dbAddress.setFlatNumber(addressDTO.getFlatNumber());
+        dbAddress.setHouseNumber(addressDTO.getHouseNumber());
+        dbAddress.setStreet(addressDTO.getStreet());
+        dbAddress.setZipCode(addressDTO.getZipCode());
+        return addressRepository.save(dbAddress);
     }
 }
