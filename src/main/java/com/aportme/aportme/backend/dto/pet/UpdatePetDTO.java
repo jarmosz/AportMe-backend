@@ -7,13 +7,8 @@ import com.aportme.aportme.backend.entity.pet.enums.PetSize;
 import com.aportme.aportme.backend.entity.pet.enums.PetType;
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Data
-public class PetSimpleDTO implements DTOEntity {
-
-    private Long id;
+public class UpdatePetDTO implements DTOEntity {
 
     private String name;
 
@@ -41,5 +36,4 @@ public class PetSimpleDTO implements DTOEntity {
 
     private String description;
 
-    private List<PetPictureDTO> pictures = new ArrayList<>();
 }
