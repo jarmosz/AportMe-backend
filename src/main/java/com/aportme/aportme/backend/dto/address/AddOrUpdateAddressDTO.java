@@ -1,11 +1,10 @@
-package com.aportme.aportme.backend.dto;
+package com.aportme.aportme.backend.dto.address;
 
+import com.aportme.aportme.backend.dto.DTOEntity;
 import lombok.Data;
 
 @Data
-public class AddressDTO implements DTOEntity {
-
-    private Long id;
+public class AddOrUpdateAddressDTO implements DTOEntity {
 
     private String city;
 

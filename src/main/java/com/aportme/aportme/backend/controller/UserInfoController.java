@@ -1,8 +1,9 @@
 package com.aportme.aportme.backend.controller;
 
 import com.aportme.aportme.backend.dto.DTOEntity;
-import com.aportme.aportme.backend.dto.user.UserInfoDTO;
-import com.aportme.aportme.backend.dto.user.UserInfoSimpleDTO;
+import com.aportme.aportme.backend.dto.user.userInfo.AddUserDTO;
+import com.aportme.aportme.backend.dto.user.userInfo.UpdateUserDTO;
+import com.aportme.aportme.backend.entity.user.UserInfo;
 import com.aportme.aportme.backend.service.UserInfoService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -20,12 +21,12 @@ public class UserInfoController {
     }
 
     @PutMapping("/{id}")
-    public DTOEntity update(@PathVariable Long id, @RequestBody UserInfoSimpleDTO userInfoSimpleDTO) throws Exception {
-        return userInfoService.update(id, userInfoSimpleDTO);
+    public DTOEntity update(@PathVariable Long id, @RequestBody UpdateUserDTO userDTO) throws Exception {
+        return userInfoService.update(id, userDTO);
     }
 
     @PostMapping
-    public DTOEntity create(@RequestParam Long userId, @RequestBody UserInfoDTO userInfoDTO) throws Exception {
-        return userInfoService.create(userId, userInfoDTO);
+    public UserInfo create(@RequestParam Long userId, @RequestBody AddUserDTO userDTO) throws Exception {
+        return userInfoService.create(userId, userDTO);
     }
 }

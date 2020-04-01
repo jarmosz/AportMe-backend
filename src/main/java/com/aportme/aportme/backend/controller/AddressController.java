@@ -1,6 +1,6 @@
 package com.aportme.aportme.backend.controller;
 
-import com.aportme.aportme.backend.dto.AddressDTO;
+import com.aportme.aportme.backend.dto.address.AddOrUpdateAddressDTO;
 import com.aportme.aportme.backend.dto.DTOEntity;
 import com.aportme.aportme.backend.service.AddressService;
 import lombok.AllArgsConstructor;
@@ -17,7 +17,7 @@ public class AddressController {
     private final AddressService addressService;
 
     @GetMapping
-    public List<DTOEntity> getAllAddresses() {
+    public List<DTOEntity> getAll() {
         return addressService.getAll();
     }
 
@@ -27,12 +27,7 @@ public class AddressController {
     }
 
     @PutMapping("/{id}")
-    public DTOEntity update(@PathVariable Long id, @RequestBody AddressDTO addressDTO) throws Exception {
+    public DTOEntity update(@PathVariable Long id, @RequestBody AddOrUpdateAddressDTO addressDTO) throws Exception {
         return addressService.update(id, addressDTO);
-    }
-
-    @PostMapping
-    public DTOEntity create(@RequestBody AddressDTO address) {
-        return addressService.create(address);
     }
 }
