@@ -24,6 +24,7 @@ public class PetService {
     private final PetRepository petRepository;
     private final FoundationInfoRepository foundationInfoRepository;
     private final EntityDTOConverter entityDTOConverter;
+    private final PictureService pictureService;
 
     public List<DTOEntity> getAll() {
         return petRepository.findAll()
@@ -66,6 +67,8 @@ public class PetService {
         dbPet.setSize(petDTO.getSize());
         dbPet.setPetType(petDTO.getPetType());
         dbPet.setTrainingNeeded(petDTO.getTrainingNeeded());
+
+        dbPet.setPictures(pictureService.createAll(petDTO.getPictures()));
 
         Optional<FoundationInfo> foundationInfoFromDB = foundationInfoRepository.findById(foundationId);
         if (foundationInfoFromDB.isEmpty()) {

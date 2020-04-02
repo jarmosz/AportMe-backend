@@ -1,5 +1,6 @@
 package com.aportme.aportme.backend.dto.pet;
 
+import com.aportme.aportme.backend.dto.pet.pictures.AddPetPictureDTO;
 import com.aportme.aportme.backend.entity.pet.enums.AgeCategory;
 import com.aportme.aportme.backend.entity.pet.enums.AgeSuffix;
 import com.aportme.aportme.backend.entity.pet.enums.PetSize;
@@ -38,5 +39,5 @@ public class AddPetDTO {
 
     private String description;
 
-    private List<PetPictureDTO> pictures = new ArrayList<>();
+    private List<AddPetPictureDTO> pictures = new ArrayList<>();
 }

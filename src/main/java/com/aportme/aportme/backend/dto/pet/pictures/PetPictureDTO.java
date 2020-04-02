@@ -1,4 +1,4 @@
-package com.aportme.aportme.backend.dto.pet;
+package com.aportme.aportme.backend.dto.pet.pictures;
 
 import com.aportme.aportme.backend.dto.DTOEntity;
 import lombok.Data;
