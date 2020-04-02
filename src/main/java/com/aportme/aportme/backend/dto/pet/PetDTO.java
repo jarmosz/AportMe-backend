@@ -2,6 +2,7 @@ package com.aportme.aportme.backend.dto.pet;
 
 import com.aportme.aportme.backend.dto.DTOEntity;
 import com.aportme.aportme.backend.dto.foundation.FoundationInfoForPetDTO;
+import com.aportme.aportme.backend.dto.pet.pictures.PetPictureDTO;
 import com.aportme.aportme.backend.dto.user.UserDTO;
 import com.aportme.aportme.backend.entity.pet.enums.AgeCategory;
 import com.aportme.aportme.backend.entity.pet.enums.AgeSuffix;

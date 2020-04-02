@@ -3,6 +3,7 @@ package com.aportme.aportme.backend.dev;
 import com.aportme.aportme.backend.entity.Address;
 import com.aportme.aportme.backend.entity.foundation.FoundationInfo;
 import com.aportme.aportme.backend.entity.pet.Pet;
+import com.aportme.aportme.backend.entity.pet.PetPicture;
 import com.aportme.aportme.backend.entity.pet.enums.AgeCategory;
 import com.aportme.aportme.backend.entity.pet.enums.AgeSuffix;
 import com.aportme.aportme.backend.entity.pet.enums.PetSize;
@@ -33,6 +34,7 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
     private final UserInfoRepository userInfoRepository;
     private final AddressRepository addressRepository;
     private final PetRepository petRepository;
+    private final PictureRepository pictureRepository;
 
     private String[] names = {"Jacek", "Dawid", "Mateusz", "Wojciech"};
     private String[] surnames = {"Krakowski", "Wietrzych", "Lesiecki", "Jarmosz"};
@@ -44,6 +46,8 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
     private String[] catBreeds = {"dachowiec", "Kot perski", "Kot bengalski", "Sfinks", "Ragdoll"};
     private String[] behaviors = {"przyjazny", "musi się oswoić", "trochę agresywny", "wymaga uwagi", "wychowywać, obserwować"};
     private String[] descriptions = {"Trochę dłuższy opis dotyczący zwierzęta w którym można zawrzeć dodatkowe informacje nieuwzględnione w wyróżnionych polach"};
+
+    private String[] base64Pictures = new BootstrapPictures().getPictures();
 
     @Override
     @Transactional
@@ -170,6 +174,17 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
         pet.setPetType(petType);
         pet.setTrainingNeeded(trainingNeeded);
         petRepository.save(pet);
+
+        addPictures(pet);
+    }
+
+    private void addPictures(Pet pet) {
+        for(int i=0; i<3; i++) {
+            PetPicture picture = new PetPicture();
+            picture.setPictureInBase64(base64Pictures[i]);
+            picture.setPet(pet);
+            pictureRepository.save(picture);
+        }
     }
 
     private AgeCategory prepareAgeCategory(int age, AgeSuffix ageSuffix) {

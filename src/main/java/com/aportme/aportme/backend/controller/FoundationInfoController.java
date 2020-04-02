@@ -2,7 +2,7 @@ package com.aportme.aportme.backend.controller;
 
 import com.aportme.aportme.backend.dto.DTOEntity;
 import com.aportme.aportme.backend.dto.foundation.AddFoundationDTO;
-import com.aportme.aportme.backend.dto.foundation.UpdateFoundationInfoDTO;
+import com.aportme.aportme.backend.dto.foundation.UpdateFoundationDTO;
 import com.aportme.aportme.backend.entity.foundation.FoundationInfo;
 import com.aportme.aportme.backend.service.FoundationInfoService;
 import lombok.AllArgsConstructor;
@@ -34,8 +34,8 @@ public class FoundationInfoController {
     }
 
     @PutMapping("/{id}")
-    public DTOEntity update(@PathVariable Long id, @RequestBody UpdateFoundationInfoDTO updateFoundationInfoDTO) throws Exception {
-        return foundationInfoService.update(id, updateFoundationInfoDTO);
+    public DTOEntity update(@PathVariable Long id, @RequestBody UpdateFoundationDTO updateFoundationDTO) throws Exception {
+        return foundationInfoService.update(id, updateFoundationDTO);
     }
 
     @PostMapping
