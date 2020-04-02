@@ -3,7 +3,7 @@ package com.aportme.aportme.backend.service;
 import com.aportme.aportme.backend.dto.DTOEntity;
 import com.aportme.aportme.backend.dto.foundation.AddFoundationDTO;
 import com.aportme.aportme.backend.dto.foundation.FoundationInfoDTO;
-import com.aportme.aportme.backend.dto.foundation.UpdateFoundationInfoDTO;
+import com.aportme.aportme.backend.dto.foundation.UpdateFoundationDTO;
 import com.aportme.aportme.backend.entity.foundation.FoundationInfo;
 import com.aportme.aportme.backend.entity.user.User;
 import com.aportme.aportme.backend.repository.FoundationInfoRepository;
@@ -49,7 +49,7 @@ public class FoundationInfoService {
         return entityDTOConverter.convertToDto(foundationInfoFromDB.get(), new FoundationInfoDTO());
     }
 
-    public DTOEntity update(Long id, UpdateFoundationInfoDTO foundationInfoDTO) throws Exception {
+    public DTOEntity update(Long id, UpdateFoundationDTO foundationInfoDTO) throws Exception {
         Optional<FoundationInfo> foundationInfoFromDB = foundationInfoRepository.findById(id);
         if (foundationInfoFromDB.isEmpty()) {
             throw new Exception("FoundationInfo not found");

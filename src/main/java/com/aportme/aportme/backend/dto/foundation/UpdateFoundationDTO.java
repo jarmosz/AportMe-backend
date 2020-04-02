@@ -4,7 +4,7 @@ import com.aportme.aportme.backend.dto.DTOEntity;
 import lombok.Data;
 
 @Data
-public class UpdateFoundationInfoDTO implements DTOEntity {
+public class UpdateFoundationDTO implements DTOEntity {
 
     private String name;
 

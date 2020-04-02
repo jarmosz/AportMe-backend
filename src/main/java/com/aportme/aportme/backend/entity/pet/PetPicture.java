@@ -14,6 +14,7 @@ public class PetPicture {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Lob
     private String pictureInBase64;
 
     @ManyToOne
