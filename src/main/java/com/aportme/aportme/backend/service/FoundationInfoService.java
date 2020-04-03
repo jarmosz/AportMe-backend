@@ -60,7 +60,7 @@ public class FoundationInfoService {
         return entityDTOConverter.convertToDto(foundationInfoRepository.save(dbFoundationInfo), new FoundationInfoDTO());
     }
 
-    public FoundationInfo create(Long userId, AddFoundationDTO foundationInfoDTO) throws Exception {
+    public DTOEntity create(Long userId, AddFoundationDTO foundationInfoDTO) throws Exception {
         FoundationInfo dbFoundationInfo = new FoundationInfo();
         dbFoundationInfo.setName(foundationInfoDTO.getName());
         dbFoundationInfo.setNip(foundationInfoDTO.getNip());
@@ -73,6 +73,6 @@ public class FoundationInfoService {
         }
 
         dbFoundationInfo.setUser(userFromDB.get());
-        return foundationInfoRepository.save(dbFoundationInfo);
+        return entityDTOConverter.convertToDto(foundationInfoRepository.save(dbFoundationInfo), new FoundationInfoDTO());
     }
 }

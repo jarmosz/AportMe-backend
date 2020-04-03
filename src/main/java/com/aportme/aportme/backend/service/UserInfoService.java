@@ -43,7 +43,7 @@ public class UserInfoService {
         return entityDTOConverter.convertToDto(userInfoRepository.save(dbUserInfo), new UserInfoDTO());
     }
 
-    public UserInfo create(Long userId, AddUserDTO userInfoDTO) throws Exception {
+    public DTOEntity create(Long userId, AddUserDTO userInfoDTO) throws Exception {
         UserInfo dbUserInfo = new UserInfo();
         dbUserInfo.setPhoneNumber(userInfoDTO.getPhoneNumber());
         dbUserInfo.setName(userInfoDTO.getName());
@@ -56,7 +56,7 @@ public class UserInfoService {
 
         dbUserInfo.setUser(userFromDB.get());
         dbUserInfo.setAddress(addressService.create(userInfoDTO.getAddress()));
-        return userInfoRepository.save(dbUserInfo);
+        return entityDTOConverter.convertToDto(userInfoRepository.save(dbUserInfo), new UserInfoDTO());
     }
 
 }

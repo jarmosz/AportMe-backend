@@ -52,7 +52,7 @@ public class PetService {
         return entityDTOConverter.convertToDto(petRepository.save(dbPet), new PetDTO());
     }
 
-    public Pet create(Long foundationId, AddPetDTO petDTO) throws Exception {
+    public DTOEntity create(Long foundationId, AddPetDTO petDTO) throws Exception {
         Pet dbPet = new Pet();
         dbPet.setAge(petDTO.getAge());
         dbPet.setAgeCategory(petDTO.getAgeCategory());
@@ -76,6 +76,6 @@ public class PetService {
         }
         dbPet.setFoundationInfo(foundationInfoFromDB.get());
 
-        return petRepository.save(dbPet);
+        return entityDTOConverter.convertToDto(petRepository.save(dbPet), new PetDTO());
     }
 }
