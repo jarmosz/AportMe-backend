@@ -39,7 +39,7 @@ public class FoundationInfoController {
     }
 
     @PostMapping
-    public FoundationInfo create(@RequestParam Long userId, @RequestBody AddFoundationDTO addFoundationDTO) throws Exception {
+    public DTOEntity create(@RequestParam Long userId, @RequestBody AddFoundationDTO addFoundationDTO) throws Exception {
         return foundationInfoService.create(userId, addFoundationDTO);
     }
 }

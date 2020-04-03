@@ -1,7 +1,7 @@
 package com.aportme.aportme.backend.controller;
 
+import com.aportme.aportme.backend.dto.DTOEntity;
 import com.aportme.aportme.backend.dto.pet.pictures.AddPetPictureDTO;
-import com.aportme.aportme.backend.entity.pet.PetPicture;
 import com.aportme.aportme.backend.service.PictureService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +15,7 @@ public class PicturesController {
     private final PictureService pictureService;
 
     @PostMapping
-    public PetPicture add(@RequestParam Long petId, @RequestBody AddPetPictureDTO pictureDTO) throws Exception {
+    public DTOEntity add(@RequestParam Long petId, @RequestBody AddPetPictureDTO pictureDTO) throws Exception {
         return pictureService.add(petId, pictureDTO);
     }
 
