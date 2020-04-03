@@ -18,8 +18,8 @@ public class PictureController {
 
     @ApiOperation(value = "Add new picture for pet", response = PetPictureDTO.class)
     @PostMapping
-    public DTOEntity add(@RequestParam Long petId, @RequestBody AddPetPictureDTO pictureDTO) throws Exception {
-        return pictureService.add(petId, pictureDTO);
+    public DTOEntity add(@RequestBody AddPetPictureDTO pictureDTO) throws Exception {
+        return pictureService.add(pictureDTO);
     }
 
     @ApiOperation(value = "Delete picture")
