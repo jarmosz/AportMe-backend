@@ -1,10 +1,13 @@
 package com.aportme.aportme.backend.service;
 
+import com.aportme.aportme.backend.dto.DTOEntity;
 import com.aportme.aportme.backend.dto.pet.pictures.AddPetPictureDTO;
+import com.aportme.aportme.backend.dto.pet.pictures.PetPictureDTO;
 import com.aportme.aportme.backend.entity.pet.Pet;
 import com.aportme.aportme.backend.entity.pet.PetPicture;
 import com.aportme.aportme.backend.repository.PetRepository;
 import com.aportme.aportme.backend.repository.PictureRepository;
+import com.aportme.aportme.backend.utils.EntityDTOConverter;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +21,9 @@ public class PictureService {
 
     private final PictureRepository pictureRepository;
     private final PetRepository petRepository;
+    private final EntityDTOConverter entityDTOConverter;
 
-    public PetPicture add(Long petId, AddPetPictureDTO pictureDTO) throws Exception {
+    public DTOEntity add(Long petId, AddPetPictureDTO pictureDTO) throws Exception {
         PetPicture dbPicture = new PetPicture();
         dbPicture.setPictureInBase64(pictureDTO.getPictureInBase64());
 
@@ -29,7 +33,7 @@ public class PictureService {
         }
 
         dbPicture.setPet(petFromDb.get());
-        return pictureRepository.save(dbPicture);
+        return entityDTOConverter.convertToDto(pictureRepository.save(dbPicture), new PetPictureDTO());
     }
 
     List<PetPicture> createAll(List<AddPetPictureDTO> picturesDTO) {

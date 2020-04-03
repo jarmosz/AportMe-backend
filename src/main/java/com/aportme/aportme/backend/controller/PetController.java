@@ -34,7 +34,7 @@ public class PetController {
     }
 
     @PostMapping
-    public Pet create(@RequestParam Long foundationId, @RequestBody AddPetDTO petDTO) throws Exception {
+    public DTOEntity create(@RequestParam Long foundationId, @RequestBody AddPetDTO petDTO) throws Exception {
         return petService.create(foundationId, petDTO);
     }
 }
