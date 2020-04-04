@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class AddPetPictureDTO {
 
-    private Long petId;
-
     private String pictureInBase64;
+
+    private Boolean isProfilePicture;
 }
