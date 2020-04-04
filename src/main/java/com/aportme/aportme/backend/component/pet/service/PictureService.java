@@ -23,11 +23,12 @@ public class PictureService {
     private final PetRepository petRepository;
     private final EntityDTOConverter entityDTOConverter;
 
-    public DTOEntity add(AddPetPictureDTO pictureDTO) throws Exception {
+    public DTOEntity add(Long petId, AddPetPictureDTO pictureDTO) throws Exception {
         PetPicture dbPicture = new PetPicture();
         dbPicture.setPictureInBase64(pictureDTO.getPictureInBase64());
+        dbPicture.setIsProfilePicture(pictureDTO.getIsProfilePicture());
 
-        Optional<Pet> petFromDb = petRepository.findById(pictureDTO.getPetId());
+        Optional<Pet> petFromDb = petRepository.findById(petId);
         if (petFromDb.isEmpty()) {
             throw new Exception("Pet not found");
         }
