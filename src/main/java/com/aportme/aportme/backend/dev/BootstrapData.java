@@ -184,10 +184,13 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
     }
 
     private void addPictures(Pet pet) {
+        int profilePictureIndex = ThreadLocalRandom.current().nextInt(0, base64Pictures.length);
+
         for(int i=0; i<3; i++) {
             PetPicture picture = new PetPicture();
             picture.setPictureInBase64(base64Pictures[i]);
             picture.setPet(pet);
+            picture.setIsProfilePicture(i == profilePictureIndex);
             pictureRepository.save(picture);
         }
     }
