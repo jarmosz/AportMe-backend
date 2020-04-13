@@ -9,4 +9,6 @@ public class PetPictureDTO implements DTOEntity {
     private Long id;
 
     private String pictureInBase64;
+
+    private boolean isProfilePicture;
 }
