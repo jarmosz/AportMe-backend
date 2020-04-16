@@ -1,9 +1,9 @@
 package com.aportme.aportme.backend.component.user.entity;
 
-import com.aportme.aportme.backend.component.user.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 
@@ -21,8 +21,5 @@ public class User {
 
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
-
-
+    private GrantedAuthority role;
 }
