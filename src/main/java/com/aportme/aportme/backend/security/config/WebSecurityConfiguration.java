@@ -34,12 +34,21 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().anyRequest().authenticated().and().sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.NEVER);
+        http.authorizeRequests()
+                .antMatchers("/").hasRole("USER_ROLE")
+                .anyRequest()
+                .authenticated()
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                http.headers().frameOptions().disable();
+
     }
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring();
+        web.ignoring()
+                .antMatchers("/h2-console/**")
+                .antMatchers("/register");
     }
     @Override
     @Bean

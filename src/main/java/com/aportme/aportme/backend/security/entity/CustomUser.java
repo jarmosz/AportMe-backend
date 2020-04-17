@@ -5,7 +5,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @AllArgsConstructor
 public class CustomUser implements UserDetails {
@@ -14,7 +16,9 @@ public class CustomUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return (Collection<? extends GrantedAuthority>) user.getRole();
+        List<GrantedAuthority> grantedAuthorityList = new ArrayList<GrantedAuthority>();
+        grantedAuthorityList.add(user.getRole());
+        return grantedAuthorityList;
     }
 
     @Override
