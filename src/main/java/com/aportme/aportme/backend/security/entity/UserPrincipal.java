@@ -6,19 +6,17 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 @AllArgsConstructor
-public class CustomUser implements UserDetails {
+public class UserPrincipal implements UserDetails {
 
     private final User user;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> grantedAuthorityList = new ArrayList<GrantedAuthority>();
-        grantedAuthorityList.add(user.getRole());
-        return grantedAuthorityList;
+        return new ArrayList<GrantedAuthority>(Arrays.asList(user.getRole()));
     }
 
     @Override

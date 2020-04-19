@@ -1,6 +1,7 @@
 package com.aportme.aportme.backend.component.userInfo.dto;
 
 import com.aportme.aportme.backend.utils.dto.DTOEntity;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data

@@ -1,11 +1,9 @@
 package com.aportme.aportme.backend.security.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -17,17 +15,27 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 @Configuration
 public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
+
     @Value("${oauth.client.id}")
     private String clientid;
+
     @Value("${oauth.client.secret}")
     private String clientSecret;
+
     @Value("${rsa.private.key}")
     private String privateKey;
+
     @Value("${rsa.public.key}")
     private String publicKey;
 
+    @Value("${oauth.accessTokenExpirationTime}")
+    private int accessTokenExpirationTime;
+
+    @Value("${oauth.refreshTokenExpirationTime}")
+    private int refreshTokenExpirationTime;
+
+
     @Autowired
-    @Qualifier("authenticationManagerBean")
     private AuthenticationManager authenticationManager;
 
     @Autowired
@@ -56,8 +64,8 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory().withClient(clientid).secret(passwordEncoder.encode(clientSecret)).scopes("read", "write")
-                .authorizedGrantTypes("password", "refresh_token").accessTokenValiditySeconds(20000)
-                .refreshTokenValiditySeconds(20000);
+                .authorizedGrantTypes("password", "refresh_token").accessTokenValiditySeconds(accessTokenExpirationTime)
+                .refreshTokenValiditySeconds(refreshTokenExpirationTime);
 
     }
 }
