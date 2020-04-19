@@ -60,4 +60,20 @@ public class UserInfoService {
         return entityDTOConverter.convertToDto(userInfoRepository.save(dbUserInfo), new UserInfoDTO());
     }
 
+    public DTOEntity create(String userEmail, AddUserInfoDTO userInfoDTO) throws Exception {
+        UserInfo dbUserInfo = new UserInfo();
+        dbUserInfo.setPhoneNumber(userInfoDTO.getPhoneNumber());
+        dbUserInfo.setName(userInfoDTO.getName());
+        dbUserInfo.setSurname(userInfoDTO.getSurname());
+
+        User userFromDB = userRepository.findByEmail(userEmail);
+        if (userFromDB == null) {
+            throw new Exception("User not found");
+        }
+
+        dbUserInfo.setUser(userFromDB);
+        dbUserInfo.setAddress(addressService.create(userInfoDTO.getAddress()));
+        return entityDTOConverter.convertToDto(userInfoRepository.save(dbUserInfo), new UserInfoDTO());
+    }
+
 }

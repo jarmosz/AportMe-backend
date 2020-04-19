@@ -30,7 +30,6 @@ public class UserInfoController {
     }
 
     @ApiOperation(value = "Creat user details", response = UserInfoDTO.class)
-    @PostMapping
     public DTOEntity create(@RequestParam Long userId, @RequestBody AddUserInfoDTO userDTO) throws Exception {
         return userInfoService.create(userId, userDTO);
     }

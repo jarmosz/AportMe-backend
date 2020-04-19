@@ -1,7 +1,7 @@
 package com.aportme.aportme.backend.security.config;
 
-import com.aportme.aportme.backend.security.service.CustomUserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.aportme.aportme.backend.security.service.UserPrincipalService;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -19,19 +19,21 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@AllArgsConstructor
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private CustomUserService customUserService;
+
+    private UserPrincipalService userPrincipalService;
 
     @Bean
     public PasswordEncoder encoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Override
-    @Autowired
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(customUserService).passwordEncoder(encoder());
+        auth.userDetailsService(userPrincipalService).passwordEncoder(encoder());
     }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
