@@ -28,9 +28,4 @@ public class UserInfoController {
     public DTOEntity update(@PathVariable Long id, @RequestBody UpdateUserInfoDTO userDTO) throws Exception {
         return userInfoService.update(id, userDTO);
     }
-
-    @ApiOperation(value = "Creat user details", response = UserInfoDTO.class)
-    public DTOEntity create(@RequestParam Long userId, @RequestBody AddUserInfoDTO userDTO) throws Exception {
-        return userInfoService.create(userId, userDTO);
-    }
 }
