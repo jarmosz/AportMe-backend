@@ -56,7 +56,7 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
 
     @Override
     @Transactional
-    public void onApplicationEvent(@NotNull ContextRefreshedEvent event) {
+    public void onApplicationEvent(ContextRefreshedEvent event) {
         createData();
     }
 

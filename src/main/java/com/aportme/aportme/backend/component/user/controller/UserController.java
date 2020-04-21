@@ -1,6 +1,7 @@
 package com.aportme.aportme.backend.component.user.controller;
 
 import com.aportme.aportme.backend.component.user.dto.UserDTO;
+import com.aportme.aportme.backend.component.user.entity.User;
 import com.aportme.aportme.backend.component.user.service.UserService;
 import com.aportme.aportme.backend.utils.dto.DTOEntity;
 import io.swagger.annotations.ApiOperation;
@@ -20,4 +21,5 @@ public class UserController {
     public DTOEntity getById(@PathVariable Long id) {
         return  userService.getUserById(id);
     }
+
 }
