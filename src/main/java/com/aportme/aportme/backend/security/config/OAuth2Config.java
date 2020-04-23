@@ -1,9 +1,12 @@
 package com.aportme.aportme.backend.security.config;
 
+import com.google.common.io.Resources;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -12,6 +15,10 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+
+import java.io.IOException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 @Configuration
 public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
@@ -22,18 +29,11 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
     @Value("${oauth.client.secret}")
     private String clientSecret;
 
-    @Value("${rsa.private.key}")
-    private String privateKey;
-
-    @Value("${rsa.public.key}")
-    private String publicKey;
-
     @Value("${oauth.accessTokenExpirationTime}")
     private int accessTokenExpirationTime;
 
     @Value("${oauth.refreshTokenExpirationTime}")
     private int refreshTokenExpirationTime;
-
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -41,15 +41,23 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    @Autowired
+    ResourceLoader resourceLoader;
+
     @Bean
-    public JwtAccessTokenConverter tokenEnhancer() {
+    public JwtAccessTokenConverter tokenEnhancer() throws IOException {
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-        converter.setSigningKey(privateKey);
-        converter.setVerifierKey(publicKey);
+        converter.setSigningKey(readRSAKey("private-key.pem"));
+        converter.setVerifierKey(readRSAKey("public-key.pem"));
         return converter;
     }
+
+    private String readRSAKey(String fileName) throws IOException {
+        return Resources.toString(Resources.getResource(fileName), StandardCharsets.UTF_8);
+    }
+
     @Bean
-    public JwtTokenStore tokenStore() {
+    public JwtTokenStore tokenStore() throws IOException {
         return new JwtTokenStore(tokenEnhancer());
     }
     @Override
