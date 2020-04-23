@@ -2,6 +2,25 @@
 Backend service for AportMe application.
 
 ## OAuth configuration
+Tokens are sign with RSA keys, so we should generate it first.
+
+Go to ***/AportMe-backend*** and run command in your bash terminal (It will generate private-key and save it to resource folder):
+
+```bash
+openssl genrsa -out src/main/resources/private-key.pem 2048
+```
+
+After that, let's generate public key:
+
+```bash
+openssl rsa -in src/main/resources/private-key.pem -pubout -out src/main/resources/public-key.pem
+```
+
+Congratulations! You have generated RSA keys, so now you can run the application.
+
+## OAuth basic authorization flow
+
+
 Register new account on:
 
 ```bash
@@ -37,3 +56,12 @@ Request headers:
 "authorization": "Basic base64(clientId:clientSecret)"
 ```
 Remember to add appriopriate headers, set grant_type = password, and encode clientId:clientSecret with Base64
+
+To retrieve access to concrete endpoint for example ***/api/pets***, make a request like this:
+
+```bash
+GET
+http://localhost:8080/api/pets?access_token={access_token_here}
+```
+
+If you have permission to that endpoint, server should return you your data in JSON format.
