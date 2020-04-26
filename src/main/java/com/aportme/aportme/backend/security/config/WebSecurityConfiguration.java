@@ -42,12 +42,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-                http.headers().frameOptions().disable();
+        http.headers().frameOptions().disable();
 
     }
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
+                .antMatchers("/api/*")
                 .antMatchers("/h2-console/**")
                 .antMatchers("/register");
     }
