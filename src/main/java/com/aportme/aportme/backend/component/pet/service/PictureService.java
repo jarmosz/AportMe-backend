@@ -37,12 +37,15 @@ public class PictureService {
         return entityDTOConverter.convertToDto(pictureRepository.save(dbPicture), new PetPictureDTO());
     }
 
-    List<PetPicture> createAll(List<AddPetPictureDTO> picturesDTO) {
+    List<PetPicture> createAll(Pet pet, List<AddPetPictureDTO> picturesDTO) {
         List<PetPicture> dbPictures = new ArrayList<>();
         picturesDTO.forEach(pictureDTO -> {
                     PetPicture dbPicture = new PetPicture();
                     dbPicture.setPictureInBase64(pictureDTO.getPictureInBase64());
-                    dbPictures.add(dbPicture); });
+                    dbPicture.setIsProfilePicture(pictureDTO.getIsProfilePicture());
+                    dbPicture.setPet(pet);
+                    dbPictures.add(dbPicture);
+        });
         return pictureRepository.saveAll(dbPictures);
     }
 
