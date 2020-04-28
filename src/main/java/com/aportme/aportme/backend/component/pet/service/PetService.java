@@ -68,14 +68,14 @@ public class PetService {
         dbPet.setPetType(petDTO.getPetType());
         dbPet.setTrainingNeeded(petDTO.getTrainingNeeded());
 
-        dbPet.setPictures(pictureService.createAll(petDTO.getPictures()));
-
         Optional<FoundationInfo> foundationInfoFromDB = foundationInfoRepository.findById(foundationId);
         if (foundationInfoFromDB.isEmpty()) {
             throw new Exception("Foundation not found");
         }
         dbPet.setFoundationInfo(foundationInfoFromDB.get());
+        dbPet = petRepository.save(dbPet);
 
-        return entityDTOConverter.convertToDto(petRepository.save(dbPet), new PetDTO());
+        dbPet.setPictures(pictureService.createAll(dbPet, petDTO.getPictures()));
+        return entityDTOConverter.convertToDto(dbPet, new PetDTO());
     }
 }
