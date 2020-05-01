@@ -6,10 +6,7 @@ import com.aportme.aportme.backend.component.foundation.entity.FoundationInfo;
 import com.aportme.aportme.backend.component.foundation.repository.FoundationInfoRepository;
 import com.aportme.aportme.backend.component.pet.entity.Pet;
 import com.aportme.aportme.backend.component.pet.entity.PetPicture;
-import com.aportme.aportme.backend.component.pet.enums.AgeCategory;
-import com.aportme.aportme.backend.component.pet.enums.AgeSuffix;
-import com.aportme.aportme.backend.component.pet.enums.PetSize;
-import com.aportme.aportme.backend.component.pet.enums.PetType;
+import com.aportme.aportme.backend.component.pet.enums.*;
 import com.aportme.aportme.backend.component.user.enums.Role;
 import com.aportme.aportme.backend.component.user.entity.User;
 import com.aportme.aportme.backend.component.user.repository.UserRepository;
@@ -130,6 +127,7 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
                     petNames[ThreadLocalRandom.current().nextInt(0, petNames.length)],
                     dogBreeds[ThreadLocalRandom.current().nextInt(0, dogBreeds.length)],
                     i,
+                    i % 2 == 0 ? PetSex.MALE : PetSex.FEMALE,
                     AgeSuffix.values()[(int)(Math.random()*AgeSuffix.values().length)],
                     PetSize.values()[(int)(Math.random()*PetSize.values().length)],
                     PetType.DOG,
@@ -148,6 +146,7 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
                     petNames[ThreadLocalRandom.current().nextInt(0, petNames.length)],
                     catBreeds[ThreadLocalRandom.current().nextInt(0, catBreeds.length)],
                     i,
+                    i % 2 == 0 ? PetSex.MALE : PetSex.FEMALE,
                     AgeSuffix.values()[(int)(Math.random()*AgeSuffix.values().length)],
                     PetSize.values()[(int)(Math.random()*PetSize.values().length)],
                     PetType.CAT,
@@ -162,7 +161,7 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
         }
     }
 
-    private void createPet(String name, String breed, int age, AgeSuffix ageSuffix, PetSize petSize, PetType petType, String diseases, String behaviorToChildren, String behaviorToAnimals, Boolean trainingNeeded, Boolean behavioristNeeded, String description, FoundationInfo foundationInfo) {
+    private void createPet(String name, String breed, int age, PetSex sex, AgeSuffix ageSuffix, PetSize petSize, PetType petType, String diseases, String behaviorToChildren, String behaviorToAnimals, Boolean trainingNeeded, Boolean behavioristNeeded, String description, FoundationInfo foundationInfo) {
         Pet pet = new Pet();
         pet.setAge(age);
         pet.setAgeCategory(prepareAgeCategory(age, ageSuffix));
@@ -171,6 +170,7 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
         pet.setBehaviorToAnimals(behaviorToAnimals);
         pet.setBehaviorToChildren(behaviorToChildren);
         pet.setBreed(breed);
+        pet.setSex(sex);
         pet.setDescription(description);
         pet.setDiseases(diseases);
         pet.setFoundationInfo(foundationInfo);

@@ -1,10 +1,7 @@
 package com.aportme.aportme.backend.component.pet.entity;
 
 import com.aportme.aportme.backend.component.foundation.entity.FoundationInfo;
-import com.aportme.aportme.backend.component.pet.enums.AgeCategory;
-import com.aportme.aportme.backend.component.pet.enums.AgeSuffix;
-import com.aportme.aportme.backend.component.pet.enums.PetSize;
-import com.aportme.aportme.backend.component.pet.enums.PetType;
+import com.aportme.aportme.backend.component.pet.enums.*;
 import com.aportme.aportme.backend.component.userInfo.entity.UserInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
@@ -29,6 +26,8 @@ public class Pet {
     private String name;
 
     private String breed;
+
+    private PetSex sex;
 
     private int age;
 
