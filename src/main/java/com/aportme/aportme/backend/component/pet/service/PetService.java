@@ -61,6 +61,7 @@ public class PetService {
         dbPet.setBehaviorToAnimals(petDTO.getBehaviorToAnimals());
         dbPet.setBehaviorToChildren(petDTO.getBehaviorToChildren());
         dbPet.setBreed(petDTO.getBreed());
+        dbPet.setSex(petDTO.getSex());
         dbPet.setDescription(petDTO.getDescription());
         dbPet.setDiseases(petDTO.getDiseases());
         dbPet.setName(petDTO.getName());
