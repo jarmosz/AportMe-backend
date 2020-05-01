@@ -1,10 +1,7 @@
 package com.aportme.aportme.backend.component.pet.dto;
 
 import com.aportme.aportme.backend.component.pet.dto.pictures.AddPetPictureDTO;
-import com.aportme.aportme.backend.component.pet.enums.AgeCategory;
-import com.aportme.aportme.backend.component.pet.enums.AgeSuffix;
-import com.aportme.aportme.backend.component.pet.enums.PetSize;
-import com.aportme.aportme.backend.component.pet.enums.PetType;
+import com.aportme.aportme.backend.component.pet.enums.*;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -26,6 +23,8 @@ public class AddPetDTO {
     private AgeCategory ageCategory;
 
     private PetSize size;
+
+    private PetSex sex;
 
     private String diseases;
 

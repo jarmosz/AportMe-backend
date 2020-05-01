@@ -1,13 +1,10 @@
 package com.aportme.aportme.backend.component.pet.dto;
 
+import com.aportme.aportme.backend.component.pet.enums.*;
 import com.aportme.aportme.backend.utils.dto.DTOEntity;
 import com.aportme.aportme.backend.component.foundation.dto.FoundationInfoForPetDTO;
 import com.aportme.aportme.backend.component.pet.dto.pictures.PetPictureDTO;
 import com.aportme.aportme.backend.component.user.dto.UserDTO;
-import com.aportme.aportme.backend.component.pet.enums.AgeCategory;
-import com.aportme.aportme.backend.component.pet.enums.AgeSuffix;
-import com.aportme.aportme.backend.component.pet.enums.PetSize;
-import com.aportme.aportme.backend.component.pet.enums.PetType;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -38,6 +35,8 @@ public class PetDTO implements DTOEntity {
     private String behaviorToChildren;
 
     private String behaviorToAnimals;
+
+    private PetSex sex;
 
     private Boolean trainingNeeded;
 
