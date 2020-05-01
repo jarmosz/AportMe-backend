@@ -9,8 +9,11 @@ import com.aportme.aportme.backend.component.userInfo.entity.UserInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +51,12 @@ public class Pet {
     private Boolean behavioristNeeded;
 
     private String description;
+
+    @CreationTimestamp
+    private LocalDateTime creationDate;
+
+    @UpdateTimestamp
+    private LocalDateTime updateDate;
 
     @JsonIgnoreProperties("pets")
     @ManyToOne
