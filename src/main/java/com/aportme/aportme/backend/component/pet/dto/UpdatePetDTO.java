@@ -1,10 +1,7 @@
 package com.aportme.aportme.backend.component.pet.dto;
 
+import com.aportme.aportme.backend.component.pet.enums.*;
 import com.aportme.aportme.backend.utils.dto.DTOEntity;
-import com.aportme.aportme.backend.component.pet.enums.AgeCategory;
-import com.aportme.aportme.backend.component.pet.enums.AgeSuffix;
-import com.aportme.aportme.backend.component.pet.enums.PetSize;
-import com.aportme.aportme.backend.component.pet.enums.PetType;
 import lombok.Data;
 
 @Data
@@ -17,6 +14,8 @@ public class UpdatePetDTO implements DTOEntity {
     private int age;
 
     private PetType petType;
+
+    private PetSex sex;
 
     private AgeSuffix ageSuffix;
 
