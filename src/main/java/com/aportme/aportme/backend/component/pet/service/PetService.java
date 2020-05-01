@@ -78,4 +78,12 @@ public class PetService {
         dbPet.setPictures(pictureService.createAll(dbPet, petDTO.getPictures()));
         return entityDTOConverter.convertToDto(dbPet, new PetDTO());
     }
+
+    public void delete(Long id) throws Exception {
+        Optional<Pet> petFromDB = petRepository.findById(id);
+        if(petFromDB.isEmpty()) {
+            throw new Exception("Pet with id " + id + " not found");
+        }
+        petRepository.delete(petFromDB.get());
+    }
 }

@@ -42,4 +42,10 @@ public class PetController {
     public DTOEntity create(@RequestParam Long foundationId, @RequestBody AddPetDTO petDTO) throws Exception {
         return petService.create(foundationId, petDTO);
     }
+
+    @ApiOperation(value = "Delete pet")
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) throws Exception {
+        petService.delete(id);
+    }
 }
