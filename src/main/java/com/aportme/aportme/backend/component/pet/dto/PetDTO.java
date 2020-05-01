@@ -10,6 +10,7 @@ import com.aportme.aportme.backend.component.pet.enums.PetSize;
 import com.aportme.aportme.backend.component.pet.enums.PetType;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +46,10 @@ public class PetDTO implements DTOEntity {
     private String description;
 
     private FoundationInfoForPetDTO foundationInfo;
+
+    private LocalDateTime creationDate;
+
+    private LocalDateTime updateDate;
 
     private List<PetPictureDTO> pictures = new ArrayList<>();
 
