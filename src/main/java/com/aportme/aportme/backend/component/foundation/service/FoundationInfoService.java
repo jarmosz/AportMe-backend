@@ -13,6 +13,7 @@ import com.aportme.aportme.backend.utils.dto.EntityDTOConverter;
 import com.aportme.aportme.backend.utils.UtilsService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -61,11 +62,12 @@ public class FoundationInfoService {
         return entityDTOConverter.convertToDto(foundationInfoRepository.save(dbFoundationInfo), new FoundationInfoDTO());
     }
 
-    public DTOEntity create(Long userId, AddFoundationDTO foundationInfoDTO) throws Exception {
+    public DTOEntity create(Long userId, AddFoundationDTO foundationInfoDTO, MultipartFile foundationLogo) throws Exception {
         FoundationInfo dbFoundationInfo = new FoundationInfo();
         dbFoundationInfo.setName(foundationInfoDTO.getName());
         dbFoundationInfo.setNip(foundationInfoDTO.getNip());
         dbFoundationInfo.setPhoneNumber(foundationInfoDTO.getPhoneNumber());
+        dbFoundationInfo.setFoundationLogo(foundationLogo.getBytes());
         dbFoundationInfo.setAddress(addressService.create(foundationInfoDTO.getAddress()));
 
         Optional<User> userFromDB = userRepository.findById(userId);

@@ -19,6 +19,10 @@ public class FoundationInfoDTO implements DTOEntity {
 
     private String phoneNumber;
 
+    private String description;
+
+    private byte[] foundationLogo;
+
     private UserDTO user;
 
     private AddressDTO address;

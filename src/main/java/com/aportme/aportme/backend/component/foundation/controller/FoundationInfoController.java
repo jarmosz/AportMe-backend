@@ -8,6 +8,7 @@ import com.aportme.aportme.backend.component.foundation.dto.UpdateFoundationDTO;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -45,7 +46,7 @@ public class FoundationInfoController {
 
     @ApiOperation(value = "Create foundation", response = FoundationInfoDTO.class)
     @PostMapping
-    public DTOEntity create(@RequestParam Long userId, @RequestBody AddFoundationDTO addFoundationDTO) throws Exception {
-        return foundationInfoService.create(userId, addFoundationDTO);
+    public DTOEntity create(@RequestParam Long userId, @RequestBody AddFoundationDTO addFoundationDTO, @RequestParam MultipartFile foundationLogo) throws Exception {
+        return foundationInfoService.create(userId, addFoundationDTO, foundationLogo);
     }
 }
