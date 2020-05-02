@@ -27,7 +27,8 @@ public class FoundationInfo {
 
     private String description;
 
-    private byte[] foundationLogo;
+    @Lob
+    private String foundationLogo;
 
     @OneToOne
     private User user;

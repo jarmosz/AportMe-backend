@@ -49,7 +49,10 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
     private String[] behaviors = {"przyjazny", "musi się oswoić", "trochę agresywny", "wymaga uwagi", "wychowywać, obserwować"};
     private String[] descriptions = {"Trochę dłuższy opis dotyczący zwierzęta w którym można zawrzeć dodatkowe informacje nieuwzględnione w wyróżnionych polach"};
 
-    private String[] base64Pictures = new BootstrapPictures().getPictures();
+    BootstrapPictures bootstrapPictures = new BootstrapPictures();
+
+    private String[] base64Pictures = bootstrapPictures.getPictures();
+    private String base64Logo = bootstrapPictures.getFoundationLogo();
 
     @Override
     @Transactional
@@ -100,6 +103,8 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
         FoundationInfo foundationInfo = new FoundationInfo();
         foundationInfo.setName(name);
         foundationInfo.setNip(nip);
+        foundationInfo.setFoundationLogo(base64Logo);
+        foundationInfo.setDescription(description);
         foundationInfo.setAddress(address);
         foundationInfo.setPhoneNumber(phoneNumber);
         foundationInfo.setUser(foundation);
