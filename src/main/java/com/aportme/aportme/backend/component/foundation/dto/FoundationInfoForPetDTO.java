@@ -15,6 +15,10 @@ public class FoundationInfoForPetDTO {
 
     private String phoneNumber;
 
+    private String description;
+
+    private byte[] foundationLogo;
+
     private UserDTO user;
 
     private Address address;
