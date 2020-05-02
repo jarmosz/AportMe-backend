@@ -63,7 +63,7 @@ public class Pet {
     private FoundationInfo foundationInfo;
 
     @OneToMany(mappedBy = "pet",
-            cascade = CascadeType.ALL
+            cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.DETACH}
     )
     private List<PetPicture> pictures = new ArrayList<>();
 
