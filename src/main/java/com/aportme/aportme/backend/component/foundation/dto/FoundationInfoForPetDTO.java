@@ -17,7 +17,7 @@ public class FoundationInfoForPetDTO {
 
     private String description;
 
-    private byte[] foundationLogo;
+    private String foundationLogo;
 
     private UserDTO user;
 
