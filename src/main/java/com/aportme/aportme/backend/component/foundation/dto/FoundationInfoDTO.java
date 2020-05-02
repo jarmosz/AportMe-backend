@@ -21,7 +21,7 @@ public class FoundationInfoDTO implements DTOEntity {
 
     private String description;
 
-    private byte[] foundationLogo;
+    private String foundationLogo;
 
     private UserDTO user;
 

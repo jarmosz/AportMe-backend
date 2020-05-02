@@ -46,7 +46,13 @@ public class FoundationInfoController {
 
     @ApiOperation(value = "Create foundation", response = FoundationInfoDTO.class)
     @PostMapping
-    public DTOEntity create(@RequestParam Long userId, @RequestBody AddFoundationDTO addFoundationDTO, @RequestParam MultipartFile foundationLogo) throws Exception {
-        return foundationInfoService.create(userId, addFoundationDTO, foundationLogo);
+    public DTOEntity create(@RequestParam Long userId, @RequestBody AddFoundationDTO addFoundationDTO) throws Exception {
+        return foundationInfoService.create(userId, addFoundationDTO);
+    }
+
+    @ApiOperation(value = "Upload foundation logo")
+    @PostMapping("/upload")
+    public void upload(@RequestParam Long id, @RequestParam("logo") MultipartFile foundationLogo) throws Exception {
+        foundationInfoService.uploadLogo(id, foundationLogo);
     }
 }
