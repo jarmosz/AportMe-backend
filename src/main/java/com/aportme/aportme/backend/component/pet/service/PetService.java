@@ -1,5 +1,7 @@
 package com.aportme.aportme.backend.component.pet.service;
 
+import com.aportme.aportme.backend.component.pet.entity.PetPicture;
+import com.aportme.aportme.backend.component.pet.repository.PictureRepository;
 import com.aportme.aportme.backend.utils.dto.DTOEntity;
 import com.aportme.aportme.backend.component.pet.dto.AddPetDTO;
 import com.aportme.aportme.backend.component.pet.dto.PetDTO;
@@ -13,6 +15,8 @@ import com.aportme.aportme.backend.utils.UtilsService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,6 +29,7 @@ public class PetService {
     private final FoundationInfoRepository foundationInfoRepository;
     private final EntityDTOConverter entityDTOConverter;
     private final PictureService pictureService;
+    private final PictureRepository pictureRepository;
 
     public List<DTOEntity> getAll() {
         return petRepository.findAll()
@@ -85,6 +90,9 @@ public class PetService {
         if(petFromDB.isEmpty()) {
             throw new Exception("Pet with id " + id + " not found");
         }
-        petRepository.delete(petFromDB.get());
+        Pet pet = petFromDB.get();
+        pictureRepository.findAllByPet(pet).forEach((pic) -> pictureService.delete(pic.getId()));
+
+        petRepository.delete(pet);
     }
 }
