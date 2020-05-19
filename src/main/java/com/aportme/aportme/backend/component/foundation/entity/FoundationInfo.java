@@ -25,6 +25,11 @@ public class FoundationInfo {
 
     private String phoneNumber;
 
+    private String description;
+
+    @Lob
+    private String foundationLogo;
+
     @OneToOne
     private User user;
 

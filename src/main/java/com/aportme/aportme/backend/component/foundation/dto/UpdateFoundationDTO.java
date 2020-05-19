@@ -12,4 +12,5 @@ public class UpdateFoundationDTO implements DTOEntity {
 
     private String phoneNumber;
 
+    private String description;
 }
