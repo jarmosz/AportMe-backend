@@ -13,7 +13,9 @@ import com.aportme.aportme.backend.utils.dto.EntityDTOConverter;
 import com.aportme.aportme.backend.utils.UtilsService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -58,6 +60,7 @@ public class FoundationInfoService {
         FoundationInfo dbFoundationInfo = foundationInfoFromDB.get();
         FoundationInfo convertedDTO = (FoundationInfo) entityDTOConverter.convertToEntity(new FoundationInfo(), foundationInfoDTO);
         UtilsService.copyNonNullProperties(convertedDTO, dbFoundationInfo);
+
         return entityDTOConverter.convertToDto(foundationInfoRepository.save(dbFoundationInfo), new FoundationInfoDTO());
     }
 
@@ -67,6 +70,7 @@ public class FoundationInfoService {
         dbFoundationInfo.setNip(foundationInfoDTO.getNip());
         dbFoundationInfo.setPhoneNumber(foundationInfoDTO.getPhoneNumber());
         dbFoundationInfo.setAddress(addressService.create(foundationInfoDTO.getAddress()));
+        dbFoundationInfo.setDescription(foundationInfoDTO.getDescription());
 
         Optional<User> userFromDB = userRepository.findById(userId);
         if (userFromDB.isEmpty()) {
@@ -75,5 +79,25 @@ public class FoundationInfoService {
 
         dbFoundationInfo.setUser(userFromDB.get());
         return entityDTOConverter.convertToDto(foundationInfoRepository.save(dbFoundationInfo), new FoundationInfoDTO());
+    }
+
+    public void uploadLogo(Long id, MultipartFile foundationLogo) throws Exception {
+        FoundationInfo foundationInfo = getFoundationInfoFromDB(id);
+
+        try {
+            byte[] logoBytes = foundationLogo.getBytes();
+            foundationInfo.setFoundationLogo(Base64.getEncoder().encodeToString(logoBytes));
+            foundationInfoRepository.save(foundationInfo);
+        } catch(Exception ex) {
+            throw new Exception(ex.getMessage());
+        }
+    }
+
+    private FoundationInfo getFoundationInfoFromDB(Long id) throws Exception {
+        Optional<FoundationInfo> foundationInfoFromDB = foundationInfoRepository.findById(id);
+        if(foundationInfoFromDB.isEmpty()) {
+            throw new Exception("Foundation not found");
+        }
+        return foundationInfoFromDB.get();
     }
 }
