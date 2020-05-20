@@ -52,4 +52,8 @@ public class PictureService {
     public void delete(Long id) {
         pictureRepository.deleteById(id);
     }
+
+    public void deleteFew(List<Long> ids) {
+        ids.forEach(pictureRepository::deleteById);
+    }
 }
