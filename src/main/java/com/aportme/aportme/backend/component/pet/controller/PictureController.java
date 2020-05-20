@@ -8,6 +8,8 @@ import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @CrossOrigin
 @AllArgsConstructor
 @RestController
@@ -26,5 +28,11 @@ public class PictureController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         pictureService.delete(id);
+    }
+
+    @ApiOperation(value = "Delete few pictures")
+    @DeleteMapping()
+    public void deleteFew(@RequestParam List<Long> ids) {
+        pictureService.deleteFew(ids);
     }
 }
