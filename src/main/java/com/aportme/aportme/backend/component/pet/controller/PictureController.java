@@ -1,12 +1,12 @@
 package com.aportme.aportme.backend.component.pet.controller;
 
 import com.aportme.aportme.backend.utils.dto.DTOEntity;
-import com.aportme.aportme.backend.component.pet.dto.pictures.AddPetPictureDTO;
 import com.aportme.aportme.backend.component.pet.dto.pictures.PetPictureDTO;
 import com.aportme.aportme.backend.component.pet.service.PictureService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -18,21 +18,20 @@ public class PictureController {
 
     private final PictureService pictureService;
 
-    @ApiOperation(value = "Add new picture for pet", response = PetPictureDTO.class)
+    @ApiOperation(value = "Upload pictures", response = PetPictureDTO.class)
     @PostMapping
-    public DTOEntity add(@RequestParam Long petId, @RequestBody AddPetPictureDTO pictureDTO) throws Exception {
-        return pictureService.add(petId, pictureDTO);
+    public List<DTOEntity> upload(@RequestParam Long petId, @RequestParam("pictures") MultipartFile[] pictures) {
+        return pictureService.upload(petId, pictures);
     }
 
-    @ApiOperation(value = "Delete picture")
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        pictureService.delete(id);
+    @PostMapping("/{id}")
+    public DTOEntity setProfilePicture(@PathVariable Long id) throws Exception {
+        return pictureService.setProfilePicture(id);
     }
 
-    @ApiOperation(value = "Delete few pictures")
-    @DeleteMapping()
-    public void deleteFew(@RequestParam List<Long> ids) {
-        pictureService.deleteFew(ids);
+    @ApiOperation(value = "Delete pictures")
+    @DeleteMapping
+    public void delete(@RequestParam List<Long> ids) {
+        pictureService.delete(ids);
     }
 }
