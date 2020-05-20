@@ -1,5 +1,6 @@
 package com.aportme.aportme.backend.component.pet.service;
 
+import com.aportme.aportme.backend.component.pet.dto.pictures.AddPetPictureDTO;
 import com.aportme.aportme.backend.utils.dto.DTOEntity;
 import com.aportme.aportme.backend.component.pet.dto.pictures.PetPictureDTO;
 import com.aportme.aportme.backend.component.pet.entity.Pet;
@@ -9,10 +10,8 @@ import com.aportme.aportme.backend.component.pet.repository.PictureRepository;
 import com.aportme.aportme.backend.utils.dto.EntityDTOConverter;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,21 +23,33 @@ public class PictureService {
     private final EntityDTOConverter entityDTOConverter;
     private final PetRepository petRepository;
 
-    public List<DTOEntity> upload(Long petId, MultipartFile[] pictures) {
+    public List<DTOEntity> upload(Long petId, List<String> base64Pictures) {
         List<DTOEntity> addedPictures = new ArrayList<>();
-        for (MultipartFile picture : pictures) {
-            PetPicture dbPicture = new PetPicture();
-
-            try {
-                dbPicture.setPictureInBase64(Base64.getEncoder().encodeToString(picture.getBytes()));
+        try {
+            Pet petFromDb = getPetFromDB(petId);
+            base64Pictures.forEach(base64Picture -> {
+                PetPicture dbPicture = new PetPicture();
+                dbPicture.setPictureInBase64(base64Picture);
                 dbPicture.setIsProfilePicture(false);
-                dbPicture.setPet(getPetFromDB(petId));
+                dbPicture.setPet(petFromDb);
                 addedPictures.add(entityDTOConverter.convertToDto(pictureRepository.save(dbPicture), new PetPictureDTO()));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return addedPictures;
+    }
+
+    List<PetPicture> createAll(Pet pet, List<AddPetPictureDTO> picturesDTO) {
+        List<PetPicture> dbPictures = new ArrayList<>();
+        picturesDTO.forEach(pictureDTO -> {
+            PetPicture dbPicture = new PetPicture();
+            dbPicture.setPictureInBase64(pictureDTO.getPictureInBase64());
+            dbPicture.setIsProfilePicture(pictureDTO.getIsProfilePicture());
+            dbPicture.setPet(pet);
+            dbPictures.add(dbPicture);
+        });
+        return pictureRepository.saveAll(dbPictures);
     }
 
     public DTOEntity setProfilePicture(Long id) throws Exception {

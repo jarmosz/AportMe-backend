@@ -6,7 +6,6 @@ import com.aportme.aportme.backend.component.pet.service.PictureService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -20,8 +19,8 @@ public class PictureController {
 
     @ApiOperation(value = "Upload pictures", response = PetPictureDTO.class)
     @PostMapping
-    public List<DTOEntity> upload(@RequestParam Long petId, @RequestParam("pictures") MultipartFile[] pictures) {
-        return pictureService.upload(petId, pictures);
+    public List<DTOEntity> upload(@RequestParam Long petId, @RequestBody List<String> base64Pictures) {
+        return pictureService.upload(petId, base64Pictures);
     }
 
     @PostMapping("/{id}")
