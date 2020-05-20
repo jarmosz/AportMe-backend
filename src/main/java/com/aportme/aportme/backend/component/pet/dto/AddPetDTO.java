@@ -1,7 +1,11 @@
 package com.aportme.aportme.backend.component.pet.dto;
 
+import com.aportme.aportme.backend.component.pet.dto.pictures.AddPetPictureDTO;
 import com.aportme.aportme.backend.component.pet.enums.*;
 import lombok.Data;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class AddPetDTO {
@@ -33,5 +37,7 @@ public class AddPetDTO {
     private Boolean behavioristNeeded;
 
     private String description;
+
+    private List<AddPetPictureDTO> pictures = new ArrayList<>();
 
 }

@@ -79,6 +79,7 @@ public class PetService {
         dbPet.setFoundationInfo(foundationInfoFromDB.get());
         dbPet = petRepository.save(dbPet);
 
+        dbPet.setPictures(pictureService.createAll(dbPet, petDTO.getPictures()));
         return entityDTOConverter.convertToDto(dbPet, new PetDTO());
     }
 

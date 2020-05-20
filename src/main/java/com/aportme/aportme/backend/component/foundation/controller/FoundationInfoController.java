@@ -52,7 +52,7 @@ public class FoundationInfoController {
 
     @ApiOperation(value = "Upload foundation logo")
     @PostMapping("/upload")
-    public void upload(@RequestParam Long id, @RequestParam("logo") MultipartFile foundationLogo) throws Exception {
-        foundationInfoService.uploadLogo(id, foundationLogo);
+    public void upload(@RequestParam Long id, @RequestBody String base64Logo) throws Exception {
+        foundationInfoService.uploadLogo(id, base64Logo);
     }
 }
