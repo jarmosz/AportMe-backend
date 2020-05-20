@@ -81,16 +81,11 @@ public class FoundationInfoService {
         return entityDTOConverter.convertToDto(foundationInfoRepository.save(dbFoundationInfo), new FoundationInfoDTO());
     }
 
-    public void uploadLogo(Long id, MultipartFile foundationLogo) throws Exception {
+    public void uploadLogo(Long id, String base64Logo) throws Exception {
         FoundationInfo foundationInfo = getFoundationInfoFromDB(id);
 
-        try {
-            byte[] logoBytes = foundationLogo.getBytes();
-            foundationInfo.setFoundationLogo(Base64.getEncoder().encodeToString(logoBytes));
-            foundationInfoRepository.save(foundationInfo);
-        } catch(Exception ex) {
-            throw new Exception(ex.getMessage());
-        }
+        foundationInfo.setFoundationLogo(base64Logo);
+        foundationInfoRepository.save(foundationInfo);
     }
 
     private FoundationInfo getFoundationInfoFromDB(Long id) throws Exception {
