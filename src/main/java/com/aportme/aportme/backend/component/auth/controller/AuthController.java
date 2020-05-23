@@ -1,9 +1,11 @@
 package com.aportme.aportme.backend.component.auth.controller;
 
 import com.aportme.aportme.backend.component.auth.dto.AuthorizedDTO;
-import com.aportme.aportme.backend.component.auth.dto.LoginDTO;
+import com.aportme.aportme.backend.component.auth.dto.GetTokenDTO;
+import com.aportme.aportme.backend.component.auth.TokenType;
 import com.aportme.aportme.backend.component.auth.service.AuthService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
@@ -15,7 +17,12 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public AuthorizedDTO login(@RequestBody LoginDTO loginDTO) {
-        return authService.login(loginDTO);
+    public ResponseEntity<AuthorizedDTO> login(@RequestBody GetTokenDTO getTokenDTO) {
+        return authService.getToken(getTokenDTO, TokenType.ACCESS);
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<AuthorizedDTO> refresh(@RequestBody GetTokenDTO refreshTokenDTO) {
+        return authService.getToken(refreshTokenDTO, TokenType.REFRESH);
     }
 }

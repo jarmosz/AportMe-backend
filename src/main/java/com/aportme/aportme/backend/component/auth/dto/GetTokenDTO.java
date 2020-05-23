@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class LoginDTO implements DTOEntity {
+public class GetTokenDTO implements DTOEntity {
 
     private String username;
 
@@ -16,4 +16,7 @@ public class LoginDTO implements DTOEntity {
 
     @JsonProperty(value = "grant_type")
     private String grantType;
+
+    @JsonProperty(value = "refresh_token")
+    private String refreshToken;
 }
