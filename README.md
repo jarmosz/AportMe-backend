@@ -1,8 +1,6 @@
 # AportMe-backend
 Backend service for AportMe application.
 
-
-
 KeyKloack docker configuration with basic settings.
 ```bash
 docker run --rm --name keycloak-server -p 8180:8080 \
@@ -27,3 +25,5 @@ grant_type: password
 Will give you token and refresh token.
 
 We cant get into API resources by adding Bearer: token header when attempting to POST /api/foundation
+
+After launching KeyCloack, you should create new user, by clicking User -> fill username and email, set up Email Verified to True, go to Credentials tab, turn off Temporary option and then set password, after that click Reset Password.
