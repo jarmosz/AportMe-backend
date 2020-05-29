@@ -39,4 +39,5 @@ public class AddPetDTO {
     private String description;
 
     private List<AddPetPictureDTO> pictures = new ArrayList<>();
+
 }
