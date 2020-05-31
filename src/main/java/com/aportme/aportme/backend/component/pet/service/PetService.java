@@ -1,22 +1,22 @@
 package com.aportme.aportme.backend.component.pet.service;
 
-import com.aportme.aportme.backend.component.pet.entity.PetPicture;
-import com.aportme.aportme.backend.component.pet.repository.PictureRepository;
-import com.aportme.aportme.backend.utils.dto.DTOEntity;
+import com.aportme.aportme.backend.component.foundation.entity.FoundationInfo;
+import com.aportme.aportme.backend.component.foundation.repository.FoundationInfoRepository;
 import com.aportme.aportme.backend.component.pet.dto.AddPetDTO;
 import com.aportme.aportme.backend.component.pet.dto.PetDTO;
 import com.aportme.aportme.backend.component.pet.dto.UpdatePetDTO;
-import com.aportme.aportme.backend.component.foundation.entity.FoundationInfo;
 import com.aportme.aportme.backend.component.pet.entity.Pet;
-import com.aportme.aportme.backend.component.foundation.repository.FoundationInfoRepository;
 import com.aportme.aportme.backend.component.pet.repository.PetRepository;
-import com.aportme.aportme.backend.utils.dto.EntityDTOConverter;
+import com.aportme.aportme.backend.component.pet.repository.PictureRepository;
 import com.aportme.aportme.backend.utils.UtilsService;
+import com.aportme.aportme.backend.utils.dto.DTOEntity;
+import com.aportme.aportme.backend.utils.dto.EntityDTOConverter;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -31,11 +31,15 @@ public class PetService {
     private final PictureService pictureService;
     private final PictureRepository pictureRepository;
 
-    public List<DTOEntity> getAll() {
-        return petRepository.findAll()
-                .stream()
-                .map((pet -> entityDTOConverter.convertToDto(pet, new PetDTO())))
-                .collect(Collectors.toList());
+    public Page<PetDTO> getAll(Pageable pageable) {
+        Page<Pet> petsFromDB = petRepository.findAll(pageable);
+        List<PetDTO> pets = petsFromDB
+                                .getContent()
+                                .stream()
+                                .map(pet -> (PetDTO) entityDTOConverter.convertToDto(pet, new PetDTO()))
+                                .collect(Collectors.toList());
+
+        return new PageImpl<>(pets, pageable, petsFromDB.getTotalElements());
     }
 
     public DTOEntity getById(Long id) {

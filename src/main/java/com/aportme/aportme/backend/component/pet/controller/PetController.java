@@ -7,6 +7,11 @@ import com.aportme.aportme.backend.component.pet.dto.UpdatePetDTO;
 import com.aportme.aportme.backend.component.pet.service.PetService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.SortDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,8 +26,8 @@ public class PetController {
 
     @ApiOperation(value = "Find all pets", response = PetDTO.class)
     @GetMapping
-    public List<DTOEntity> getAll() {
-        return petService.getAll();
+    public Page<PetDTO> getAll(@SortDefault(sort = "creationDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        return petService.getAll(pageable);
     }
 
     @ApiOperation(value = "Find pet by id", response = PetDTO.class)
