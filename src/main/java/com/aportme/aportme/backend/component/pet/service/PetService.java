@@ -95,7 +95,7 @@ public class PetService {
             throw new Exception("Pet with id " + id + " not found");
         }
         Pet pet = petFromDB.get();
-        pictureRepository.findAllByPet(pet).forEach((pic) -> pictureService.delete(pic.getId()));
+        pictureService.delete(pictureRepository.findAllByPet(pet).stream().map(PetPicture::getId).collect(Collectors.toList()));
 
         petRepository.delete(pet);
     }
