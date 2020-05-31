@@ -16,9 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -88,16 +86,11 @@ public class FoundationInfoService {
         return entityDTOConverter.convertToDto(foundationInfoRepository.save(dbFoundationInfo), new FoundationInfoDTO());
     }
 
-    public void uploadLogo(Long id, MultipartFile foundationLogo) throws Exception {
+    public void uploadLogo(Long id, String base64Logo) throws Exception {
         FoundationInfo foundationInfo = getFoundationInfoFromDB(id);
 
-        try {
-            byte[] logoBytes = foundationLogo.getBytes();
-            foundationInfo.setFoundationLogo(Base64.getEncoder().encodeToString(logoBytes));
-            foundationInfoRepository.save(foundationInfo);
-        } catch (Exception ex) {
-            throw new Exception(ex.getMessage());
-        }
+        foundationInfo.setFoundationLogo(base64Logo);
+        foundationInfoRepository.save(foundationInfo);
     }
 
     private FoundationInfo getFoundationInfoFromDB(Long id) throws Exception {
