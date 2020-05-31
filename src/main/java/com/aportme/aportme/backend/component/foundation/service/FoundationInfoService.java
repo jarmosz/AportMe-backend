@@ -1,17 +1,20 @@
 package com.aportme.aportme.backend.component.foundation.service;
 
 import com.aportme.aportme.backend.component.address.service.AddressService;
-import com.aportme.aportme.backend.component.foundation.repository.FoundationInfoRepository;
-import com.aportme.aportme.backend.component.foundation.entity.FoundationInfo;
-import com.aportme.aportme.backend.utils.dto.DTOEntity;
 import com.aportme.aportme.backend.component.foundation.dto.AddFoundationDTO;
 import com.aportme.aportme.backend.component.foundation.dto.FoundationInfoDTO;
 import com.aportme.aportme.backend.component.foundation.dto.UpdateFoundationDTO;
+import com.aportme.aportme.backend.component.foundation.entity.FoundationInfo;
+import com.aportme.aportme.backend.component.foundation.repository.FoundationInfoRepository;
 import com.aportme.aportme.backend.component.user.entity.User;
 import com.aportme.aportme.backend.component.user.repository.UserRepository;
-import com.aportme.aportme.backend.utils.dto.EntityDTOConverter;
 import com.aportme.aportme.backend.utils.UtilsService;
+import com.aportme.aportme.backend.utils.dto.DTOEntity;
+import com.aportme.aportme.backend.utils.dto.EntityDTOConverter;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,11 +32,15 @@ public class FoundationInfoService {
     private final EntityDTOConverter entityDTOConverter;
     private final AddressService addressService;
 
-    public List<DTOEntity> getAll() {
-        return foundationInfoRepository.findAll()
+    public Page<FoundationInfoDTO> getAll(Pageable pageable) {
+        Page<FoundationInfo> foundationInfosFromDB = foundationInfoRepository.findAll(pageable);
+        List<FoundationInfoDTO> foundationInfos = foundationInfosFromDB
+                .getContent()
                 .stream()
-                .map((foundationInfo -> entityDTOConverter.convertToDto(foundationInfo, new FoundationInfoDTO())))
+                .map((foundationInfo -> (FoundationInfoDTO) entityDTOConverter.convertToDto(foundationInfo, new FoundationInfoDTO())))
                 .collect(Collectors.toList());
+
+        return new PageImpl<>(foundationInfos, pageable, foundationInfosFromDB.getTotalElements());
     }
 
     public DTOEntity getById(Long id) {
@@ -88,14 +95,14 @@ public class FoundationInfoService {
             byte[] logoBytes = foundationLogo.getBytes();
             foundationInfo.setFoundationLogo(Base64.getEncoder().encodeToString(logoBytes));
             foundationInfoRepository.save(foundationInfo);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             throw new Exception(ex.getMessage());
         }
     }
 
     private FoundationInfo getFoundationInfoFromDB(Long id) throws Exception {
         Optional<FoundationInfo> foundationInfoFromDB = foundationInfoRepository.findById(id);
-        if(foundationInfoFromDB.isEmpty()) {
+        if (foundationInfoFromDB.isEmpty()) {
             throw new Exception("Foundation not found");
         }
         return foundationInfoFromDB.get();

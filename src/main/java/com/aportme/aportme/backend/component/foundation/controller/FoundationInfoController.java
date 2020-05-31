@@ -7,10 +7,12 @@ import com.aportme.aportme.backend.component.foundation.dto.FoundationInfoDTO;
 import com.aportme.aportme.backend.component.foundation.dto.UpdateFoundationDTO;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.SortDefault;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @CrossOrigin
 @AllArgsConstructor
@@ -22,8 +24,8 @@ public class FoundationInfoController {
 
     @ApiOperation(value = "Find all foundations", response = FoundationInfoDTO.class)
     @GetMapping
-    public List<DTOEntity> getAll() {
-        return foundationInfoService.getAll();
+    public Page<FoundationInfoDTO> getAll(@SortDefault(value = "name", direction = Sort.Direction.DESC) Pageable pageable) {
+        return foundationInfoService.getAll(pageable);
     }
 
     @ApiOperation(value = "Find foundation by id", response = FoundationInfoDTO.class)
