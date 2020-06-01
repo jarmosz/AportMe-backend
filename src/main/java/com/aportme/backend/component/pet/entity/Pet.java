@@ -1,7 +1,6 @@
 package com.aportme.backend.component.pet.entity;
 
 import com.aportme.backend.component.foundation.entity.FoundationInfo;
-import com.aportme.aportme.backend.component.pet.enums.*;
 import com.aportme.backend.component.pet.enums.*;
 import com.aportme.backend.component.userInfo.entity.UserInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
