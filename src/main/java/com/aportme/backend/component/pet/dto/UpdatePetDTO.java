@@ -1,6 +1,5 @@
 package com.aportme.backend.component.pet.dto;
 
-import com.aportme.aportme.backend.component.pet.enums.*;
 import com.aportme.backend.component.pet.enums.*;
 import com.aportme.backend.utils.dto.DTOEntity;
 import lombok.Data;
