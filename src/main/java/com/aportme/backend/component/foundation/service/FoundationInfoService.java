@@ -1,16 +1,16 @@
 package com.aportme.backend.component.foundation.service;
 
-import com.aportme.aportme.backend.component.address.service.AddressService;
-import com.aportme.aportme.backend.component.foundation.dto.AddFoundationDTO;
-import com.aportme.aportme.backend.component.foundation.dto.FoundationInfoDTO;
-import com.aportme.aportme.backend.component.foundation.dto.UpdateFoundationDTO;
-import com.aportme.aportme.backend.component.foundation.entity.FoundationInfo;
-import com.aportme.aportme.backend.component.foundation.repository.FoundationInfoRepository;
-import com.aportme.aportme.backend.component.user.entity.User;
-import com.aportme.aportme.backend.component.user.repository.UserRepository;
-import com.aportme.aportme.backend.utils.UtilsService;
-import com.aportme.aportme.backend.utils.dto.DTOEntity;
-import com.aportme.aportme.backend.utils.dto.EntityDTOConverter;
+import com.aportme.backend.component.address.service.AddressService;
+import com.aportme.backend.component.foundation.dto.AddFoundationDTO;
+import com.aportme.backend.component.foundation.dto.FoundationInfoDTO;
+import com.aportme.backend.component.foundation.dto.UpdateFoundationDTO;
+import com.aportme.backend.component.foundation.entity.FoundationInfo;
+import com.aportme.backend.component.foundation.repository.FoundationInfoRepository;
+import com.aportme.backend.component.user.entity.User;
+import com.aportme.backend.component.user.repository.UserRepository;
+import com.aportme.backend.utils.UtilsService;
+import com.aportme.backend.utils.dto.DTOEntity;
+import com.aportme.backend.utils.dto.EntityDTOConverter;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;

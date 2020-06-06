@@ -1,10 +1,10 @@
 package com.aportme.backend.component.foundation.controller;
 
-import com.aportme.aportme.backend.component.foundation.dto.AddFoundationDTO;
-import com.aportme.aportme.backend.component.foundation.dto.FoundationInfoDTO;
-import com.aportme.aportme.backend.component.foundation.dto.UpdateFoundationDTO;
-import com.aportme.aportme.backend.component.foundation.service.FoundationInfoService;
-import com.aportme.aportme.backend.utils.dto.DTOEntity;
+import com.aportme.backend.component.foundation.dto.AddFoundationDTO;
+import com.aportme.backend.component.foundation.dto.FoundationInfoDTO;
+import com.aportme.backend.component.foundation.dto.UpdateFoundationDTO;
+import com.aportme.backend.component.foundation.service.FoundationInfoService;
+import com.aportme.backend.utils.dto.DTOEntity;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
