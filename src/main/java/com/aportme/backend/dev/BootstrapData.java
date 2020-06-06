@@ -6,7 +6,6 @@ import com.aportme.backend.component.foundation.entity.FoundationInfo;
 import com.aportme.backend.component.foundation.repository.FoundationInfoRepository;
 import com.aportme.backend.component.pet.entity.Pet;
 import com.aportme.backend.component.pet.entity.PetPicture;
-import com.aportme.aportme.backend.component.pet.enums.*;
 import com.aportme.backend.component.pet.enums.*;
 import com.aportme.backend.component.user.enums.Role;
 import com.aportme.backend.component.user.entity.User;
