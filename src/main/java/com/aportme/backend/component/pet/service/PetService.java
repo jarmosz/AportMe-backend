@@ -1,17 +1,21 @@
 package com.aportme.backend.component.pet.service;
 
-import com.aportme.aportme.backend.component.foundation.entity.FoundationInfo;
-import com.aportme.aportme.backend.component.foundation.repository.FoundationInfoRepository;
-import com.aportme.aportme.backend.component.pet.dto.AddPetDTO;
-import com.aportme.aportme.backend.component.pet.dto.PetDTO;
-import com.aportme.aportme.backend.component.pet.dto.UpdatePetDTO;
-import com.aportme.aportme.backend.component.pet.entity.Pet;
-import com.aportme.aportme.backend.component.pet.repository.PetRepository;
-import com.aportme.aportme.backend.component.pet.repository.PictureRepository;
-import com.aportme.aportme.backend.utils.UtilsService;
-import com.aportme.aportme.backend.utils.dto.DTOEntity;
-import com.aportme.aportme.backend.utils.dto.EntityDTOConverter;
+import com.aportme.backend.component.foundation.entity.FoundationInfo;
+import com.aportme.backend.component.foundation.repository.FoundationInfoRepository;
+import com.aportme.backend.component.pet.dto.AddPetDTO;
+import com.aportme.backend.component.pet.dto.PetDTO;
+import com.aportme.backend.component.pet.dto.UpdatePetDTO;
+import com.aportme.backend.component.pet.entity.Pet;
+import com.aportme.backend.component.pet.entity.PetPicture;
+import com.aportme.backend.component.pet.repository.PetRepository;
+import com.aportme.backend.component.pet.repository.PictureRepository;
+import com.aportme.backend.utils.UtilsService;
+import com.aportme.backend.utils.dto.DTOEntity;
+import com.aportme.backend.utils.dto.EntityDTOConverter;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -92,7 +96,12 @@ public class PetService {
             throw new Exception("Pet with id " + id + " not found");
         }
         Pet pet = petFromDB.get();
-        pictureService.delete(pictureRepository.findAllByPet(pet).stream().map(PetPicture::getId).collect(Collectors.toList()));
+        List<Long> picturesIds = pictureRepository.findAllByPet(pet)
+                .stream()
+                .map(PetPicture::getId)
+                .collect(Collectors.toList());
+
+        pictureService.delete(picturesIds);
 
         petRepository.delete(pet);
     }
