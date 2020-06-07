@@ -23,7 +23,7 @@ public class FoundationInfoController {
 
     @ApiOperation(value = "Find all foundations", response = FoundationInfoDTO.class)
     @GetMapping
-    public Page<FoundationInfoDTO> getAll(@SortDefault(value = "name", direction = Sort.Direction.DESC) Pageable pageable) {
+    public Page<FoundationInfoDTO> getAll(@SortDefault(value = "name", direction = Sort.Direction.ASC) Pageable pageable) {
         return foundationInfoService.getAll(pageable);
     }
 
