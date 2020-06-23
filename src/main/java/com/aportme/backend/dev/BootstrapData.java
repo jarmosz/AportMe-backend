@@ -1,5 +1,7 @@
 package com.aportme.backend.dev;
 
+import com.aportme.backend.component.activationToken.entity.ActivationToken;
+import com.aportme.backend.component.activationToken.repository.ActivationTokenRepository;
 import com.aportme.backend.component.address.entity.Address;
 import com.aportme.backend.component.address.repository.AddressRepository;
 import com.aportme.backend.component.foundation.entity.FoundationInfo;
@@ -15,6 +17,7 @@ import com.aportme.backend.component.pet.repository.PetRepository;
 import com.aportme.backend.component.pet.repository.PictureRepository;
 import com.aportme.backend.component.userInfo.repository.UserInfoRepository;
 import lombok.RequiredArgsConstructor;
+import org.joda.time.DateTime;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
@@ -35,6 +38,7 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
     private final FoundationInfoRepository foundationInfoRepository;
     private final UserInfoRepository userInfoRepository;
     private final AddressRepository addressRepository;
+    private final ActivationTokenRepository activationTokenRepository;
     private final PetRepository petRepository;
     private final PictureRepository pictureRepository;
 
@@ -84,6 +88,7 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
         user.setEmail(email);
         user.setPassword(password);
         user.setRole(Role.USER);
+        user.setActive(true);
         userRepository.save(user);
         UserInfo userInfo = new UserInfo();
         userInfo.setPhoneNumber(phoneNumber);
@@ -92,6 +97,11 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
         userInfo.setAddress(address);
         userInfo.setUser(user);
         userInfoRepository.save(userInfo);
+        ActivationToken activationToken = new ActivationToken();
+        activationToken.setToken("2945729834n34h9d7h573h2375dh273h76ch29376");
+        activationToken.setUser(user);
+        activationToken.setExpiryDate(new DateTime().plusMinutes(1440));
+        activationTokenRepository.save(activationToken);
     }
 
     private void createFoundation(String email, String password, String phoneNumber, String description, String name, String nip, Address address) {
