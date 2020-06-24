@@ -1,16 +1,16 @@
 package com.aportme.backend.component.userInfo.service;
 
 import com.aportme.backend.component.address.service.AddressService;
-import com.aportme.backend.component.userInfo.entity.UserInfo;
-import com.aportme.backend.component.userInfo.repository.UserInfoRepository;
-import com.aportme.backend.utils.dto.DTOEntity;
+import com.aportme.backend.component.user.entity.User;
+import com.aportme.backend.component.user.repository.UserRepository;
 import com.aportme.backend.component.userInfo.dto.AddUserInfoDTO;
 import com.aportme.backend.component.userInfo.dto.UpdateUserInfoDTO;
 import com.aportme.backend.component.userInfo.dto.UserInfoDTO;
-import com.aportme.backend.component.user.entity.User;
-import com.aportme.backend.component.user.repository.UserRepository;
-import com.aportme.backend.utils.dto.EntityDTOConverter;
+import com.aportme.backend.component.userInfo.entity.UserInfo;
+import com.aportme.backend.component.userInfo.repository.UserInfoRepository;
 import com.aportme.backend.utils.UtilsService;
+import com.aportme.backend.utils.dto.DTOEntity;
+import com.aportme.backend.utils.dto.EntityDTOConverter;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

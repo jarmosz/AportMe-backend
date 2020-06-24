@@ -1,9 +1,9 @@
 package com.aportme.backend.component.address.controller;
 
-import com.aportme.backend.component.address.service.AddressService;
 import com.aportme.backend.component.address.dto.AddOrUpdateAddressDTO;
-import com.aportme.backend.utils.dto.DTOEntity;
 import com.aportme.backend.component.address.dto.AddressDTO;
+import com.aportme.backend.component.address.service.AddressService;
+import com.aportme.backend.utils.dto.DTOEntity;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;

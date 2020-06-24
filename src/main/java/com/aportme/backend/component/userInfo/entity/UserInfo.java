@@ -1,8 +1,8 @@
 package com.aportme.backend.component.userInfo.entity;
 
 import com.aportme.backend.component.address.entity.Address;
-import com.aportme.backend.component.user.entity.User;
 import com.aportme.backend.component.pet.entity.Pet;
+import com.aportme.backend.component.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
