@@ -8,8 +8,6 @@ import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-
 @CrossOrigin
 @AllArgsConstructor
 @RestController
@@ -26,7 +24,7 @@ public class UserController {
 
     @ApiOperation(value = "Register new user")
     @PostMapping("/register")
-    public void registerUser(@RequestBody User user, HttpServletRequest request) {
-        userService.registerUser(user, request);
+    public void registerUser(@RequestBody User user) {
+        userService.registerUser(user);
     }
 }

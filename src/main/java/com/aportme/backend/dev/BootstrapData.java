@@ -9,12 +9,12 @@ import com.aportme.backend.component.foundation.repository.FoundationInfoReposit
 import com.aportme.backend.component.pet.entity.Pet;
 import com.aportme.backend.component.pet.entity.PetPicture;
 import com.aportme.backend.component.pet.enums.*;
-import com.aportme.backend.component.user.enums.Role;
-import com.aportme.backend.component.user.entity.User;
-import com.aportme.backend.component.user.repository.UserRepository;
-import com.aportme.backend.component.userInfo.entity.UserInfo;
 import com.aportme.backend.component.pet.repository.PetRepository;
 import com.aportme.backend.component.pet.repository.PictureRepository;
+import com.aportme.backend.component.user.entity.User;
+import com.aportme.backend.component.user.enums.Role;
+import com.aportme.backend.component.user.repository.UserRepository;
+import com.aportme.backend.component.userInfo.entity.UserInfo;
 import com.aportme.backend.component.userInfo.repository.UserInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.joda.time.DateTime;

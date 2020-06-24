@@ -6,8 +6,8 @@ import lombok.Setter;
 import org.joda.time.DateTime;
 import org.springframework.context.ApplicationEvent;
 
-@Setter
 @Getter
+@Setter
 public class OnRegistrationCompleteEvent extends ApplicationEvent {
 
     private String appUrl;
