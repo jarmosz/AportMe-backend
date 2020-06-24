@@ -1,25 +1,27 @@
 package com.aportme.backend.component.activationToken.listener;
 
 import com.aportme.backend.component.activationToken.event.OnRegistrationCompleteEvent;
-import com.aportme.backend.component.activationToken.repository.ActivationTokenRepository;
-import com.aportme.backend.component.user.entity.User;
+import com.aportme.backend.component.activationToken.service.ActivationEmailBuilderService;
+import com.aportme.backend.component.activationToken.service.ActivationTokenService;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.MessageSource;
-import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.Locale;
 import java.util.UUID;
 
 @Component
 @AllArgsConstructor
 public class ActivationTokenListener implements ApplicationListener<OnRegistrationCompleteEvent> {
 
-    private MessageSource messages;
+    private ActivationTokenService activationTokenService;
+    private ActivationEmailBuilderService activationEmailBuilderService;
     private JavaMailSender mailSender;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public void onApplicationEvent(OnRegistrationCompleteEvent onRegistrationCompleteEvent) {
@@ -27,10 +29,26 @@ public class ActivationTokenListener implements ApplicationListener<OnRegistrati
     }
 
     private void confirmRegistration(OnRegistrationCompleteEvent event) {
-        SimpleMailMessage email = new SimpleMailMessage();
-        email.setTo("jarmoszw@gmail.com");
-        email.setSubject("Testowyy");
-        email.setText("Hello test!");
-        mailSender.send(email);
+
+        String recipient = event.getUser().getEmail();
+        String token = bCryptPasswordEncoder.encode(UUID.randomUUID().toString());
+
+        activationTokenService.saveToken(event.getUser(), token);
+
+        String confirmationUrl = event.getAppUrl() + "/activateAccount?token=" + token;
+
+        MimeMessagePreparator messagePreparator = mimeMessage -> {
+            MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
+            messageHelper.setFrom("aportme@gmail.com");
+            messageHelper.setTo(recipient);
+            messageHelper.setSubject("Aktywuj swoje konto w aplikacji");
+            String content = activationEmailBuilderService.build(confirmationUrl);
+            messageHelper.setText(content, true);
+        };
+        try {
+            mailSender.send(messagePreparator);
+        } catch (MailException e) {
+            // runtime exception; compiler will not force you to handle it
+        }
     }
 }
