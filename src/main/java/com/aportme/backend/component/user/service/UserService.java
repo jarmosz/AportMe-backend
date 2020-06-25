@@ -12,6 +12,7 @@ import com.aportme.backend.utils.dto.DTOEntity;
 import com.aportme.backend.utils.dto.EntityDTOConverter;
 import lombok.AllArgsConstructor;
 import org.joda.time.DateTime;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -37,27 +38,29 @@ public class UserService {
     }
 
     private boolean validateEmail(String email){
-
-        String regex = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)])";
-        return email.matches(regex);
+        // General Email Regex (RFC 5322 Official Standard)
+        String emailRegexPattern = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)])";
+        return email.matches(emailRegexPattern);
     }
 
     private boolean validatePassword(String password){
-        return password.length() > 8;
+        // password length >= 8 and <= 15, should contain at least one big character, small character and one digit.
+        String passwordRegexPattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,15}$";
+        return password.matches(passwordRegexPattern);
     }
 
     public void registerUser(User user){
-
         if(validateEmail(user.getEmail()) && validatePassword(user.getPassword())){
-            Optional<User> userFromDB = Optional.ofNullable(userRepository.findByEmail(user.getEmail()));
-            if(!userFromDB.isEmpty()) {
+            Optional<User> userFromDB = userRepository.findByEmail(user.getEmail());
+            if(userFromDB.isEmpty()) {
+                user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+                user.setRole(Role.USER);
+                user.setActive(false);
+                userRepository.save(user);
+                eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user, DateTime.now()));
+            } else {
                 throw new UserAlreadyExistsException();
             }
-            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-            user.setRole(Role.USER);
-            user.setActive(false);
-            userRepository.save(user);
-            eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user, DateTime.now(), "http://localhost:8080"));
         }
         else {
             throw new WrongUserCredentialsException();

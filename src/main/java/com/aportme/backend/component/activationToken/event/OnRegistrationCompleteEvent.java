@@ -10,14 +10,12 @@ import org.springframework.context.ApplicationEvent;
 @Setter
 public class OnRegistrationCompleteEvent extends ApplicationEvent {
 
-    private String appUrl;
     private DateTime registrationTime;
     private User user;
 
-    public OnRegistrationCompleteEvent(User user, DateTime registrationTime, String appUrl) {
+    public OnRegistrationCompleteEvent(User user, DateTime registrationTime) {
         super(user);
         this.user = user;
         this.registrationTime = registrationTime;
-        this.appUrl = appUrl;
     }
 }
