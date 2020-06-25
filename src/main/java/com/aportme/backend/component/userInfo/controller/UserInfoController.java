@@ -1,10 +1,10 @@
 package com.aportme.backend.component.userInfo.controller;
 
-import com.aportme.backend.component.userInfo.service.UserInfoService;
-import com.aportme.backend.utils.dto.DTOEntity;
 import com.aportme.backend.component.userInfo.dto.AddUserInfoDTO;
 import com.aportme.backend.component.userInfo.dto.UpdateUserInfoDTO;
 import com.aportme.backend.component.userInfo.dto.UserInfoDTO;
+import com.aportme.backend.component.userInfo.service.UserInfoService;
+import com.aportme.backend.utils.dto.DTOEntity;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;

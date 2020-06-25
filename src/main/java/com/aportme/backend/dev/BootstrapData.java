@@ -1,5 +1,7 @@
 package com.aportme.backend.dev;
 
+import com.aportme.backend.component.activationToken.entity.ActivationToken;
+import com.aportme.backend.component.activationToken.repository.ActivationTokenRepository;
 import com.aportme.backend.component.address.entity.Address;
 import com.aportme.backend.component.address.repository.AddressRepository;
 import com.aportme.backend.component.foundation.entity.FoundationInfo;
@@ -7,14 +9,15 @@ import com.aportme.backend.component.foundation.repository.FoundationInfoReposit
 import com.aportme.backend.component.pet.entity.Pet;
 import com.aportme.backend.component.pet.entity.PetPicture;
 import com.aportme.backend.component.pet.enums.*;
-import com.aportme.backend.component.user.enums.Role;
-import com.aportme.backend.component.user.entity.User;
-import com.aportme.backend.component.user.repository.UserRepository;
-import com.aportme.backend.component.userInfo.entity.UserInfo;
 import com.aportme.backend.component.pet.repository.PetRepository;
 import com.aportme.backend.component.pet.repository.PictureRepository;
+import com.aportme.backend.component.user.entity.User;
+import com.aportme.backend.component.user.enums.Role;
+import com.aportme.backend.component.user.repository.UserRepository;
+import com.aportme.backend.component.userInfo.entity.UserInfo;
 import com.aportme.backend.component.userInfo.repository.UserInfoRepository;
 import lombok.RequiredArgsConstructor;
+import org.joda.time.DateTime;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
@@ -35,6 +38,7 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
     private final FoundationInfoRepository foundationInfoRepository;
     private final UserInfoRepository userInfoRepository;
     private final AddressRepository addressRepository;
+    private final ActivationTokenRepository activationTokenRepository;
     private final PetRepository petRepository;
     private final PictureRepository pictureRepository;
 
@@ -63,7 +67,8 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
     private void createData() {
         List<Address> addresses = createAddresses();
         for (int i = 0; i < 4; i++) {
-            createUser("user" + i + "@gmail.com", UUID.randomUUID().toString(), phoneNumbers[i], names[i], surnames[i], addresses.get(i));
+            User user = createUser("user" + i + "@gmail.com", UUID.randomUUID().toString());
+            createUserInfo(user, phoneNumbers[i], names[i], surnames[i], addresses.get(i));
         }
         for (int i = 0; i < 4; i++) {
             createFoundation("foundation" + i + "@gmail.com", UUID.randomUUID().toString(), phoneNumbers[i], "Opis fundacji", foundationNames[i], String.format("%10d", i), addresses.get(i));
@@ -79,12 +84,23 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
         return addresses;
     }
 
-    private void createUser(String email, String password, String phoneNumber, String name, String surname, Address address) {
+    private User createUser(String email, String password) {
         User user = new User();
         user.setEmail(email);
         user.setPassword(password);
         user.setRole(Role.USER);
+        user.setActive(true);
         userRepository.save(user);
+        ActivationToken activationToken = new ActivationToken();
+        activationToken.setToken("2945729834n34h9d7h573h2375dh273h76ch29376");
+        activationToken.setUser(user);
+        activationToken.setExpiryDate(new DateTime().plusMinutes(1440));
+        activationTokenRepository.save(activationToken);
+
+        return user;
+    }
+
+    private void createUserInfo(User user, String phoneNumber, String name, String surname, Address address){
         UserInfo userInfo = new UserInfo();
         userInfo.setPhoneNumber(phoneNumber);
         userInfo.setName(name);
