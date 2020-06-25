@@ -7,8 +7,12 @@ import com.aportme.backend.component.user.event.SetActiveUserEvent;
 import lombok.AllArgsConstructor;
 import org.joda.time.DateTime;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.net.URI;
 import java.util.Optional;
 
 @Service
@@ -18,7 +22,7 @@ public class ActivationTokenService {
     private ActivationTokenRepository activationTokenRepository;
     private ApplicationEventPublisher eventPublisher;
 
-    public void saveToken(User user, String token){
+    public void saveToken(User user, String token) {
         ActivationToken activationToken = new ActivationToken();
         activationToken.setUser(user);
         activationToken.setToken(token);
@@ -26,18 +30,21 @@ public class ActivationTokenService {
         activationTokenRepository.save(activationToken);
     }
 
-    public boolean confirmActivationToken(String token){
+    public ResponseEntity<Object> confirmActivationToken(String token) {
         Optional<ActivationToken> activationTokenFromDB = activationTokenRepository.findActivationTokenByToken(token);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        URI redirectAddress = URI.create("http://localhost:8081/accountNotActivated");
 
-        if(!activationTokenFromDB.isEmpty()){
+        if (activationTokenFromDB.isPresent()) {
             ActivationToken activationToken = activationTokenFromDB.get();
-            if(new DateTime().isBefore(activationToken.getExpiryDate())) {
+            if (new DateTime().isBefore(activationToken.getExpiryDate())) {
                 Long activeUserId = activationToken.getUser().getId();
                 eventPublisher.publishEvent(new SetActiveUserEvent(activeUserId));
                 activationTokenRepository.delete(activationToken);
-                return true;
+                redirectAddress = URI.create("http://localhost:8081/accountActivationComplete");
             }
         }
-        return false;
+        httpHeaders.setLocation(redirectAddress);
+        return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
     }
 }

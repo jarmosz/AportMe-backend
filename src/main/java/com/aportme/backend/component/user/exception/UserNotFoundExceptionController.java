@@ -13,4 +13,3 @@ public class UserNotFoundExceptionController {
         return new ResponseEntity<>("User does not exists in the database", HttpStatus.NOT_FOUND);
     }
 }
-
