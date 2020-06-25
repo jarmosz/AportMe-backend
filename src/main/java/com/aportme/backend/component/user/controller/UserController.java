@@ -1,6 +1,7 @@
 package com.aportme.backend.component.user.controller;
 
 import com.aportme.backend.component.user.dto.UserDTO;
+import com.aportme.backend.component.user.entity.User;
 import com.aportme.backend.component.user.service.UserService;
 import com.aportme.backend.utils.dto.DTOEntity;
 import io.swagger.annotations.ApiOperation;
@@ -19,5 +20,11 @@ public class UserController {
     @GetMapping("/{id}")
     public DTOEntity getById(@PathVariable Long id) {
         return  userService.getUserById(id);
+    }
+
+    @ApiOperation(value = "Register new user")
+    @PostMapping("/register")
+    public void registerUser(@RequestBody User user) {
+        userService.registerUser(user);
     }
 }

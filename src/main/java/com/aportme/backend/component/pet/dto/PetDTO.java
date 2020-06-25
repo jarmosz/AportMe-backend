@@ -1,10 +1,10 @@
 package com.aportme.backend.component.pet.dto;
 
-import com.aportme.backend.component.pet.enums.*;
-import com.aportme.backend.utils.dto.DTOEntity;
 import com.aportme.backend.component.foundation.dto.FoundationInfoForPetDTO;
 import com.aportme.backend.component.pet.dto.pictures.PetPictureDTO;
+import com.aportme.backend.component.pet.enums.*;
 import com.aportme.backend.component.user.dto.UserDTO;
+import com.aportme.backend.utils.dto.DTOEntity;
 import lombok.Data;
 
 import java.time.LocalDateTime;
