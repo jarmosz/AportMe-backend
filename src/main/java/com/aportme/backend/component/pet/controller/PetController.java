@@ -1,10 +1,10 @@
 package com.aportme.backend.component.pet.controller;
 
-import com.aportme.backend.utils.dto.DTOEntity;
 import com.aportme.backend.component.pet.dto.AddPetDTO;
 import com.aportme.backend.component.pet.dto.PetDTO;
 import com.aportme.backend.component.pet.dto.UpdatePetDTO;
 import com.aportme.backend.component.pet.service.PetService;
+import com.aportme.backend.utils.dto.DTOEntity;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
