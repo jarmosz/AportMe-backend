@@ -12,6 +12,9 @@ import com.aportme.backend.utils.UtilsService;
 import com.aportme.backend.utils.dto.DTOEntity;
 import com.aportme.backend.utils.dto.EntityDTOConverter;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,11 +30,15 @@ public class FoundationInfoService {
     private final EntityDTOConverter entityDTOConverter;
     private final AddressService addressService;
 
-    public List<DTOEntity> getAll() {
-        return foundationInfoRepository.findAll()
+    public Page<FoundationInfoDTO> getAll(Pageable pageable) {
+        Page<FoundationInfo> foundationInfosFromDB = foundationInfoRepository.findAll(pageable);
+        List<FoundationInfoDTO> foundationInfos = foundationInfosFromDB
+                .getContent()
                 .stream()
-                .map((foundationInfo -> entityDTOConverter.convertToDto(foundationInfo, new FoundationInfoDTO())))
+                .map((foundationInfo -> (FoundationInfoDTO) entityDTOConverter.convertToDto(foundationInfo, new FoundationInfoDTO())))
                 .collect(Collectors.toList());
+
+        return new PageImpl<>(foundationInfos, pageable, foundationInfosFromDB.getTotalElements());
     }
 
     public DTOEntity getById(Long id) {
