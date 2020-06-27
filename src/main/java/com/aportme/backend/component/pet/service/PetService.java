@@ -52,13 +52,14 @@ public class PetService {
         Pet dbPet = petFromDB.get();
         Pet convertedDTO = (Pet) entityDTOConverter.convertToEntity(new Pet(), petDTO);
         UtilsService.copyNonNullProperties(convertedDTO, dbPet);
+        dbPet.setAgeCategory(UtilsService.prepareAgeCategory(dbPet.getAge(), dbPet.getAgeSuffix()));
         return entityDTOConverter.convertToDto(petRepository.save(dbPet), new PetDTO());
     }
 
     public DTOEntity create(Long foundationId, AddPetDTO petDTO) throws Exception {
         Pet dbPet = new Pet();
         dbPet.setAge(petDTO.getAge());
-        dbPet.setAgeCategory(petDTO.getAgeCategory());
+        dbPet.setAgeCategory(UtilsService.prepareAgeCategory(petDTO.getAge(), petDTO.getAgeSuffix()));
         dbPet.setAgeSuffix(petDTO.getAgeSuffix());
         dbPet.setBehavioristNeeded(petDTO.getBehavioristNeeded());
         dbPet.setBehaviorToAnimals(petDTO.getBehaviorToAnimals());

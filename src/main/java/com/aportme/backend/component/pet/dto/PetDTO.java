@@ -48,8 +48,6 @@ public class PetDTO implements DTOEntity {
 
     private LocalDateTime creationDate;
 
-    private LocalDateTime updateDate;
-
     private List<PetPictureDTO> pictures = new ArrayList<>();
 
     private List<UserDTO> users = new ArrayList<>();

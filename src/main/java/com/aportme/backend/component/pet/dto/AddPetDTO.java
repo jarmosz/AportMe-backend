@@ -20,8 +20,6 @@ public class AddPetDTO {
 
     private AgeSuffix ageSuffix;
 
-    private AgeCategory ageCategory;
-
     private PetSize size;
 
     private PetSex sex;
