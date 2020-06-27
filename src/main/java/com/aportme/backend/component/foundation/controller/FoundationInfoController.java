@@ -27,8 +27,8 @@ public class FoundationInfoController {
 
     @ApiOperation(value = "Find foundation by id", response = FoundationInfoDTO.class)
     @GetMapping("/{id}")
-    public DTOEntity getById(@PathVariable Long id) {
-        return foundationInfoService.getById(id);
+    public DTOEntity getById(@PathVariable Long id, @RequestParam Boolean withPets) {
+        return foundationInfoService.getById(id, withPets);
     }
 
     @ApiOperation(value = "Search  foundation by pet id", response = FoundationInfoDTO.class)

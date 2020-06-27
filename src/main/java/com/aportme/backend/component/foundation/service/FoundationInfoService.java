@@ -3,6 +3,7 @@ package com.aportme.backend.component.foundation.service;
 import com.aportme.backend.component.address.service.AddressService;
 import com.aportme.backend.component.foundation.dto.AddFoundationDTO;
 import com.aportme.backend.component.foundation.dto.FoundationInfoDTO;
+import com.aportme.backend.component.foundation.dto.FoundationInfoWithoutPetsDTO;
 import com.aportme.backend.component.foundation.dto.UpdateFoundationDTO;
 import com.aportme.backend.component.foundation.entity.FoundationInfo;
 import com.aportme.backend.component.foundation.repository.FoundationInfoRepository;
@@ -34,12 +35,12 @@ public class FoundationInfoService {
                 .collect(Collectors.toList());
     }
 
-    public DTOEntity getById(Long id) {
+    public DTOEntity getById(Long id, Boolean withPets) {
         Optional<FoundationInfo> foundationInfoFromDB = foundationInfoRepository.findById(id);
         if (foundationInfoFromDB.isEmpty()) {
             return null;
         }
-        return entityDTOConverter.convertToDto(foundationInfoFromDB.get(), new FoundationInfoDTO());
+        return withPets ? entityDTOConverter.convertToDto(foundationInfoFromDB.get(), new FoundationInfoDTO()) : entityDTOConverter.convertToDto(foundationInfoFromDB.get(), new FoundationInfoWithoutPetsDTO());
     }
 
     public DTOEntity getByPetId(Long petId) {

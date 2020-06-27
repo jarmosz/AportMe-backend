@@ -1,6 +1,6 @@
 package com.aportme.backend.component.pet.dto;
 
-import com.aportme.backend.component.foundation.dto.FoundationInfoForPetDTO;
+import com.aportme.backend.component.foundation.dto.FoundationInfoWithoutPetsDTO;
 import com.aportme.backend.component.pet.dto.pictures.PetPictureDTO;
 import com.aportme.backend.component.pet.enums.*;
 import com.aportme.backend.component.user.dto.UserDTO;
@@ -44,7 +44,7 @@ public class PetDTO implements DTOEntity {
 
     private String description;
 
-    private FoundationInfoForPetDTO foundationInfo;
+    private FoundationInfoWithoutPetsDTO foundationInfo;
 
     private LocalDateTime creationDate;
 
