@@ -23,6 +23,10 @@ public class FoundationInfo {
 
     private String nip;
 
+    private String krs;
+
+    private String accountNumber;
+
     private String phoneNumber;
 
     private String description;
