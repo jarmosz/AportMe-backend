@@ -53,7 +53,7 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
     private String[] behaviors = {"przyjazny", "musi się oswoić", "trochę agresywny", "wymaga uwagi", "wychowywać, obserwować"};
     private String[] descriptions = {"Trochę dłuższy opis dotyczący zwierzęta w którym można zawrzeć dodatkowe informacje nieuwzględnione w wyróżnionych polach"};
 
-    BootstrapPictures bootstrapPictures = new BootstrapPictures();
+    private BootstrapPictures bootstrapPictures = new BootstrapPictures();
 
     private String[] base64Pictures = bootstrapPictures.getPictures();
     private String base64Logo = bootstrapPictures.getFoundationLogo();
@@ -71,7 +71,7 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
             createUserInfo(user, phoneNumbers[i], names[i], surnames[i], addresses.get(i));
         }
         for (int i = 0; i < 4; i++) {
-            createFoundation("foundation" + i + "@gmail.com", UUID.randomUUID().toString(), phoneNumbers[i], "Opis fundacji", foundationNames[i], String.format("%10d", i), addresses.get(i));
+            createFoundation("foundation" + i + "@gmail.com", UUID.randomUUID().toString(), phoneNumbers[i], "Opis fundacji", foundationNames[i], String.format("%10d", i), addresses.get(i), "0000133156", "82 1020 5226 0000 6102 0417 7895 ");
         }
     }
 
@@ -110,7 +110,7 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
         userInfoRepository.save(userInfo);
     }
 
-    private void createFoundation(String email, String password, String phoneNumber, String description, String name, String nip, Address address) {
+    private void createFoundation(String email, String password, String phoneNumber, String description, String name, String nip, Address address, String krs, String accountNumber) {
         User foundation = new User();
         foundation.setEmail(email);
         foundation.setPassword(password);
@@ -119,6 +119,8 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
         FoundationInfo foundationInfo = new FoundationInfo();
         foundationInfo.setName(name);
         foundationInfo.setNip(nip);
+        foundationInfo.setKrs(krs);
+        foundationInfo.setAccountNumber(accountNumber);
         foundationInfo.setFoundationLogo(base64Logo);
         foundationInfo.setDescription(description);
         foundationInfo.setAddress(address);
