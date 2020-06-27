@@ -66,6 +66,8 @@ public class FoundationInfoService {
         FoundationInfo dbFoundationInfo = new FoundationInfo();
         dbFoundationInfo.setName(foundationInfoDTO.getName());
         dbFoundationInfo.setNip(foundationInfoDTO.getNip());
+        dbFoundationInfo.setKrs(foundationInfoDTO.getKrs());
+        dbFoundationInfo.setAccountNumber(foundationInfoDTO.getAccountNumber());
         dbFoundationInfo.setPhoneNumber(foundationInfoDTO.getPhoneNumber());
         dbFoundationInfo.setAddress(addressService.create(foundationInfoDTO.getAddress()));
         dbFoundationInfo.setDescription(foundationInfoDTO.getDescription());
