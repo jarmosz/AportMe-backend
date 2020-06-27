@@ -1,5 +1,7 @@
 package com.aportme.backend.utils;
 
+import com.aportme.backend.component.pet.enums.AgeCategory;
+import com.aportme.backend.component.pet.enums.AgeSuffix;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -20,5 +22,15 @@ public class UtilsService {
                 .toArray(String[]::new);
 
         BeanUtils.copyProperties(source, target, emptyNames);
+    }
+
+    public static AgeCategory prepareAgeCategory(int age, AgeSuffix ageSuffix) {
+        if (age <= 5 && ageSuffix.equals(AgeSuffix.MONTHS)) {
+            return AgeCategory.YOUNG;
+        } else if (age > 3 && ageSuffix.equals(AgeSuffix.YEARS)) {
+            return AgeCategory.SENIOR;
+        } else {
+            return AgeCategory.NORMAL;
+        }
     }
 }

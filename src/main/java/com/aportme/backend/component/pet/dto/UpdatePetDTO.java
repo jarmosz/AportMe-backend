@@ -19,8 +19,6 @@ public class UpdatePetDTO implements DTOEntity {
 
     private AgeSuffix ageSuffix;
 
-    private AgeCategory ageCategory;
-
     private PetSize size;
 
     private String diseases;

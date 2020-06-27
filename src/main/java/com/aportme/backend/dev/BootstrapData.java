@@ -16,6 +16,7 @@ import com.aportme.backend.component.user.enums.Role;
 import com.aportme.backend.component.user.repository.UserRepository;
 import com.aportme.backend.component.userInfo.entity.UserInfo;
 import com.aportme.backend.component.userInfo.repository.UserInfoRepository;
+import com.aportme.backend.utils.UtilsService;
 import lombok.RequiredArgsConstructor;
 import org.joda.time.DateTime;
 import org.springframework.context.ApplicationListener;
@@ -53,7 +54,7 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
     private String[] behaviors = {"przyjazny", "musi się oswoić", "trochę agresywny", "wymaga uwagi", "wychowywać, obserwować"};
     private String[] descriptions = {"Trochę dłuższy opis dotyczący zwierzęta w którym można zawrzeć dodatkowe informacje nieuwzględnione w wyróżnionych polach"};
 
-    BootstrapPictures bootstrapPictures = new BootstrapPictures();
+    private BootstrapPictures bootstrapPictures = new BootstrapPictures();
 
     private String[] base64Pictures = bootstrapPictures.getPictures();
     private String base64Logo = bootstrapPictures.getFoundationLogo();
@@ -185,7 +186,7 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
     private void createPet(String name, String breed, int age, PetSex sex, AgeSuffix ageSuffix, PetSize petSize, PetType petType, String diseases, String behaviorToChildren, String behaviorToAnimals, Boolean trainingNeeded, Boolean behavioristNeeded, String description, FoundationInfo foundationInfo) {
         Pet pet = new Pet();
         pet.setAge(age);
-        pet.setAgeCategory(prepareAgeCategory(age, ageSuffix));
+        pet.setAgeCategory(UtilsService.prepareAgeCategory(age, ageSuffix));
         pet.setAgeSuffix(ageSuffix);
         pet.setBehavioristNeeded(behavioristNeeded);
         pet.setBehaviorToAnimals(behaviorToAnimals);
@@ -216,13 +217,4 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
         }
     }
 
-    private AgeCategory prepareAgeCategory(int age, AgeSuffix ageSuffix) {
-        if (age <= 5 && ageSuffix.equals(AgeSuffix.MONTHS)) {
-            return AgeCategory.YOUNG;
-        } else if (age > 3 && ageSuffix.equals(AgeSuffix.YEARS)) {
-            return AgeCategory.SENIOR;
-        } else {
-            return AgeCategory.NORMAL;
-        }
-    }
 }
