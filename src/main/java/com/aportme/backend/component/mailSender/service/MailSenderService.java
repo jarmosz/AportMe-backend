@@ -24,7 +24,7 @@ public class MailSenderService {
             MimeMessagePreparator messagePreparator = prepareMail(receiver, subject, content);
             mailSender.send(messagePreparator);
         } catch (MailException e) {
-            //TODO
+            //TODO Handle mail exceptions
         }
     }
 
