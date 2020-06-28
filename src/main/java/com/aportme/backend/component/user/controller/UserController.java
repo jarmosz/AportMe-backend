@@ -19,7 +19,7 @@ public class UserController {
     @ApiOperation(value = "Find user by id", response = UserDTO.class)
     @GetMapping("/{id}")
     public DTOEntity getById(@PathVariable Long id) {
-        return  userService.getUserById(id);
+        return userService.getUserById(id);
     }
 
     @ApiOperation(value = "Register new user")
