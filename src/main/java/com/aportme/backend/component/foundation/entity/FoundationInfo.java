@@ -25,6 +25,7 @@ public class FoundationInfo {
 
     private String phoneNumber;
 
+    @Lob
     private String description;
 
     @Lob
