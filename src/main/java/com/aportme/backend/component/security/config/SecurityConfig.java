@@ -24,6 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterAfter(jwtAuthorizationFilter, BasicAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/api/users/register").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/login").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers(HttpMethod.GET,"/activateAccount").permitAll()
                 .antMatchers(HttpMethod.GET,"/api/foundations").permitAll()
