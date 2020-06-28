@@ -47,14 +47,14 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
 
     private void createRealisticData() {
         List<Address> addresses = createAddresses();
-        createUserInfo(createUser("user1@gmail.com", "haslo1"), "567234123", "Jacek", "Krakowski", addresses.get(0));
-        createUserInfo(createUser("user2@gmail.com", "haslo2"), "789567345", "Dawid", "Wietrzych", addresses.get(1));
-        createUserInfo(createUser("user3@gmail.com", "haslo3"), "500400300", "Mateusz", "Lesiecki", addresses.get(2));
-        createUserInfo(createUser("user4@gmail.com", "haslo4"), "567678789", "Wojciech", "Jarmosz", addresses.get(3));
+        createUserInfo(createUser("user1@gmail.com", "Haslo123"), "567234123", "Jacek", "Krakowski", addresses.get(0));
+        createUserInfo(createUser("user2@gmail.com", "Haslo123"), "789567345", "Dawid", "Wietrzych", addresses.get(1));
+        createUserInfo(createUser("user3@gmail.com", "Haslo123"), "500400300", "Mateusz", "Lesiecki", addresses.get(2));
+        createUserInfo(createUser("user4@gmail.com", "Haslo123"), "567678789", "Wojciech", "Jarmosz", addresses.get(3));
 
         FoundationInfo foundation1 = createFoundation(
                 "adopcje.ttb@op.pl",
-                "haslo1",
+                "Haslo123",
                 "668 157 162",
                 "Jako organizacja czynnie działamy od grudnia 2014 roku.Znaleźliśmy w tym czasie dobre domy dla kilkuset psów. Staramy się zrzeszać wokół siebie właścicieli psów TTB z naszego regionu. Robimy to bo właśnie psy są naszymi towarzyszami, miłością i pasją. To psy, wokół których narosło najwięcej mitów i legend. Psy wzbudzające niezdrowe emocje i zainteresowanie.",
                 "TTB Poznań",
@@ -73,7 +73,7 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
 
         FoundationInfo foundation2 = createFoundation(
                 "kociszczecin@viva.org.pl",
-                "haslo2",
+                "Haslo123",
                 "504312213",
                 "Naszym celem jest  niesienie pomocy kotom ze Szczecina i okolic. Koty, które znajdują się pod naszą opieką, trafiają do nas prosto z ulicy, z miejsc które zagrażają ich życiu i gdzie nie powinny się urodzić.\n" +
                         "Nasze koty mieszkają w domach tymczasowych, a te w najcięższym stanie przebywają w szpitalu dla zwierząt. Leczymy je, socjalizujemy, a kiedy są gotowe do adopcji, szukamy im nowych domów. ",
