@@ -49,6 +49,7 @@ public class Pet {
 
     private Boolean behavioristNeeded;
 
+    @Lob
     private String description;
 
     @CreationTimestamp
