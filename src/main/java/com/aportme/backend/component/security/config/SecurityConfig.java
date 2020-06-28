@@ -26,7 +26,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/users/register").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers(HttpMethod.GET,"/activateAccount").permitAll()
-                .antMatchers(HttpMethod.POST,"/api/login").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/foundations").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/foundations/*").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/pets").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/pets/*").permitAll()
                 .anyRequest().authenticated();
                 // this disables session creation on Spring Security
         http.headers().frameOptions().disable();
