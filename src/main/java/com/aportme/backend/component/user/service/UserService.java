@@ -13,7 +13,7 @@ import com.aportme.backend.utils.dto.EntityDTOConverter;
 import lombok.AllArgsConstructor;
 import org.joda.time.DateTime;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -24,7 +24,7 @@ public class UserService {
 
     private final EntityDTOConverter entityDTOConverter;
     private UserRepository userRepository;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private PasswordEncoder passwordEncoder;
     private ApplicationEventPublisher eventPublisher;
 
     public DTOEntity getUserById(Long id) {
@@ -52,7 +52,7 @@ public class UserService {
         if(validateEmail(user.getEmail()) && validatePassword(user.getPassword())){
             Optional<User> userFromDB = userRepository.findByEmail(user.getEmail());
             if(userFromDB.isEmpty()) {
-                user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+                user.setPassword(passwordEncoder.encode(user.getPassword()));
                 user.setRole(Role.USER);
                 user.setActive(false);
                 userRepository.save(user);
