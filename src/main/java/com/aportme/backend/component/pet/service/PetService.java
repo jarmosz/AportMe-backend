@@ -13,6 +13,9 @@ import com.aportme.backend.utils.UtilsService;
 import com.aportme.backend.utils.dto.DTOEntity;
 import com.aportme.backend.utils.dto.EntityDTOConverter;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,11 +32,15 @@ public class PetService {
     private final PictureService pictureService;
     private final PictureRepository pictureRepository;
 
-    public List<DTOEntity> getAll() {
-        return petRepository.findAll()
-                .stream()
-                .map((pet -> entityDTOConverter.convertToDto(pet, new PetDTO())))
-                .collect(Collectors.toList());
+    public Page<PetDTO> getAll(Pageable pageable) {
+        Page<Pet> petsFromDB = petRepository.findAll(pageable);
+        List<PetDTO> pets = petsFromDB
+                                .getContent()
+                                .stream()
+                                .map(pet -> (PetDTO) entityDTOConverter.convertToDto(pet, new PetDTO()))
+                                .collect(Collectors.toList());
+
+        return new PageImpl<>(pets, pageable, petsFromDB.getTotalElements());
     }
 
     public DTOEntity getById(Long id) {
@@ -89,7 +96,12 @@ public class PetService {
             throw new Exception("Pet with id " + id + " not found");
         }
         Pet pet = petFromDB.get();
-        pictureService.delete(pictureRepository.findAllByPet(pet).stream().map(PetPicture::getId).collect(Collectors.toList()));
+        List<Long> picturesIds = pictureRepository.findAllByPet(pet)
+                .stream()
+                .map(PetPicture::getId)
+                .collect(Collectors.toList());
+
+        pictureService.delete(picturesIds);
 
         petRepository.delete(pet);
     }

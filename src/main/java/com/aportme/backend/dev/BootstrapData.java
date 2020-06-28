@@ -70,8 +70,8 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
             User user = createUser("user" + i + "@gmail.com", UUID.randomUUID().toString());
             createUserInfo(user, phoneNumbers[i], names[i], surnames[i], addresses.get(i));
         }
-        for (int i = 0; i < 4; i++) {
-            createFoundation("foundation" + i + "@gmail.com", UUID.randomUUID().toString(), phoneNumbers[i], "Opis fundacji", foundationNames[i], String.format("%10d", i), addresses.get(i), "0000133156", "82 1020 5226 0000 6102 0417 7895 ");
+        for (int i = 0; i < 36; i++) {
+            createFoundation("foundation" + i + "@gmail.com", UUID.randomUUID().toString(), phoneNumbers[i % 4], "Opis fundacji", foundationNames[i % 4] + " " + i, String.format("%10d", i), addresses.get(i % 4), "0000133156", "82 1020 5226 0000 6102 0417 7895");
         }
     }
 
