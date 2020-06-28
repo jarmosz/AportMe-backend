@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/account")
+@RequestMapping("/api/account/activation")
 public class ActivationTokenController {
 
     private final ActivationTokenService activationTokenService;
 
-    @GetMapping("/activation")
+    @GetMapping
     @ApiOperation("Activating user account by passing token in params.")
     public ResponseEntity<Object> activateAccount(@RequestParam("token") String token) {
         return activationTokenService.confirmActivationToken(token);
