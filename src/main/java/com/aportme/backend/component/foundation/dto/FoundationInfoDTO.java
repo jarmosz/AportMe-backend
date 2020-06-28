@@ -23,6 +23,10 @@ public class FoundationInfoDTO implements DTOEntity {
 
     private String foundationLogo;
 
+    private String krs;
+
+    private String accountNumber;
+
     private UserDTO user;
 
     private AddressDTO address;
