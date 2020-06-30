@@ -22,7 +22,7 @@ import java.util.Date;
 @Component
 public class JWTAuthorizationFilter extends GenericFilterBean {
 
-    private static final String HEADER_STRING = "X-Access-Token";
+    private static final String HEADER_STRING = "Authorization";
 
     @Value("${jwt.encryption.secret}")
     private String SECRET;
@@ -52,16 +52,20 @@ public class JWTAuthorizationFilter extends GenericFilterBean {
         if (token != null) {
             SecurityContextHolder.getContext().setAuthentication(getAuthentication(token));
         }
+
         chain.doFilter(httpRequest, httpResponse);
     }
 
     private Authentication getAuthentication(String token) {
         // parse the token.
+
         final String username;
         try {
+            String[] tokenParts = token.split(" ");
+            String mainToken = tokenParts[1];
             DecodedJWT jwt = JWT.require(Algorithm.HMAC256(SECRET.getBytes()))
                     .build()
-                    .verify(token);
+                    .verify(mainToken);
             username = jwt.getSubject();
         } catch (JWTVerificationException e) {
             return null;

@@ -6,6 +6,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import javax.servlet.http.HttpServletResponse;
@@ -33,7 +34,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,"/api/pets/*").permitAll()
                 .anyRequest().authenticated();
                 // this disables session creation on Spring Security
-        http.headers().frameOptions().disable();
+        http.headers().frameOptions().disable()
+                .and()
+        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.exceptionHandling().authenticationEntryPoint((request, response, authException) -> {
             response.setHeader("WWW-Authenticate", "Bearer");
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
