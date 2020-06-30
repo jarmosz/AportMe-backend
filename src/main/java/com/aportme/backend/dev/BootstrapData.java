@@ -113,7 +113,7 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
 
             Pet pet2 = createPet(
                     "Aron",
-                    "",
+                    "Bulterier",
                     2,
                     PetSex.MALE,
                     AgeSuffix.YEARS,
@@ -170,7 +170,7 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
 
             Pet pet5 = createPet(
                     "Budda",
-                    "",
+                    "Bulterier",
                     4,
                     PetSex.MALE,
                     AgeSuffix.YEARS,
@@ -189,7 +189,7 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
 
             Pet pet6 = createPet(
                     "Maciek",
-                    "",
+                    "Europejski",
                     3,
                     PetSex.MALE,
                     AgeSuffix.YEARS,
