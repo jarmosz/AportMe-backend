@@ -17,4 +17,9 @@ public class SecurityExceptionHandler {
     public ResponseEntity<String> handleWrongPasswordException(UserDoesNotExistsException ex){
         return new ResponseEntity<>("User with given email does not exists.", HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(RefreshTokenDoesNotExistsException.class)
+    public ResponseEntity<String> handleRefreshTokenDoesNotExistsException(RefreshTokenDoesNotExistsException ex){
+        return new ResponseEntity<>("Refresh token has expired or doesn't exist.", HttpStatus.CONFLICT);
+    }
 }
