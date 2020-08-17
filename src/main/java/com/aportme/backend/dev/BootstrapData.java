@@ -1,21 +1,21 @@
 package com.aportme.backend.dev;
 
-import com.aportme.backend.component.activationToken.entity.ActivationToken;
-import com.aportme.backend.component.activationToken.repository.ActivationTokenRepository;
-import com.aportme.backend.component.address.entity.Address;
-import com.aportme.backend.component.address.repository.AddressRepository;
-import com.aportme.backend.component.foundation.entity.FoundationInfo;
-import com.aportme.backend.component.foundation.repository.FoundationInfoRepository;
-import com.aportme.backend.component.pet.entity.Pet;
-import com.aportme.backend.component.pet.entity.PetPicture;
-import com.aportme.backend.component.pet.enums.*;
-import com.aportme.backend.component.pet.repository.PetRepository;
-import com.aportme.backend.component.pet.repository.PictureRepository;
-import com.aportme.backend.component.user.entity.User;
-import com.aportme.backend.component.user.enums.Role;
-import com.aportme.backend.component.user.repository.UserRepository;
-import com.aportme.backend.component.userInfo.entity.UserInfo;
-import com.aportme.backend.component.userInfo.repository.UserInfoRepository;
+import com.aportme.backend.entity.ActivationToken;
+import com.aportme.backend.entity.enums.*;
+import com.aportme.backend.repository.ActivationTokenRepository;
+import com.aportme.backend.entity.Address;
+import com.aportme.backend.repository.AddressRepository;
+import com.aportme.backend.entity.Foundation;
+import com.aportme.backend.repository.FoundationRepository;
+import com.aportme.backend.entity.Pet;
+import com.aportme.backend.entity.PetPicture;
+import com.aportme.backend.repository.PetRepository;
+import com.aportme.backend.repository.PictureRepository;
+import com.aportme.backend.entity.User;
+import com.aportme.backend.entity.enums.Role;
+import com.aportme.backend.repository.UserRepository;
+import com.aportme.backend.entity.UserInfo;
+import com.aportme.backend.repository.UserInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.joda.time.DateTime;
 import org.springframework.context.ApplicationListener;
@@ -32,7 +32,7 @@ import java.util.List;
 public class BootstrapData implements ApplicationListener<ContextRefreshedEvent> {
 
     private final UserRepository userRepository;
-    private final FoundationInfoRepository foundationInfoRepository;
+    private final FoundationRepository foundationRepository;
     private final UserInfoRepository userInfoRepository;
     private final AddressRepository addressRepository;
     private final ActivationTokenRepository activationTokenRepository;
@@ -52,7 +52,7 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
         createUserInfo(createUser("user3@gmail.com", "Haslo123"), "500400300", "Mateusz", "Lesiecki", addresses.get(2));
         createUserInfo(createUser("user4@gmail.com", "Haslo123"), "567678789", "Wojciech", "Jarmosz", addresses.get(3));
 
-        FoundationInfo foundation1 = createFoundation(
+        Foundation foundation1 = createFoundation(
                 "adopcje.ttb@op.pl",
                 "Haslo123",
                 "668 157 162",
@@ -71,7 +71,7 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
                 "67 2030 0045 1110 0000 0283 8380"
         );
 
-        FoundationInfo foundation2 = createFoundation(
+        Foundation foundation2 = createFoundation(
                 "kociszczecin@viva.org.pl",
                 "Haslo123",
                 "504312213",
@@ -251,13 +251,13 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
         userInfoRepository.save(userInfo);
     }
 
-    private FoundationInfo createFoundation(String email, String password, String phoneNumber, String description, String name, String nip, Address address, String logo, String krs, String accountNumber) {
+    private Foundation createFoundation(String email, String password, String phoneNumber, String description, String name, String nip, Address address, String logo, String krs, String accountNumber) {
         User foundation = new User();
         foundation.setEmail(email);
         foundation.setPassword(password);
         foundation.setRole(Role.FOUNDATION);
         userRepository.save(foundation);
-        FoundationInfo foundationInfo = new FoundationInfo();
+        Foundation foundationInfo = new Foundation();
         foundationInfo.setName(name);
         foundationInfo.setNip(nip);
         foundationInfo.setKrs(krs);
@@ -267,7 +267,7 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
         foundationInfo.setAddress(address);
         foundationInfo.setPhoneNumber(phoneNumber);
         foundationInfo.setUser(foundation);
-        return foundationInfoRepository.save(foundationInfo);
+        return foundationRepository.save(foundationInfo);
     }
 
     private Address createAddress(String city, String street, String houseNumber, String zipCode, String flatNumber) {
@@ -281,7 +281,7 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
         return address;
     }
 
-    private Pet createPet(String name, String breed, int age, PetSex sex, AgeSuffix ageSuffix, PetSize petSize, PetType petType, String diseases, String behaviorToChildren, String behaviorToAnimals, Boolean trainingNeeded, Boolean behavioristNeeded, String description, FoundationInfo foundationInfo) {
+    private Pet createPet(String name, String breed, int age, PetSex sex, AgeSuffix ageSuffix, PetSize petSize, PetType petType, String diseases, String behaviorToChildren, String behaviorToAnimals, Boolean trainingNeeded, Boolean behavioristNeeded, String description, Foundation foundation) {
         Pet pet = new Pet();
         pet.setAge(age);
         pet.setAgeCategory(prepareAgeCategory(age, ageSuffix));
@@ -293,7 +293,7 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
         pet.setSex(sex);
         pet.setDescription(description);
         pet.setDiseases(diseases);
-        pet.setFoundationInfo(foundationInfo);
+        pet.setFoundation(foundation);
         pet.setName(name);
         pet.setSize(petSize);
         pet.setPetType(petType);
