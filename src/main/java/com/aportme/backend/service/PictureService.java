@@ -46,9 +46,9 @@ public class PictureService {
     public ResponseEntity<Object> setProfilePicture(Long id) {
         PetPicture petPicture = findPetPictureById(id);
         List<PetPicture> pictures = pictureRepository.findAllByPet(petPicture.getPet());
-        pictures.forEach(picture -> picture.setIsProfilePicture(false));
+        pictures.forEach(picture -> picture.setProfilePicture(false));
         pictureRepository.saveAll(pictures);
-        petPicture.setIsProfilePicture(true);
+        petPicture.setProfilePicture(true);
         pictureRepository.save(petPicture);
 
         return new ResponseEntity<>(HttpStatus.OK);
@@ -66,7 +66,7 @@ public class PictureService {
     private PetPicture createUploadedPicture(Pet pet, String pictureInBase64) {
         PetPicture dbPicture = new PetPicture();
         dbPicture.setPictureInBase64(pictureInBase64);
-        dbPicture.setIsProfilePicture(false);
+        dbPicture.setProfilePicture(false);
         dbPicture.setPet(pet);
         return dbPicture;
     }
