@@ -212,7 +212,7 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
         PetPicture picture = new PetPicture();
         picture.setPictureInBase64(base64image);
         picture.setPet(pet);
-        picture.setIsProfilePicture(isProfilePicture);
+        picture.setProfilePicture(isProfilePicture);
         pictureRepository.save(picture);
     }
 
