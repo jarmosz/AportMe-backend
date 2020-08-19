@@ -17,7 +17,7 @@ public class PetPicture {
     @Lob
     private String pictureInBase64;
 
-    private Boolean isProfilePicture;
+    private Boolean profilePicture;
 
     @ManyToOne
     @JoinColumn(name = "pet_id")

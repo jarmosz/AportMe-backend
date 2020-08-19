@@ -9,5 +9,5 @@ public class PictureBaseDTO {
 
     private String pictureInBase64;
 
-    private boolean isProfilePicture;
+    private boolean profilePicture;
 }
