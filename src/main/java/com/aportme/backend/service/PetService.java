@@ -55,10 +55,10 @@ public class PetService {
     public ResponseEntity<Object> create(Long foundationId, AddPetDTO petDTO) {
         Pet pet = modelMapper.map(petDTO, Pet.class);
         Foundation foundation = foundationService.findFoundationById(foundationId);
-        List<PetPicture> pictures = pictureService.createPicturesForNewPet(pet, petDTO.getPictures());
-
         pet.setFoundation(foundation);
         petRepository.save(pet);
+
+        List<PetPicture> pictures = pictureService.createPicturesForNewPet(pet, petDTO.getPictures());
 
         pet.setPictures(pictures);
         return new ResponseEntity<>(HttpStatus.OK);
