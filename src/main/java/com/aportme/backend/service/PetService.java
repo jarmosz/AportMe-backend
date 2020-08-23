@@ -31,6 +31,7 @@ public class PetService {
 
     public Page<PetDTO> getAllPets(Pageable pageable) {
         Page<Pet> pets = petRepository.findAll(pageable);
+
         List<PetDTO> petDTOs = pets
                                 .getContent()
                                 .stream()
