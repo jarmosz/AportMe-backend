@@ -36,19 +36,19 @@ public class PictureService {
     }
 
     public List<PetPicture> createPicturesForNewPet(Pet pet, List<AddPetPictureDTO> picturesDTO) {
-        List<PetPicture> dbPictures = picturesDTO
+        List<PetPicture> pictures = picturesDTO
                 .stream()
                 .map(pictureDTO -> createPictureForNewPet(pet, pictureDTO))
                 .collect(Collectors.toList());
-        return pictureRepository.saveAll(dbPictures);
+        return pictureRepository.saveAll(pictures);
     }
 
     public ResponseEntity<Object> setProfilePicture(Long id) {
         PetPicture petPicture = findPetPictureById(id);
         List<PetPicture> pictures = pictureRepository.findAllByPet(petPicture.getPet());
-        pictures.forEach(picture -> picture.setProfilePicture(false));
+        pictures.forEach(picture -> picture.setIsProfilePicture(false));
         pictureRepository.saveAll(pictures);
-        petPicture.setProfilePicture(true);
+        petPicture.setIsProfilePicture(true);
         pictureRepository.save(petPicture);
 
         return new ResponseEntity<>(HttpStatus.OK);
@@ -66,7 +66,7 @@ public class PictureService {
     private PetPicture createUploadedPicture(Pet pet, String pictureInBase64) {
         PetPicture dbPicture = new PetPicture();
         dbPicture.setPictureInBase64(pictureInBase64);
-        dbPicture.setProfilePicture(false);
+        dbPicture.setIsProfilePicture(false);
         dbPicture.setPet(pet);
         return dbPicture;
     }
