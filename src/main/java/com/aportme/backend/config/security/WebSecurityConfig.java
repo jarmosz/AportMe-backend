@@ -18,7 +18,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,"/api/account/activation/**").permitAll()
                 //After security fix delete unnaccessary mappings
                 .antMatchers(HttpMethod.GET, "/api/pets/**").permitAll()
+                .antMatchers(HttpMethod.PUT, "/api/pets/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/pets/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/pets/pictures/**").permitAll()
                 .anyRequest().authenticated();
                 // this disables session creation on Spring Security
         http.headers().frameOptions().disable();

@@ -1,12 +1,12 @@
 package com.aportme.backend.service;
 
 import com.aportme.backend.entity.Foundation;
-import com.aportme.backend.exception.PetNotFoundException;
+import com.aportme.backend.entity.Pet;
+import com.aportme.backend.entity.PetPicture;
 import com.aportme.backend.entity.dto.pet.AddPetDTO;
 import com.aportme.backend.entity.dto.pet.PetDTO;
 import com.aportme.backend.entity.dto.pet.UpdatePetDTO;
-import com.aportme.backend.entity.Pet;
-import com.aportme.backend.entity.PetPicture;
+import com.aportme.backend.exception.PetNotFoundException;
 import com.aportme.backend.repository.PetRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -33,10 +33,10 @@ public class PetService {
         Page<Pet> pets = petRepository.findAll(pageable);
 
         List<PetDTO> petDTOs = pets
-                                .getContent()
-                                .stream()
-                                .map(pet -> modelMapper.map(pet, PetDTO.class))
-                                .collect(Collectors.toList());
+                .getContent()
+                .stream()
+                .map(pet -> modelMapper.map(pet, PetDTO.class))
+                .collect(Collectors.toList());
 
         return new PageImpl<>(petDTOs, pageable, pets.getTotalElements());
     }
@@ -59,7 +59,7 @@ public class PetService {
         pet.setFoundation(foundation);
         petRepository.save(pet);
 
-        List<PetPicture> pictures = pictureService.createPicturesForNewPet(pet, petDTO.getPictures());
+        List<PetPicture> pictures = pictureService.createPicturesForPet(pet, petDTO.getPictures());
 
         pet.setPictures(pictures);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -75,4 +75,14 @@ public class PetService {
     public Pet findPetById(Long id) {
         return petRepository.findById(id).orElseThrow(PetNotFoundException::new);
     }
+
+    public ResponseEntity<Object> newUpdate(Long id, UpdatePetDTO updatePet) {
+        Pet pet = findPetById(id);
+        pictureService.updatePetPictures(updatePet, pet);
+        modelMapper.map(pet, updatePet.getPetData());
+        petRepository.save(pet);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
 }
