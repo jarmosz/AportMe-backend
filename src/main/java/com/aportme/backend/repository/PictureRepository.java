@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface PictureRepository extends JpaRepository<PetPicture, Long> {
     List<PetPicture> findAllByPet(Pet pet);
+
+    List<PetPicture> findAllByIdIn(List<Long> ids);
 }
