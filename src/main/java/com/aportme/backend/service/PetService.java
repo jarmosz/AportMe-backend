@@ -1,15 +1,16 @@
 package com.aportme.backend.service;
 
 import com.aportme.backend.entity.Foundation;
-import com.aportme.backend.exception.PetNotFoundException;
+import com.aportme.backend.entity.Pet;
+import com.aportme.backend.entity.PetPicture;
 import com.aportme.backend.entity.dto.pet.AddPetDTO;
 import com.aportme.backend.entity.dto.pet.PetDTO;
 import com.aportme.backend.entity.dto.pet.UpdatePetDTO;
-import com.aportme.backend.entity.Pet;
-import com.aportme.backend.entity.PetPicture;
+import com.aportme.backend.exception.PetNotFoundException;
 import com.aportme.backend.repository.PetRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -21,22 +22,22 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PetService {
 
     private final PetRepository petRepository;
     private final FoundationService foundationService;
-    private final PictureService pictureService;
     private final ModelMapper modelMapper;
+    private PictureService pictureService;
 
     public Page<PetDTO> getAllPets(Pageable pageable) {
         Page<Pet> pets = petRepository.findAll(pageable);
 
         List<PetDTO> petDTOs = pets
-                                .getContent()
-                                .stream()
-                                .map(pet -> modelMapper.map(pet, PetDTO.class))
-                                .collect(Collectors.toList());
+                .getContent()
+                .stream()
+                .map(pet -> modelMapper.map(pet, PetDTO.class))
+                .collect(Collectors.toList());
 
         return new PageImpl<>(petDTOs, pageable, pets.getTotalElements());
     }
@@ -46,13 +47,14 @@ public class PetService {
         return modelMapper.map(pet, PetDTO.class);
     }
 
-    public ResponseEntity<Object> update(Long id, UpdatePetDTO petDTO) {
+    public UpdatePetDTO update(Long id, UpdatePetDTO petDTO) {
         Pet pet = findPetById(id);
         modelMapper.map(petDTO, pet);
-        petRepository.save(pet);
-        return new ResponseEntity<>(HttpStatus.OK);
+        Pet updatedPet = petRepository.save(pet);
+        return modelMapper.map(updatedPet, UpdatePetDTO.class);
     }
 
+    //TODO We should get foundation from Spring Security Context
     public ResponseEntity<Object> create(Long foundationId, AddPetDTO petDTO) {
         Pet pet = modelMapper.map(petDTO, Pet.class);
         Foundation foundation = foundationService.findFoundationById(foundationId);
@@ -74,5 +76,10 @@ public class PetService {
 
     public Pet findPetById(Long id) {
         return petRepository.findById(id).orElseThrow(PetNotFoundException::new);
+    }
+
+    @Autowired
+    public void setPictureService(PictureService pictureService) {
+        this.pictureService = pictureService;
     }
 }
