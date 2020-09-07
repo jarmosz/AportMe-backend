@@ -10,6 +10,12 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class PetPicture {
 
+    public PetPicture(String picture, Boolean isProfilePicture, Pet pet) {
+        this.pictureInBase64 = picture;
+        this.isProfilePicture = isProfilePicture;
+        this.pet = pet;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
