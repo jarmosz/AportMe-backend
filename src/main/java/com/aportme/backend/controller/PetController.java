@@ -34,13 +34,13 @@ public class PetController {
     }
 
     @PutMapping("/{id}")
-    @ApiOperation(value = "Update pet", response = PetDTO.class)
-    public ResponseEntity<Object> update(@PathVariable Long id, @RequestBody UpdatePetDTO petDTO) {
+    @ApiOperation(value = "Update pet", response = UpdatePetDTO.class)
+    public UpdatePetDTO update(@PathVariable Long id, @RequestBody UpdatePetDTO petDTO) {
         return petService.update(id, petDTO);
     }
 
     @PostMapping
-    @ApiOperation(value = "Create pet", response = PetDTO.class)
+    @ApiOperation(value = "Create pet")
     public ResponseEntity<Object> create(@RequestParam Long foundationId, @RequestBody AddPetDTO petDTO) {
         return petService.create(foundationId, petDTO);
     }
