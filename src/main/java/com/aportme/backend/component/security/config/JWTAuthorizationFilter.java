@@ -1,6 +1,7 @@
 package com.aportme.backend.component.security.config;
 
 import com.aportme.backend.component.security.entity.RefreshToken;
+import com.aportme.backend.component.security.exception.UserDoesNotExistsException;
 import com.aportme.backend.component.security.repository.RefreshTokenRepository;
 import com.aportme.backend.component.user.entity.User;
 import com.aportme.backend.component.user.repository.UserRepository;
@@ -67,7 +68,7 @@ public class JWTAuthorizationFilter extends GenericFilterBean {
         chain.doFilter(httpRequest, httpResponse);
     }
 
-    private Authentication getAuthentication(String token) {
+    private Authentication getAuthentication(String token) throws UserDoesNotExistsException {
 
         final String username;
         try {
@@ -78,14 +79,14 @@ public class JWTAuthorizationFilter extends GenericFilterBean {
                     .verify(mainToken);
             username = jwt.getSubject();
         } catch (JWTVerificationException e) {
-            return null;
+            throw new UserDoesNotExistsException();
         }
 
         final Long userId;
         try {
             userId = Long.valueOf(username);
         } catch (NumberFormatException e) {
-            return null;
+            throw new UserDoesNotExistsException();
         }
 
         return new JWTAuthentication(userId);

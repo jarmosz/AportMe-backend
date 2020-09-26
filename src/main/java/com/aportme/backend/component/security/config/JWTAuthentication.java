@@ -14,15 +14,18 @@ public class JWTAuthentication implements Authentication {
         this.userId = userId;
     }
 
-    @Override public Collection<? extends GrantedAuthority> getAuthorities() {
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.emptySet();
     }
 
-    @Override public Object getCredentials() {
+    @Override
+    public Object getCredentials() {
         return null;
     }
 
-    @Override public Object getDetails() {
+    @Override
+    public Object getDetails() {
         return null;
     }
 
@@ -30,19 +33,23 @@ public class JWTAuthentication implements Authentication {
         return userId;
     }
 
-    @Override public Long getPrincipal() {
+    @Override
+    public Long getPrincipal() {
         return userId;
     }
 
-    @Override public boolean isAuthenticated() {
+    @Override
+    public boolean isAuthenticated() {
         return true;
     }
 
-    @Override public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
+    @Override
+    public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
         throw new UnsupportedOperationException("JWT authentication is always authenticated");
     }
 
-    @Override public String getName() {
+    @Override
+    public String getName() {
         return String.valueOf(userId);
     }
 }

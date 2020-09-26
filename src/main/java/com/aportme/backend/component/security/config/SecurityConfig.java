@@ -3,6 +3,7 @@ package com.aportme.backend.component.security.config;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -20,6 +21,7 @@ import java.util.Arrays;
 @Configuration
 @EnableWebSecurity
 @AllArgsConstructor
+@Profile("auth")
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JWTAuthorizationFilter jwtAuthorizationFilter;

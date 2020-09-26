@@ -10,7 +10,7 @@ public class SecurityExceptionHandler {
 
     @ExceptionHandler(WrongPasswordException.class)
     public ResponseEntity<String> handleWrongPasswordException(WrongPasswordException ex){
-        return new ResponseEntity<>("User was passed wrong password.", HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>("Wrong password.", HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(UserDoesNotExistsException.class)
