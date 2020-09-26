@@ -19,7 +19,7 @@ public class PictureController {
 
     @GetMapping("/{id}")
     public List<PetPictureDTO> getPicturesByPetId(@PathVariable Long id) {
-        return pictureService.getPicturesByPetId(id);
+        return pictureService.getById(id);
     }
 
     @PostMapping

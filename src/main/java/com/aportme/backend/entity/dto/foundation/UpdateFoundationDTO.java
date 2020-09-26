@@ -1,10 +1,10 @@
 package com.aportme.backend.entity.dto.foundation;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-@Getter
-@Setter
+@Data
+@EqualsAndHashCode(callSuper = true)
 public class UpdateFoundationDTO extends FoundationBaseDTO {
 
     private String accountNumber;

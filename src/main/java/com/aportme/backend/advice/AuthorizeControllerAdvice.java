@@ -1,13 +1,15 @@
-package com.aportme.backend.controller;
+package com.aportme.backend.advice;
 
-import com.aportme.backend.exception.*;
+import com.aportme.backend.exception.UserAlreadyExistsException;
+import com.aportme.backend.exception.UserIsAlreadyActivatedException;
+import com.aportme.backend.exception.WrongUserCredentialsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
-public class ExceptionController {
+public class AuthorizeControllerAdvice {
 
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<Object> userAlreadyExistsException() {
@@ -17,17 +19,6 @@ public class ExceptionController {
     @ExceptionHandler(UserIsAlreadyActivatedException.class)
     public ResponseEntity<Object> userIsAlreadyActivatedException() {
         return new ResponseEntity<>("User is already activated", HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<Object> userNotFoundException() {
-        return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(PetPictureNotFoundException.class)
-    public ResponseEntity<Object> petPictureNotFoundException
-            () {
-        return new ResponseEntity<>("Picture not found", HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(WrongUserCredentialsException.class)

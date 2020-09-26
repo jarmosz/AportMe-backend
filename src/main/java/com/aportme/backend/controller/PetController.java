@@ -24,18 +24,18 @@ public class PetController {
     @GetMapping
     @ApiOperation(value = "Find all pets", response = PetDTO.class)
     public Page<PetDTO> getAll(@SortDefault(sort = "creationDate", direction = Sort.Direction.DESC) Pageable pageable) {
-        return petService.getAllPets(pageable);
+        return petService.getPets(pageable);
     }
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Find pet by id", response = PetDTO.class)
     public PetDTO getById(@PathVariable Long id) {
-        return petService.getPetById(id);
+        return petService.getById(id);
     }
 
     @PutMapping("/{id}")
     @ApiOperation(value = "Update pet", response = UpdatePetDTO.class)
-    public UpdatePetDTO update(@PathVariable Long id, @RequestBody UpdatePetDTO petDTO) {
+    public PetDTO update(@PathVariable Long id, @RequestBody UpdatePetDTO petDTO) {
         return petService.update(id, petDTO);
     }
 
@@ -48,6 +48,6 @@ public class PetController {
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete pet")
     public ResponseEntity<Object> delete(@PathVariable Long id) {
-        return petService.deletePet(id);
+        return petService.delete(id);
     }
 }

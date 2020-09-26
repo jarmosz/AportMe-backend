@@ -1,10 +1,8 @@
 package com.aportme.backend.entity.dto.address;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 class AddressBaseDTO {
 
     private String city;

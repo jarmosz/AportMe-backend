@@ -1,10 +1,8 @@
 package com.aportme.backend.entity.dto.foundation;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 class FoundationBaseDTO {
 
     private String name;

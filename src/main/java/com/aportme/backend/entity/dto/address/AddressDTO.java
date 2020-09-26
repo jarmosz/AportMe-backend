@@ -1,10 +1,8 @@
 package com.aportme.backend.entity.dto.address;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.EqualsAndHashCode;
 
-@Getter
-@Setter
+@EqualsAndHashCode(callSuper = true)
 public class AddressDTO extends AddressBaseDTO {
 
     private Long id;
