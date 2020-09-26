@@ -6,7 +6,6 @@ import com.aportme.backend.entity.User;
 import com.aportme.backend.entity.dto.foundation.AddFoundationDTO;
 import com.aportme.backend.entity.dto.foundation.FoundationDTO;
 import com.aportme.backend.entity.dto.foundation.UpdateFoundationDTO;
-import com.aportme.backend.exception.FoundationNotFoundException;
 import com.aportme.backend.repository.FoundationRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -17,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,7 +29,7 @@ public class FoundationService {
     private final AddressService addressService;
     private final ModelMapper modelMapper;
 
-    public Page<FoundationDTO> getAllFoundations(Pageable pageable) {
+    public Page<FoundationDTO> getAll(Pageable pageable) {
         Page<Foundation> foundationsInfo = foundationRepository.findAll(pageable);
         List<FoundationDTO> foundationsInfoDTOs = foundationsInfo
                 .getContent()
@@ -40,27 +40,27 @@ public class FoundationService {
         return new PageImpl<>(foundationsInfoDTOs, pageable, foundationsInfo.getTotalElements());
     }
 
-    public FoundationDTO getFoundationById(Long id) {
-        Foundation foundation = findFoundationById(id);
+    public FoundationDTO getById(Long id) {
+        Foundation foundation = findById(id);
         return modelMapper.map(foundation, FoundationDTO.class);
     }
 
-    public FoundationDTO getFoundationByPetId(Long petId) {
-        Foundation foundation = foundationRepository.findByPetId(petId).orElseThrow(FoundationNotFoundException::new);
+    public FoundationDTO getByPetId(Long petId) {
+        Foundation foundation = foundationRepository.findByPetId(petId).orElseThrow(() -> new EntityNotFoundException("Foundation not found"));
         return modelMapper.map(foundation, FoundationDTO.class);
     }
 
-    public ResponseEntity<Object> updateFoundation(Long id, UpdateFoundationDTO foundationInfoDTO) {
-        Foundation foundation = foundationRepository.findById(id).orElseThrow(FoundationNotFoundException::new);
+    public ResponseEntity<Object> update(Long id, UpdateFoundationDTO foundationInfoDTO) {
+        Foundation foundation = findById(id);
         modelMapper.map(foundationInfoDTO, foundation);
         foundationRepository.save(foundation);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    public ResponseEntity<Object> createFoundation(Long userId, AddFoundationDTO addFoundationDTO) {
+    public ResponseEntity<Object> create(Long userId, AddFoundationDTO addFoundationDTO) {
         Foundation foundation = modelMapper.map(addFoundationDTO, Foundation.class);
-        Address address = addressService.createAddress(addFoundationDTO.getAddress());
-        User user = userService.findUserById(userId);
+        Address address = addressService.create(addFoundationDTO.getAddress());
+        User user = userService.findById(userId);
 
         foundation.setUser(user);
         foundation.setAddress(address);
@@ -68,13 +68,13 @@ public class FoundationService {
     }
 
     public ResponseEntity<Object> uploadFoundationLogo(Long id, String base64Logo) {
-        Foundation foundation = findFoundationById(id);
+        Foundation foundation = findById(id);
         foundation.setFoundationLogo(base64Logo);
         foundationRepository.save(foundation);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    public Foundation findFoundationById(Long id) {
-        return foundationRepository.findById(id).orElseThrow(FoundationNotFoundException::new);
+    public Foundation findById(Long id) {
+        return foundationRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Foundation not found"));
     }
 }

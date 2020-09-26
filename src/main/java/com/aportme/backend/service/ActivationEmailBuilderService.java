@@ -9,7 +9,7 @@ import org.thymeleaf.context.Context;
 @AllArgsConstructor
 public class ActivationEmailBuilderService {
 
-    private TemplateEngine templateEngine;
+    private final TemplateEngine templateEngine;
 
     public String build(String activationLink) {
         Context context = new Context();

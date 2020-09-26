@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
 @CrossOrigin
 @AllArgsConstructor
 @RestController
@@ -20,12 +19,12 @@ public class AddressController {
     @GetMapping("/{id}")
     @ApiOperation(value = "Find address by id", response = AddressDTO.class)
     public AddressDTO getAddressById(@PathVariable Long id) {
-        return addressService.getAddressById(id);
+        return addressService.getById(id);
     }
 
     @PutMapping("/{id}")
     @ApiOperation(value = "Update address")
     public ResponseEntity<Object> updateAddress(@PathVariable Long id, @RequestBody AddOrUpdateAddressDTO addressDTO) {
-        return addressService.updateAddress(id, addressDTO);
+        return addressService.update(id, addressDTO);
     }
 }

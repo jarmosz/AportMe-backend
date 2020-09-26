@@ -1,10 +1,8 @@
 package com.aportme.backend.entity.dto.picture;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class PictureBaseDTO {
 
     private String pictureInBase64;

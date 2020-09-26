@@ -18,7 +18,7 @@ public class UserController {
     @GetMapping("/{id}")
     @ApiOperation(value = "Find user by id", response = UserDTO.class)
     public UserDTO getUSerById(@PathVariable Long id) {
-        return userService.getUserById(id);
+        return userService.getById(id);
     }
 
     @PostMapping("/register")

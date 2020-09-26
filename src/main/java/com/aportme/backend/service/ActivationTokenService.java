@@ -23,12 +23,12 @@ import java.util.Optional;
 @AllArgsConstructor
 public class ActivationTokenService {
 
-    private ActivationTokenRepository activationTokenRepository;
-    private ApplicationEventPublisher eventPublisher;
-    private UserRepository userRepository;
+    private final ActivationTokenRepository activationTokenRepository;
+    private final ApplicationEventPublisher eventPublisher;
+    private final UserRepository userRepository;
 
     public void saveToken(User user, String token) {
-        ActivationToken activationToken = activationTokenRepository.findByUserId(user.getId()).orElse(null);
+        ActivationToken activationToken = findById(user.getId());
 
         if (activationToken == null) {
             activationToken = new ActivationToken();
@@ -66,6 +66,10 @@ public class ActivationTokenService {
         } else {
             throw new UserIsAlreadyActivatedException();
         }
-        return new ResponseEntity<>(new HttpHeaders(), HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    private ActivationToken findById(Long id) {
+        return activationTokenRepository.findByUserId(id).orElse(null);
     }
 }

@@ -2,11 +2,11 @@ package com.aportme.backend.entity.dto.foundation;
 
 import com.aportme.backend.entity.dto.address.AddressDTO;
 import com.aportme.backend.entity.dto.user.UserDTO;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-@Getter
-@Setter
+@Data
+@EqualsAndHashCode(callSuper = true)
 public class FoundationForPetDTO extends FoundationBaseDTO {
 
     private Long id;

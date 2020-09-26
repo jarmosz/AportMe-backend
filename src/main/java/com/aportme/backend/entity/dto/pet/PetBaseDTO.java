@@ -1,11 +1,9 @@
 package com.aportme.backend.entity.dto.pet;
 
 import com.aportme.backend.entity.enums.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 class PetBaseDTO {
 
     private String name;
