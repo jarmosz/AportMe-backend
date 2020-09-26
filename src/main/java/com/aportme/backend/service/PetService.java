@@ -6,7 +6,6 @@ import com.aportme.backend.entity.PetPicture;
 import com.aportme.backend.entity.dto.pet.AddPetDTO;
 import com.aportme.backend.entity.dto.pet.PetDTO;
 import com.aportme.backend.entity.dto.pet.UpdatePetDTO;
-import com.aportme.backend.exception.PetNotFoundException;
 import com.aportme.backend.repository.PetRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -18,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +30,7 @@ public class PetService {
     private final ModelMapper modelMapper;
     private PictureService pictureService;
 
-    public Page<PetDTO> getAllPets(Pageable pageable) {
+    public Page<PetDTO> getPets(Pageable pageable) {
         Page<Pet> pets = petRepository.findAll(pageable);
 
         List<PetDTO> petDTOs = pets
@@ -42,22 +42,22 @@ public class PetService {
         return new PageImpl<>(petDTOs, pageable, pets.getTotalElements());
     }
 
-    public PetDTO getPetById(Long id) {
-        Pet pet = findPetById(id);
+    public PetDTO getById(Long id) {
+        Pet pet = findById(id);
         return modelMapper.map(pet, PetDTO.class);
     }
 
-    public UpdatePetDTO update(Long id, UpdatePetDTO petDTO) {
-        Pet pet = findPetById(id);
+    public PetDTO update(Long id, UpdatePetDTO petDTO) {
+        Pet pet = findById(id);
         modelMapper.map(petDTO, pet);
         Pet updatedPet = petRepository.save(pet);
-        return modelMapper.map(updatedPet, UpdatePetDTO.class);
+        return modelMapper.map(updatedPet, PetDTO.class);
     }
 
     //TODO We should get foundation from Spring Security Context
     public ResponseEntity<Object> create(Long foundationId, AddPetDTO petDTO) {
         Pet pet = modelMapper.map(petDTO, Pet.class);
-        Foundation foundation = foundationService.findFoundationById(foundationId);
+        Foundation foundation = foundationService.findById(foundationId);
         pet.setFoundation(foundation);
         petRepository.save(pet);
 
@@ -67,15 +67,15 @@ public class PetService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    public ResponseEntity<Object> deletePet(Long id) {
-        Pet pet = findPetById(id);
-        pictureService.deleteAllPetPictures(pet);
+    public ResponseEntity<Object> delete(Long id) {
+        Pet pet = findById(id);
+        pictureService.deleteAll(pet);
         petRepository.delete(pet);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    public Pet findPetById(Long id) {
-        return petRepository.findById(id).orElseThrow(PetNotFoundException::new);
+    public Pet findById(Long id) {
+        return petRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Pet not found"));
     }
 
     @Autowired

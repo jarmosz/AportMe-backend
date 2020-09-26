@@ -1,10 +1,8 @@
 package com.aportme.backend.entity.dto.user;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 class UserBaseDTO {
 
     private String email;

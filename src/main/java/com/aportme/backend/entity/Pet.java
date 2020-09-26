@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
 @Data
+@Entity
 @NoArgsConstructor
 public class Pet {
 
@@ -67,5 +67,5 @@ public class Pet {
     private List<PetPicture> pictures = new ArrayList<>();
 
     @ManyToMany(mappedBy = "likedPets")
-    private List<UserInfo> users = new ArrayList<>();
+    private List<User> users = new ArrayList<>();
 }

@@ -24,31 +24,31 @@ public class FoundationController {
     @GetMapping
     @ApiOperation(value = "Find all foundations", response = FoundationDTO.class)
     public Page<FoundationDTO> getAllFoundations(@SortDefault(value = "name", direction = Sort.Direction.ASC) Pageable pageable) {
-        return foundationService.getAllFoundations(pageable);
+        return foundationService.getAll(pageable);
     }
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Find foundation by id", response = FoundationDTO.class)
     public FoundationDTO getFoundationById(@PathVariable Long id) {
-        return foundationService.getFoundationById(id);
+        return foundationService.getById(id);
     }
 
     @GetMapping("/search")
     @ApiOperation(value = "Search  foundation by pet id", response = FoundationDTO.class)
     public FoundationDTO getFoundationByPetId(@RequestParam Long petId) {
-        return foundationService.getFoundationByPetId(petId);
+        return foundationService.getByPetId(petId);
     }
 
     @PutMapping("/{id}")
     @ApiOperation(value = "Update foundation")
     public ResponseEntity<Object> updateFoundation(@PathVariable Long id, @RequestBody UpdateFoundationDTO updateFoundationDTO) {
-        return foundationService.updateFoundation(id, updateFoundationDTO);
+        return foundationService.update(id, updateFoundationDTO);
     }
 
     @PostMapping
     @ApiOperation(value = "Create foundation")
     public ResponseEntity<Object> createFoundation(@RequestParam Long userId, @RequestBody AddFoundationDTO addFoundationDTO) {
-        return foundationService.createFoundation(userId, addFoundationDTO);
+        return foundationService.create(userId, addFoundationDTO);
     }
 
     @PostMapping("/upload")

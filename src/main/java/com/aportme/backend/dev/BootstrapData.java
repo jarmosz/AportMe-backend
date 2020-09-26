@@ -14,8 +14,6 @@ import com.aportme.backend.repository.PictureRepository;
 import com.aportme.backend.entity.User;
 import com.aportme.backend.entity.enums.Role;
 import com.aportme.backend.repository.UserRepository;
-import com.aportme.backend.entity.UserInfo;
-import com.aportme.backend.repository.UserInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.joda.time.DateTime;
 import org.springframework.context.ApplicationListener;
@@ -33,7 +31,6 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
 
     private final UserRepository userRepository;
     private final FoundationRepository foundationRepository;
-    private final UserInfoRepository userInfoRepository;
     private final AddressRepository addressRepository;
     private final ActivationTokenRepository activationTokenRepository;
     private final PetRepository petRepository;
@@ -47,10 +44,6 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
 
     private void createRealisticData() {
         List<Address> addresses = createAddresses();
-        createUserInfo(createUser("user1@gmail.com", "Haslo123"), "567234123", "Jacek", "Krakowski", addresses.get(0));
-        createUserInfo(createUser("user2@gmail.com", "Haslo123"), "789567345", "Dawid", "Wietrzych", addresses.get(1));
-        createUserInfo(createUser("user3@gmail.com", "Haslo123"), "500400300", "Mateusz", "Lesiecki", addresses.get(2));
-        createUserInfo(createUser("user4@gmail.com", "Haslo123"), "567678789", "Wojciech", "Jarmosz", addresses.get(3));
 
         Foundation foundation1 = createFoundation(
                 "adopcje.ttb@op.pl",
@@ -239,16 +232,6 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
         activationTokenRepository.save(activationToken);
 
         return user;
-    }
-
-    private void createUserInfo(User user, String phoneNumber, String name, String surname, Address address) {
-        UserInfo userInfo = new UserInfo();
-        userInfo.setPhoneNumber(phoneNumber);
-        userInfo.setName(name);
-        userInfo.setSurname(surname);
-        userInfo.setAddress(address);
-        userInfo.setUser(user);
-        userInfoRepository.save(userInfo);
     }
 
     private Foundation createFoundation(String email, String password, String phoneNumber, String description, String name, String nip, Address address, String logo, String krs, String accountNumber) {
