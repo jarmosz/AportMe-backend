@@ -18,12 +18,12 @@ public class SecurityController {
     private SecurityService securityService;
 
     @PostMapping("/login")
-    public TokenPairDTO loginUser(@RequestBody UserLoginDTO userLoginDTO){
+    public TokenPairDTO login(@RequestBody UserLoginDTO userLoginDTO){
         return securityService.loginUser(userLoginDTO);
     }
 
     @PostMapping("/logout")
-    public void logoutUser(ServletRequest request, ServletResponse response){
+    public void logout(ServletRequest request, ServletResponse response){
         securityService.logoutUser(request, response);
     }
 
