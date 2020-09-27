@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -15,6 +16,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/users/register").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers(HttpMethod.GET,"/api/account/activation/**").permitAll()
+                //After security fix delete unnaccessary mappings
+                .antMatchers(HttpMethod.GET, "/api/pets/**").permitAll()
+                .antMatchers(HttpMethod.PUT, "/api/pets/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/pets/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/pets/pictures/**").permitAll()
                 .anyRequest().authenticated();
                 // this disables session creation on Spring Security
         http.headers().frameOptions().disable();
