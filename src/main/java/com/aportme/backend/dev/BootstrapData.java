@@ -49,7 +49,7 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
 
     private void createRealisticData() {
         List<Address> addresses = createAddresses();
-        createUserInfo(createUser("user1@gmail.com", passwordEncoder.encode("Haslo123")), "567234123", "Jacek", "Krakowski", addresses.get(0));
+            createUserInfo(createUser("user1@gmail.com", passwordEncoder.encode("Haslo123")), "567234123", "Jacek", "Krakowski", addresses.get(0));
         createUserInfo(createUser("user2@gmail.com", passwordEncoder.encode("Haslo123")), "789567345", "Dawid", "Wietrzych", addresses.get(1));
         createUserInfo(createUser("user3@gmail.com", passwordEncoder.encode("Haslo123")), "500400300", "Mateusz", "Lesiecki", addresses.get(2));
         createUserInfo(createUser("user4@gmail.com", passwordEncoder.encode("Haslo123")), "567678789", "Wojciech", "Jarmosz", addresses.get(3));

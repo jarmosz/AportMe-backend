@@ -21,7 +21,6 @@ import java.util.Arrays;
 @Configuration
 @EnableWebSecurity
 @AllArgsConstructor
-@Profile("auth")
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JWTAuthorizationFilter jwtAuthorizationFilter;
@@ -40,8 +39,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,"/activateAccount").permitAll()
                 .antMatchers(HttpMethod.GET,"/api/foundations").permitAll()
                 .antMatchers(HttpMethod.GET,"/api/foundations/*").permitAll()
-                .antMatchers(HttpMethod.GET,"/api/pets").permitAll()
-                .antMatchers(HttpMethod.GET,"/api/pets/*").permitAll()
                 .anyRequest().authenticated();
                 // this disables session creation on Spring Security
         http.headers().frameOptions().disable()

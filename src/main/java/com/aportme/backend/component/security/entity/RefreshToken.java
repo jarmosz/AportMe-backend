@@ -17,9 +17,9 @@ public class RefreshToken {
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
 
-        private String refreshToken;
+        private String token;
 
-        @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
+        @OneToOne
         @JoinColumn(nullable = false, name = "user_id")
         private User user;
 
