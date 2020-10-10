@@ -1,14 +1,16 @@
 package com.aportme.backend.component.security.controller;
 
-import com.aportme.backend.component.security.dto.AccessTokenDTO;
 import com.aportme.backend.component.security.dto.TokenPairDTO;
 import com.aportme.backend.component.security.dto.UserLoginDTO;
 import com.aportme.backend.component.security.service.SecurityService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api")
@@ -23,12 +25,12 @@ public class SecurityController {
     }
 
     @PostMapping("/logout")
-    public void logout(ServletRequest request, ServletResponse response){
-        securityService.logoutUser(request, response);
+    public ResponseEntity logout(HttpServletRequest request){
+        return securityService.logoutUser(request);
     }
 
     @PostMapping("/refreshToken")
-    public AccessTokenDTO refreshToken(ServletRequest request, ServletResponse response){
-        return securityService.refreshAccessToken(request, response);
+    public TokenPairDTO refreshToken(HttpServletRequest request){
+        return securityService.refreshAccessToken(request);
     }
 }
