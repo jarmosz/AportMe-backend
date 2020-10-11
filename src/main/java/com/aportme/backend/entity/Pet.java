@@ -61,7 +61,8 @@ public class Pet {
     @JoinColumn(name = "foundation_id")
     private Foundation foundation;
 
-    @OneToMany(mappedBy = "pet",
+    @OneToMany(
+            mappedBy = "pet",
             cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.DETACH}
     )
     private List<PetPicture> pictures = new ArrayList<>();
