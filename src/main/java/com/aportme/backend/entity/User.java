@@ -31,6 +31,14 @@ public class User implements UserDetails {
 
     private boolean isActive;
 
+
+    @ManyToMany
+    @JoinTable(name = "user_pet",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "pet_id")
+    )
+    private List<Pet> likedPets = new ArrayList<>();
+
     @Override
     public Collection<GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> userRoles = new ArrayList<>();
