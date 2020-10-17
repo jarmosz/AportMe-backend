@@ -8,8 +8,8 @@ import com.aportme.backend.exception.UserIsAlreadyActivatedException;
 import com.aportme.backend.exception.UserNotFoundException;
 import com.aportme.backend.repository.ActivationTokenRepository;
 import com.aportme.backend.repository.UserRepository;
-import lombok.AllArgsConstructor;
 import org.joda.time.DateTime;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -20,12 +20,22 @@ import java.net.URI;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
 public class ActivationTokenService {
+
+    @Value("${frontendUrl}")
+    private String frontendUrl;
 
     private final ActivationTokenRepository activationTokenRepository;
     private final ApplicationEventPublisher eventPublisher;
     private final UserRepository userRepository;
+
+    public ActivationTokenService(ActivationTokenRepository activationTokenRepository,
+                                  ApplicationEventPublisher eventPublisher,
+                                  UserRepository userRepository) {
+        this.activationTokenRepository = activationTokenRepository;
+        this.eventPublisher = eventPublisher;
+        this.userRepository = userRepository;
+    }
 
     public void saveToken(User user, String token) {
         ActivationToken activationToken = findById(user.getId());
@@ -43,7 +53,7 @@ public class ActivationTokenService {
     public ResponseEntity<Object> confirmActivationToken(String token) {
         Optional<ActivationToken> activationTokenFromDB = activationTokenRepository.findActivationTokenByToken(token);
         HttpHeaders httpHeaders = new HttpHeaders();
-        URI redirectAddress = URI.create("http://localhost:8081/accountNotActivated");
+        URI redirectAddress = URI.create(this.frontendUrl + "/accountNotActivated");
 
         if (activationTokenFromDB.isPresent()) {
             ActivationToken activationToken = activationTokenFromDB.get();
@@ -51,7 +61,7 @@ public class ActivationTokenService {
                 Long activeUserId = activationToken.getUser().getId();
                 eventPublisher.publishEvent(new SetActiveUserEvent(activeUserId));
                 activationTokenRepository.delete(activationToken);
-                redirectAddress = URI.create("http://localhost:8081/accountActivationComplete");
+                redirectAddress = URI.create(this.frontendUrl + "/accountActivationComplete");
             }
         }
         httpHeaders.setLocation(redirectAddress);
