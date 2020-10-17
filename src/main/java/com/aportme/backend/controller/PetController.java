@@ -13,7 +13,6 @@ import org.springframework.data.web.SortDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/pets")

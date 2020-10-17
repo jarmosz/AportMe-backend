@@ -1,5 +1,6 @@
 package com.aportme.backend.entity;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
@@ -7,10 +8,17 @@ import org.joda.time.DateTime;
 
 import javax.persistence.*;
 
-@Entity
 @Data
+@Entity
 @NoArgsConstructor
-public class ActivationToken {
+public class RefreshToken {
+
+    @Builder
+    public RefreshToken(String token, DateTime expiryDate, User user) {
+        this.token = token;
+        this.expiryDate = expiryDate;
+        this.user = user;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,7 +27,7 @@ public class ActivationToken {
     private String token;
 
     @OneToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(nullable = false, name = "user_id")
     private User user;
 
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
