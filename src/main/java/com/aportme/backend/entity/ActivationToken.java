@@ -18,8 +18,8 @@ public class ActivationToken {
 
     private String token;
 
-    @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false, name = "user_id")
+    @OneToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")

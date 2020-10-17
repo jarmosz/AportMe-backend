@@ -1,5 +1,8 @@
 package com.aportme.backend.security;
 
+import com.aportme.backend.entity.User;
+import com.aportme.backend.exception.UserNotFoundException;
+import com.aportme.backend.repository.UserRepository;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
@@ -20,6 +23,12 @@ import java.io.IOException;
 
 @Component
 public class JWTAuthorizationFilter extends GenericFilterBean {
+
+    private final UserRepository userRepository;
+
+    public JWTAuthorizationFilter(UserRepository userRepository){
+        this.userRepository = userRepository;
+    }
 
     @Value("${jwt.header.string}")
     private String HEADER_STRING;
@@ -61,7 +70,9 @@ public class JWTAuthorizationFilter extends GenericFilterBean {
             return null;
         }
 
-        return new JWTAuthentication(userId);
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+
+        return new JWTAuthentication(user);
     }
 
 }
