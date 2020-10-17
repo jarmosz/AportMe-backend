@@ -1,22 +1,26 @@
 package com.aportme.backend.security;
 
+import com.aportme.backend.entity.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
-import java.util.Collections;
 
 public class JWTAuthentication implements Authentication {
 
     private final long userId;
+    private final String email;
+    private final Collection<GrantedAuthority> grantedAuthorities;
 
-    public JWTAuthentication(long userId) {
-        this.userId = userId;
+    public JWTAuthentication(User user) {
+        this.userId = user.getId();
+        this.email = user.getEmail();
+        this.grantedAuthorities = user.getAuthorities();
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptySet();
+        return this.grantedAuthorities;
     }
 
     @Override
@@ -50,6 +54,6 @@ public class JWTAuthentication implements Authentication {
 
     @Override
     public String getName() {
-        return String.valueOf(userId);
+        return this.email;
     }
 }
