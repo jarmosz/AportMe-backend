@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/addresses")

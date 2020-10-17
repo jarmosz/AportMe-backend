@@ -13,13 +13,12 @@ import org.springframework.data.web.SortDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/foundations")
 public class FoundationController {
 
-    private final FoundationService foundationService;
+    private FoundationService foundationService;
 
     @GetMapping
     @ApiOperation(value = "Find all foundations", response = FoundationDTO.class)
