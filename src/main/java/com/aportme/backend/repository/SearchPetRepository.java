@@ -25,8 +25,8 @@ public class SearchPetRepository implements CustomPetRepository {
         CriteriaQuery<Pet> criteriaQuery = criteriaBuilder.createQuery(Pet.class);
 
         Root<Pet> pet = criteriaQuery.from(Pet.class);
-        Predicate namePredicate = criteriaBuilder.like(pet.get("name"), "%" + name + "%");
-        Predicate breedPredicate = criteriaBuilder.like(pet.get("breed"), "%" + breed + "%");
+        Predicate namePredicate = criteriaBuilder.like(pet.get("searchableName"), "%" + name + "%");
+        Predicate breedPredicate = criteriaBuilder.like(pet.get("searchableBreed"), "%" + breed + "%");
         criteriaQuery.where(namePredicate, breedPredicate);
 
         TypedQuery<Pet> query = entityManager.createQuery(criteriaQuery);

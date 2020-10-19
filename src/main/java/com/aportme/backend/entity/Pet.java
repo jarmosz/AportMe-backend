@@ -23,7 +23,11 @@ public class Pet {
 
     private String name;
 
+    private String searchableName;
+
     private String breed;
+
+    private String searchableBreed;
 
     private PetSex sex;
 
