@@ -66,6 +66,8 @@ public class PetService {
         Pet pet = modelMapper.map(petDTO, Pet.class);
         Foundation foundation = foundationService.findById(foundationId);
         pet.setFoundation(foundation);
+        pet.setSearchableName(pet.getName().toLowerCase());
+        pet.setSearchableBreed(pet.getBreed().toLowerCase());
         petRepository.save(pet);
 
         List<PetPicture> pictures = pictureService.createPicturesForNewPet(pet, petDTO.getPictures());
@@ -91,13 +93,13 @@ public class PetService {
     }
 
     private SearchablePet resolveSearchQuery(String query) {
-        if (query.isEmpty()) {
+        if (query == null || query.equals(" ")) {
             return new SearchablePet("", "");
         } else if (!query.contains(",")) {
-            return new SearchablePet(query, "");
+            return new SearchablePet(query.toLowerCase(), "");
         } else {
             String[] splittedQuery = query.split(",");
-            return new SearchablePet(splittedQuery[0], splittedQuery[1]);
+            return new SearchablePet(splittedQuery[0].toLowerCase(), splittedQuery[1].toLowerCase());
         }
     }
 }
