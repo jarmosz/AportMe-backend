@@ -22,8 +22,8 @@ public class PetController {
 
     @GetMapping
     @ApiOperation(value = "Find all pets", response = PetDTO.class)
-    public Page<PetDTO> getAll(@SortDefault(sort = "creationDate", direction = Sort.Direction.DESC) Pageable pageable) {
-        return petService.getPets(pageable);
+    public Page<PetDTO> getAll(@SortDefault(sort = "creationDate", direction = Sort.Direction.DESC) Pageable pageable, @RequestParam String searchQuery) {
+        return petService.getPets(pageable, searchQuery);
     }
 
     @GetMapping("/{id}")
