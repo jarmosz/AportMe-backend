@@ -27,20 +27,25 @@ public class SearchPetRepository implements CustomPetRepository {
     public Page<Pet> findPetsByNameAndBreed(Pageable pageable, String name, String breed, PetFilters filters) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Pet> criteriaQuery = criteriaBuilder.createQuery(Pet.class);
-
         Root<Pet> pet = criteriaQuery.from(Pet.class);
-        List<Predicate> predicates = new ArrayList<>();
-        predicates.add(criteriaBuilder.like(pet.get("searchableName"), "%" + name + "%"));
-        predicates.add(criteriaBuilder.like(pet.get("searchableBreed"), "%" + breed + "%"));
-        if (filters != null && filters.getSize() != null) predicates.add(criteriaBuilder.equal(pet.get("size"), filters.getSize()));
-        if (filters != null && filters.getAgeCategory() != null) predicates.add(criteriaBuilder.equal(pet.get("ageCategory"), filters.getAgeCategory()));
-        if (filters != null && filters.getPetType() != null) predicates.add(criteriaBuilder.equal(pet.get("petType"), filters.getPetType()));
-        if (filters != null && filters.getPetSex() != null) predicates.add(criteriaBuilder.equal(pet.get("petSex"), filters.getPetSex()));
-        criteriaQuery.where(criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()])));
 
+        criteriaQuery.where(buildPredicate(pet, criteriaBuilder, name, breed, filters));
         TypedQuery<Pet> query = entityManager.createQuery(criteriaQuery);
 
         int totalRows = query.getResultList().size();
         return new PageImpl<>(query.getResultList(), pageable, totalRows);
+    }
+
+    private Predicate buildPredicate(Root<Pet> pet, CriteriaBuilder criteriaBuilder, String name, String breed, PetFilters filters) {
+        List<Predicate> predicates = new ArrayList<>();
+        predicates.add(criteriaBuilder.like(pet.get("searchableName"), "%" + name + "%"));
+        predicates.add(criteriaBuilder.like(pet.get("searchableBreed"), "%" + breed + "%"));
+        if (filters != null) {
+            if (filters.getSize() != null) predicates.add(criteriaBuilder.equal(pet.get("size"), filters.getSize()));
+            if (filters.getAgeCategory() != null) predicates.add(criteriaBuilder.equal(pet.get("ageCategory"), filters.getAgeCategory()));
+            if (filters.getPetType() != null) predicates.add(criteriaBuilder.equal(pet.get("petType"), filters.getPetType()));
+            if (filters.getPetSex() != null) predicates.add(criteriaBuilder.equal(pet.get("petSex"), filters.getPetSex()));
+        }
+        return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
     }
 }

@@ -95,7 +95,7 @@ public class PetService {
     }
 
     private SearchablePet resolveSearchQuery(String query) {
-        if (query == null || query.equals(" ")) {
+        if (query == null || query.isBlank()) {
             return new SearchablePet("", "");
         } else if (!query.contains(",")) {
             return new SearchablePet(query.toLowerCase(), "");
