@@ -6,6 +6,7 @@ import com.aportme.backend.entity.PetPicture;
 import com.aportme.backend.entity.SearchablePet;
 import com.aportme.backend.entity.dto.pet.AddPetDTO;
 import com.aportme.backend.entity.dto.pet.PetDTO;
+import com.aportme.backend.entity.dto.pet.PetFilters;
 import com.aportme.backend.entity.dto.pet.UpdatePetDTO;
 import com.aportme.backend.repository.PetRepository;
 import com.aportme.backend.repository.SearchPetRepository;
@@ -33,13 +34,14 @@ public class PetService {
     private final ModelMapper modelMapper;
     private PictureService pictureService;
 
-    public Page<PetDTO> getPets(Pageable pageable, String searchQuery) {
+    public Page<PetDTO> getPets(Pageable pageable, String searchQuery, PetFilters filters) {
         SearchablePet searchablePet = resolveSearchQuery(searchQuery);
         Page<Pet> pets = searchPetRepository.
                 findPetsByNameAndBreed(
                         pageable,
                         searchablePet.getName(),
-                        searchablePet.getBreed());
+                        searchablePet.getBreed(),
+                        filters);
 
         List<PetDTO> petDTOs = pets
                 .getContent()
