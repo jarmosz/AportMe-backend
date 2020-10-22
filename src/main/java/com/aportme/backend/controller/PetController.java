@@ -2,6 +2,7 @@ package com.aportme.backend.controller;
 
 import com.aportme.backend.entity.dto.pet.AddPetDTO;
 import com.aportme.backend.entity.dto.pet.PetDTO;
+import com.aportme.backend.entity.dto.pet.PetFilters;
 import com.aportme.backend.entity.dto.pet.UpdatePetDTO;
 import com.aportme.backend.service.PetService;
 import io.swagger.annotations.ApiOperation;
@@ -22,8 +23,11 @@ public class PetController {
 
     @GetMapping
     @ApiOperation(value = "Find all pets", response = PetDTO.class)
-    public Page<PetDTO> getAll(@SortDefault(sort = "creationDate", direction = Sort.Direction.DESC) Pageable pageable) {
-        return petService.getPets(pageable);
+    public Page<PetDTO> getAll(
+            @SortDefault(sort = "creationDate", direction = Sort.Direction.DESC) Pageable pageable,
+            @RequestParam(required = false) String searchQuery,
+            PetFilters filters) {
+        return petService.getPets(pageable, searchQuery, filters);
     }
 
     @GetMapping("/{id}")
