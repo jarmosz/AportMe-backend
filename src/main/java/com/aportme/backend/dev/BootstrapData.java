@@ -204,11 +204,13 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
         pet.setBehaviorToAnimals(behaviorToAnimals);
         pet.setBehaviorToChildren(behaviorToChildren);
         pet.setBreed(breed);
+        pet.setSearchableBreed(breed.toLowerCase());
         pet.setSex(sex);
         pet.setDescription(description);
         pet.setDiseases(diseases);
         pet.setFoundation(foundation);
         pet.setName(name);
+        pet.setSearchableName(name.toLowerCase());
         pet.setSize(petSize);
         pet.setPetType(petType);
         pet.setTrainingNeeded(trainingNeeded);
