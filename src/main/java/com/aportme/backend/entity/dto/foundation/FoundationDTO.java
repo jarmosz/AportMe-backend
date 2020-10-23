@@ -18,7 +18,7 @@ public class FoundationDTO extends FoundationBaseDTO {
 
     private String accountNumber;
 
-    private UserDTO user;
+    private String email;
 
     private AddressDTO address;
 

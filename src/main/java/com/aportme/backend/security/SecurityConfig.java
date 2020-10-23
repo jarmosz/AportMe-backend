@@ -1,8 +1,10 @@
 package com.aportme.backend.security;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -14,13 +16,12 @@ import javax.servlet.http.HttpServletResponse;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
+@EnableGlobalMethodSecurity(prePostEnabled=true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JWTAuthorizationFilter jwtAuthorizationFilter;
 
-    public SecurityConfig(JWTAuthorizationFilter jwtAuthorizationFilter) {
-        this.jwtAuthorizationFilter = jwtAuthorizationFilter;
-    }
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -36,15 +37,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,"/activateAccount").permitAll()
                 .antMatchers(HttpMethod.GET,"/api/foundations").permitAll()
                 .antMatchers(HttpMethod.GET,"/api/foundations/*").permitAll()
-                .anyRequest().authenticated();
-                // this disables session creation on Spring Security
+                .anyRequest()
+                .authenticated();
 
         http
                 .headers()
                 .frameOptions()
                 .disable();
-//                .and()
-//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http
                 .exceptionHandling()

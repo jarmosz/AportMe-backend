@@ -5,6 +5,7 @@ import com.aportme.backend.entity.Pet;
 import com.aportme.backend.entity.PetPicture;
 import com.aportme.backend.entity.SearchablePet;
 import com.aportme.backend.entity.dto.pet.AddPetDTO;
+import com.aportme.backend.entity.dto.pet.PetBaseDTO;
 import com.aportme.backend.entity.dto.pet.PetDTO;
 import com.aportme.backend.entity.dto.pet.PetFilters;
 import com.aportme.backend.entity.dto.pet.UpdatePetDTO;
@@ -48,6 +49,7 @@ public class PetService {
                 .stream()
                 .map(pet -> modelMapper.map(pet, PetDTO.class))
                 .collect(Collectors.toList());
+
         return new PageImpl<>(petDTOs, pageable, pets.getTotalElements());
     }
 
@@ -56,7 +58,7 @@ public class PetService {
         return modelMapper.map(pet, PetDTO.class);
     }
 
-    public PetDTO update(Long id, UpdatePetDTO petDTO) {
+    public PetDTO update(Long id, PetBaseDTO petDTO) {
         Pet pet = findById(id);
         modelMapper.map(petDTO, pet);
         Pet updatedPet = petRepository.save(pet);
