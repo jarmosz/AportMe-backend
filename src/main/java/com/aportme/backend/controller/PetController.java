@@ -1,6 +1,7 @@
 package com.aportme.backend.controller;
 
 import com.aportme.backend.entity.dto.pet.AddPetDTO;
+import com.aportme.backend.entity.dto.pet.PetBaseDTO;
 import com.aportme.backend.entity.dto.pet.PetDTO;
 import com.aportme.backend.entity.dto.pet.PetFilters;
 import com.aportme.backend.entity.dto.pet.UpdatePetDTO;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.SortDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
@@ -37,18 +39,21 @@ public class PetController {
     }
 
     @PutMapping("/{id}")
-    @ApiOperation(value = "Update pet", response = UpdatePetDTO.class)
-    public PetDTO update(@PathVariable Long id, @RequestBody UpdatePetDTO petDTO) {
+    @PreAuthorize("@accessService.isFoundation() && @accessService.isFoundationPet(#id)")
+    @ApiOperation(value = "Update pet", response = PetDTO.class)
+    public PetDTO update(@PathVariable Long id, @RequestBody PetBaseDTO petDTO) {
         return petService.update(id, petDTO);
     }
 
     @PostMapping
+    @PreAuthorize("@accessService.isFoundation()")
     @ApiOperation(value = "Create pet")
     public ResponseEntity<Object> create(@RequestParam Long foundationId, @RequestBody AddPetDTO petDTO) {
         return petService.create(foundationId, petDTO);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("@accessService.isFoundation() && @accessService.isFoundationPet(#id)")
     @ApiOperation(value = "Delete pet")
     public ResponseEntity<Object> delete(@PathVariable Long id) {
         return petService.delete(id);
