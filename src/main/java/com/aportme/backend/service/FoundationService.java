@@ -7,6 +7,7 @@ import com.aportme.backend.entity.dto.foundation.AddFoundationDTO;
 import com.aportme.backend.entity.dto.foundation.FoundationDTO;
 import com.aportme.backend.entity.dto.foundation.UpdateFoundationDTO;
 import com.aportme.backend.repository.FoundationRepository;
+import com.aportme.backend.utils.ModelMapperUtil;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -42,11 +43,7 @@ public class FoundationService {
 
     public FoundationDTO getById(Long id) {
         Foundation foundation = findById(id);
-        return modelMapper.map(foundation, FoundationDTO.class);
-    }
-
-    public FoundationDTO getByPetId(Long petId) {
-        Foundation foundation = foundationRepository.findByPetId(petId).orElseThrow(() -> new EntityNotFoundException("Foundation not found"));
+        ModelMapperUtil.mapUserToFoundationDTO(modelMapper);
         return modelMapper.map(foundation, FoundationDTO.class);
     }
 

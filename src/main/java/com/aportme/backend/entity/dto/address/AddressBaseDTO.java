@@ -3,7 +3,7 @@ package com.aportme.backend.entity.dto.address;
 import lombok.Data;
 
 @Data
-class AddressBaseDTO {
+public class AddressBaseDTO {
 
     private String city;
 
