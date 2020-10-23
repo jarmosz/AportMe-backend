@@ -8,9 +8,9 @@ import com.aportme.backend.entity.dto.pet.AddPetDTO;
 import com.aportme.backend.entity.dto.pet.PetBaseDTO;
 import com.aportme.backend.entity.dto.pet.PetDTO;
 import com.aportme.backend.entity.dto.pet.PetFilters;
-import com.aportme.backend.entity.dto.pet.UpdatePetDTO;
 import com.aportme.backend.repository.PetRepository;
 import com.aportme.backend.repository.SearchPetRepository;
+import com.aportme.backend.utils.ModelMapperUtil;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,12 +37,11 @@ public class PetService {
 
     public Page<PetDTO> getPets(Pageable pageable, String searchQuery, PetFilters filters) {
         SearchablePet searchablePet = resolveSearchQuery(searchQuery);
-        Page<Pet> pets = searchPetRepository.
-                findPetsByNameAndBreed(
-                        pageable,
-                        searchablePet.getName(),
-                        searchablePet.getBreed(),
-                        filters);
+        Page<Pet> pets = searchPetRepository.findPetsByNameAndBreed(
+                pageable,
+                searchablePet.getName(),
+                searchablePet.getBreed(),
+                filters);
 
         List<PetDTO> petDTOs = pets
                 .getContent()
@@ -67,11 +66,10 @@ public class PetService {
 
     //TODO We should get foundation from Spring Security Context
     public ResponseEntity<Object> create(Long foundationId, AddPetDTO petDTO) {
+        ModelMapperUtil.mapPetDTOtoPet(modelMapper);
         Pet pet = modelMapper.map(petDTO, Pet.class);
         Foundation foundation = foundationService.findById(foundationId);
         pet.setFoundation(foundation);
-        pet.setSearchableName(pet.getName().toLowerCase());
-        pet.setSearchableBreed(pet.getBreed().toLowerCase());
         petRepository.save(pet);
 
         List<PetPicture> pictures = pictureService.createPicturesForNewPet(pet, petDTO.getPictures());
