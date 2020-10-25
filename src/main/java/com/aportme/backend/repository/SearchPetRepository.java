@@ -22,6 +22,7 @@ import java.util.List;
 @Repository
 @RequiredArgsConstructor
 public class SearchPetRepository implements CustomPetRepository {
+
     private final EntityManager entityManager;
 
     @Override
