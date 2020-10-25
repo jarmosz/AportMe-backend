@@ -4,7 +4,6 @@ import com.aportme.backend.entity.dto.pet.AddPetDTO;
 import com.aportme.backend.entity.dto.pet.PetBaseDTO;
 import com.aportme.backend.entity.dto.pet.PetDTO;
 import com.aportme.backend.entity.dto.pet.PetFilters;
-import com.aportme.backend.entity.dto.pet.UpdatePetDTO;
 import com.aportme.backend.service.PetService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -36,6 +35,16 @@ public class PetController {
     @ApiOperation(value = "Find pet by id", response = PetDTO.class)
     public PetDTO getById(@PathVariable Long id) {
         return petService.getById(id);
+    }
+
+    @GetMapping("/myPets")
+    @PreAuthorize("@accessService.isFoundation()")
+    @ApiOperation(value = "Find pets which belongs to logged foundation", response = PetDTO.class)
+    public Page<PetDTO> getMyPets(
+            @SortDefault(sort = "creationDate", direction = Sort.Direction.DESC) Pageable pageable,
+            @RequestParam(required = false) String search
+    ) {
+        return petService.getMyPets(pageable, search);
     }
 
     @PutMapping("/{id}")

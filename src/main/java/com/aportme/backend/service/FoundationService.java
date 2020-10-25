@@ -28,6 +28,7 @@ public class FoundationService {
     private final FoundationRepository foundationRepository;
     private final UserService userService;
     private final AddressService addressService;
+    private final AuthenticationService authenticationService;
     private final ModelMapper modelMapper;
 
     public Page<FoundationDTO> getAll(Pageable pageable) {
@@ -47,7 +48,8 @@ public class FoundationService {
         return modelMapper.map(foundation, FoundationDTO.class);
     }
 
-    public ResponseEntity<Object> update(Long id, UpdateFoundationDTO foundationInfoDTO) {
+    public ResponseEntity<Object> update(UpdateFoundationDTO foundationInfoDTO) {
+        Long id = authenticationService.getLoggedUserId();
         Foundation foundation = findById(id);
         modelMapper.map(foundationInfoDTO, foundation);
         foundationRepository.save(foundation);
