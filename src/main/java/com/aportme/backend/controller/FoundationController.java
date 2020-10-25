@@ -34,7 +34,7 @@ public class FoundationController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("(@accessService.isFoundation() || @accessService.isAdmin()) && @accessService.isMyData(#id)")
+    @PreAuthorize("(@accessService.isFoundation() && @accessService.isMyData(#id)) || @accessService.isAdmin()")
     @ApiOperation(value = "Update foundation")
     public ResponseEntity<Object> updateFoundation(@PathVariable Long id, @RequestBody UpdateFoundationDTO updateFoundationDTO) {
         return foundationService.update(id, updateFoundationDTO);
@@ -48,7 +48,7 @@ public class FoundationController {
     }
 
     @PostMapping("/upload")
-    @PreAuthorize("(@accessService.isFoundation() || @accessService.isAdmin()) && @accessService.isMyData(#id)")
+    @PreAuthorize("(@accessService.isFoundation() && @accessService.isMyData(#id)) || @accessService.isAdmin() ")
     @ApiOperation(value = "Upload foundation logo")
     public ResponseEntity<Object> uploadFoundationLogo(@RequestParam Long id, @RequestBody String base64Logo) {
         return foundationService.uploadFoundationLogo(id, base64Logo);
