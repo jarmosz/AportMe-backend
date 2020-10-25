@@ -6,6 +6,7 @@ import com.aportme.backend.service.security.SecurityService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,18 +22,19 @@ public class SecurityController {
     private final SecurityService securityService;
 
     @PostMapping("/login")
-    public TokenPairDTO login(@RequestBody UserLoginDTO userLoginDTO){
+    public TokenPairDTO login(@RequestBody UserLoginDTO userLoginDTO) {
         return securityService.loginUser(userLoginDTO);
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Object> logout(HttpServletRequest request){
+    public ResponseEntity<Object> logout(HttpServletRequest request) {
         securityService.logoutUser(request);
         return new ResponseEntity<>("User logged out.", HttpStatus.NO_CONTENT);
     }
 
     @PostMapping("/refreshToken")
-    public TokenPairDTO refreshToken(HttpServletRequest request){
+    @PreAuthorize("@accessService.isUser() || accessService.isFoundation()")
+    public TokenPairDTO refreshToken(HttpServletRequest request) {
         return securityService.refreshAccessToken(request);
     }
 }
