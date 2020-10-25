@@ -4,7 +4,7 @@ import com.aportme.backend.entity.enums.*;
 import lombok.Data;
 
 @Data
-class PetBaseDTO {
+public class PetBaseDTO {
 
     private String name;
 

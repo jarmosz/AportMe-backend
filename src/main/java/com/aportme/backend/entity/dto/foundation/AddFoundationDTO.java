@@ -1,6 +1,6 @@
 package com.aportme.backend.entity.dto.foundation;
 
-import com.aportme.backend.entity.dto.address.AddOrUpdateAddressDTO;
+import com.aportme.backend.entity.dto.address.AddressBaseDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -10,6 +10,6 @@ public class AddFoundationDTO extends FoundationBaseDTO {
 
     private String accountNumber;
 
-    private AddOrUpdateAddressDTO address;
+    private AddressBaseDTO address;
 
 }

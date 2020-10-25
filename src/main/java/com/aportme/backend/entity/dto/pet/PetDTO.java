@@ -16,7 +16,7 @@ public class PetDTO extends PetBaseDTO {
 
     private Long id;
 
-    private FoundationForPetDTO foundationInfo;
+    private FoundationForPetDTO foundation;
 
     private LocalDateTime creationDate;
 
