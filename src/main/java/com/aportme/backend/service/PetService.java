@@ -33,6 +33,7 @@ public class PetService {
     private final SearchPetRepository searchPetRepository;
     private final FoundationService foundationService;
     private final ModelMapper modelMapper;
+    private final AuthenticationService authenticationService;
     private PictureService pictureService;
 
     public Page<PetDTO> getPets(Pageable pageable, String searchQuery, PetFilters filters) {
@@ -43,13 +44,18 @@ public class PetService {
                 searchablePet.getBreed(),
                 filters);
 
-        List<PetDTO> petDTOs = pets
-                .getContent()
-                .stream()
-                .map(pet -> modelMapper.map(pet, PetDTO.class))
-                .collect(Collectors.toList());
+        return convertPetsToPage(pageable, pets);
+    }
 
-        return new PageImpl<>(petDTOs, pageable, pets.getTotalElements());
+    public Page<PetDTO> getMyPets(Pageable pageable, String name) {
+        Long foundationId = authenticationService.getLoggedUserId();
+        Page<Pet> pets;
+        if(name == null) {
+            pets = petRepository.findAllByFoundation_Id(pageable, foundationId);
+        } else {
+            pets = petRepository.findAllByNameContainingIgnoreCaseAndFoundation_Id(pageable, name.toLowerCase(), foundationId);
+        }
+        return convertPetsToPage(pageable, pets);
     }
 
     public PetDTO getById(Long id) {
@@ -89,9 +95,13 @@ public class PetService {
         return petRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Pet not found"));
     }
 
-    @Autowired
-    public void setPictureService(PictureService pictureService) {
-        this.pictureService = pictureService;
+    private Page<PetDTO> convertPetsToPage(Pageable pageable, Page<Pet> pets) {
+        List<PetDTO> petDTOs = pets.getContent()
+                .stream()
+                .map(pet -> modelMapper.map(pet, PetDTO.class))
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(petDTOs, pageable, pets.getTotalElements());
     }
 
     private SearchablePet resolveSearchQuery(String query) {
@@ -103,5 +113,10 @@ public class PetService {
             String[] splittedQuery = query.split(",");
             return new SearchablePet(splittedQuery[0].toLowerCase(), splittedQuery[1].toLowerCase());
         }
+    }
+
+    @Autowired
+    public void setPictureService(PictureService pictureService) {
+        this.pictureService = pictureService;
     }
 }

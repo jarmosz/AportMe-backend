@@ -33,11 +33,11 @@ public class FoundationController {
         return foundationService.getById(id);
     }
 
-    @PutMapping("/{id}")
-    @PreAuthorize("(@accessService.isFoundation() && @accessService.isMyData(#id)) || @accessService.isAdmin()")
+    @PutMapping
+    @PreAuthorize("@accessService.isFoundation() || @accessService.isAdmin()")
     @ApiOperation(value = "Update foundation")
-    public ResponseEntity<Object> updateFoundation(@PathVariable Long id, @RequestBody UpdateFoundationDTO updateFoundationDTO) {
-        return foundationService.update(id, updateFoundationDTO);
+    public ResponseEntity<Object> updateFoundation(@RequestBody UpdateFoundationDTO updateFoundationDTO) {
+        return foundationService.update(updateFoundationDTO);
     }
 
     @PostMapping
