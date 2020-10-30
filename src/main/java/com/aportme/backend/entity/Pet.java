@@ -1,7 +1,7 @@
 package com.aportme.backend.entity;
 
 import com.aportme.backend.entity.enums.*;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.aportme.backend.entity.survey.Survey;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -63,7 +63,9 @@ public class Pet {
     @UpdateTimestamp
     private LocalDateTime updateDate;
 
-    @JsonIgnoreProperties("pets")
+    @OneToMany(mappedBy = "pet")
+    private List<Survey> surveys;
+
     @ManyToOne
     @JoinColumn(name = "foundation_id")
     private Foundation foundation;

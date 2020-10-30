@@ -67,6 +67,11 @@ public class FoundationService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    public Foundation findByLoggedEmail() {
+        String foundationEmail = accessService.getAuthenticatedUserEmail();
+        return foundationRepository.findByEmail(foundationEmail).orElseThrow(() -> new EntityNotFoundException("Foundation not found"));
+    }
+
     public Foundation findById(Long id) {
         return foundationRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Foundation not found"));
     }
