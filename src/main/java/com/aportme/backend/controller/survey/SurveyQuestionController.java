@@ -20,7 +20,7 @@ public class SurveyQuestionController {
     private final SurveyQuestionService surveyQuestionService;
 
     @GetMapping
-    @ApiOperation(value = "Get logged foundation survey questions")
+    @ApiOperation(value = "Get logged foundation survey questions", response = SurveyQuestionDTO.class)
     public List<SurveyQuestionDTO> getMyQuestions() {
         return surveyQuestionService.getQuestions();
     }
