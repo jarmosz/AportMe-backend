@@ -19,15 +19,15 @@ public class AccessService {
     private final AuthenticationService authenticationService;
 
     public Boolean isAdmin() {
-        return authenticationService.getAuthentication().getAuthorities().contains(Role.ADMIN);
+        return authenticationService.getAuthorities().contains(Role.ADMIN);
     }
 
     public Boolean isFoundation() {
-        return authenticationService.getAuthentication().getAuthorities().contains(Role.FOUNDATION);
+        return authenticationService.getAuthorities().contains(Role.FOUNDATION);
     }
 
     public Boolean isUser() {
-        return authenticationService.getAuthentication().getAuthorities().contains(Role.USER);
+        return authenticationService.getAuthorities().contains(Role.USER);
     }
 
     public Boolean isFoundationPet(Long petId) {
