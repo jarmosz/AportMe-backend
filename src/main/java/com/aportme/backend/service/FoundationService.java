@@ -5,6 +5,7 @@ import com.aportme.backend.entity.Foundation;
 import com.aportme.backend.entity.User;
 import com.aportme.backend.entity.dto.foundation.AddFoundationDTO;
 import com.aportme.backend.entity.dto.foundation.FoundationDTO;
+import com.aportme.backend.entity.dto.foundation.LoggedFundationDataDTO;
 import com.aportme.backend.entity.dto.foundation.UpdateFoundationDTO;
 import com.aportme.backend.repository.FoundationRepository;
 import com.aportme.backend.utils.ModelMapperUtil;
@@ -44,14 +45,14 @@ public class FoundationService {
 
     public FoundationDTO getById(Long id) {
         Foundation foundation = findById(id);
-        ModelMapperUtil.mapUserToFoundationDTO(modelMapper);
+        ModelMapperUtil.mapFoundationEmail(modelMapper);
         return modelMapper.map(foundation, FoundationDTO.class);
     }
 
-    public ResponseEntity<Object> update(UpdateFoundationDTO foundationInfoDTO) {
+    public ResponseEntity<Object> update(UpdateFoundationDTO foundationDTO) {
         Long id = authenticationService.getLoggedUserId();
         Foundation foundation = findById(id);
-        modelMapper.map(foundationInfoDTO, foundation);
+        modelMapper.map(foundationDTO, foundation);
         foundationRepository.save(foundation);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -66,14 +67,13 @@ public class FoundationService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    public ResponseEntity<Object> uploadFoundationLogo(Long id, String base64Logo) {
-        Foundation foundation = findById(id);
-        foundation.setFoundationLogo(base64Logo);
-        foundationRepository.save(foundation);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
     public Foundation findById(Long id) {
         return foundationRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Foundation not found"));
+    }
+
+    public LoggedFundationDataDTO getMyData() {
+        Long id = authenticationService.getLoggedUserId();
+        Foundation foundation = findById(id);
+        return modelMapper.map(foundation, LoggedFundationDataDTO.class);
     }
 }
