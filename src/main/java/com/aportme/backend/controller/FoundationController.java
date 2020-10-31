@@ -2,6 +2,7 @@ package com.aportme.backend.controller;
 
 import com.aportme.backend.entity.dto.foundation.AddFoundationDTO;
 import com.aportme.backend.entity.dto.foundation.FoundationDTO;
+import com.aportme.backend.entity.dto.foundation.LoggedFundationDataDTO;
 import com.aportme.backend.entity.dto.foundation.UpdateFoundationDTO;
 import com.aportme.backend.service.FoundationService;
 import io.swagger.annotations.ApiOperation;
@@ -33,6 +34,13 @@ public class FoundationController {
         return foundationService.getById(id);
     }
 
+    @GetMapping("/profile")
+    @PreAuthorize("@accessService.isFoundation()")
+    @ApiOperation(value = "Find all foundations", response = FoundationDTO.class)
+    public LoggedFundationDataDTO getMyData() {
+        return foundationService.getMyData();
+    }
+
     @PutMapping
     @PreAuthorize("@accessService.isFoundation() || @accessService.isAdmin()")
     @ApiOperation(value = "Update foundation")
@@ -45,12 +53,5 @@ public class FoundationController {
     @ApiOperation(value = "Create foundation")
     public ResponseEntity<Object> createFoundation(@RequestParam Long userId, @RequestBody AddFoundationDTO addFoundationDTO) {
         return foundationService.create(userId, addFoundationDTO);
-    }
-
-    @PostMapping("/upload")
-    @PreAuthorize("(@accessService.isFoundation() && @accessService.isMyData(#id)) || @accessService.isAdmin() ")
-    @ApiOperation(value = "Upload foundation logo")
-    public ResponseEntity<Object> uploadFoundationLogo(@RequestParam Long id, @RequestBody String base64Logo) {
-        return foundationService.uploadFoundationLogo(id, base64Logo);
     }
 }
