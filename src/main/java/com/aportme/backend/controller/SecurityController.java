@@ -33,7 +33,6 @@ public class SecurityController {
     }
 
     @PostMapping("/refreshToken")
-    @PreAuthorize("@accessService.isUser() || accessService.isFoundation()")
     public TokenPairDTO refreshToken(HttpServletRequest request) {
         return securityService.refreshAccessToken(request);
     }
