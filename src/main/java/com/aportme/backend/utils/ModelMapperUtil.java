@@ -8,7 +8,7 @@ import org.modelmapper.ModelMapper;
 
 public class ModelMapperUtil {
 
-    public static void mapUserToFoundationDTO(ModelMapper modelMapper) {
+    public static void mapFoundationEmail(ModelMapper modelMapper) {
         modelMapper.typeMap(Foundation.class, FoundationDTO.class)
                 .addMappings(mapper -> mapper.map(src -> src.getUser().getEmail(), FoundationDTO::setEmail));
     }
