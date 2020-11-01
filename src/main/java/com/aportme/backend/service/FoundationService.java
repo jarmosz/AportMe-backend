@@ -50,8 +50,8 @@ public class FoundationService {
     }
 
     public ResponseEntity<Object> update(UpdateFoundationDTO foundationDTO) {
-        Long id = authenticationService.getLoggedUserId();
-        Foundation foundation = findById(id);
+        String email = authenticationService.getLoggedUserName();
+        Foundation foundation = findByEmail(email);
         modelMapper.map(foundationDTO, foundation);
         foundationRepository.save(foundation);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -71,9 +71,13 @@ public class FoundationService {
         return foundationRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Foundation not found"));
     }
 
+    public Foundation findByEmail(String email) {
+        return foundationRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("Foundation not found"));
+    }
+
     public LoggedFundationDataDTO getMyData() {
-        Long id = authenticationService.getLoggedUserId();
-        Foundation foundation = findById(id);
+        String email = authenticationService.getLoggedUserName();
+        Foundation foundation = findByEmail(email);
         return modelMapper.map(foundation, LoggedFundationDataDTO.class);
     }
 }
