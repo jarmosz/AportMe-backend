@@ -36,26 +36,16 @@ public class PetService {
     private final AuthenticationService authenticationService;
     private PictureService pictureService;
 
-    public Page<PetDTO> getPets(Pageable pageable, String searchQuery, PetFilters filters) {
+    public Page<PetDTO> getPets(Pageable pageable, String searchQuery, PetFilters filters, boolean isFoundationCall) {
         SearchablePet searchablePet = resolveSearchQuery(searchQuery);
-        Page<Pet> pets = searchPetRepository.findPetsByNameAndBreed(
+        Page<Pet> petsPage = searchPetRepository.findPetsByNameAndBreed(
                 pageable,
                 searchablePet.getName(),
                 searchablePet.getBreed(),
-                filters);
+                filters,
+                isFoundationCall);
 
-        return convertPetsToPage(pageable, pets);
-    }
-
-    public Page<PetDTO> getMyPets(Pageable pageable, String name) {
-        Long foundationId = authenticationService.getLoggedUserId();
-        Page<Pet> pets;
-        if(name == null) {
-            pets = petRepository.findAllByFoundation_Id(pageable, foundationId);
-        } else {
-            pets = petRepository.findAllByNameContainingIgnoreCaseAndFoundation_Id(pageable, name.toLowerCase(), foundationId);
-        }
-        return convertPetsToPage(pageable, pets);
+        return convertPetsToPage(pageable, petsPage);
     }
 
     public PetDTO getById(Long id) {
@@ -70,10 +60,10 @@ public class PetService {
         return modelMapper.map(updatedPet, PetDTO.class);
     }
 
-    //TODO We should get foundation from Spring Security Context
-    public ResponseEntity<Object> create(Long foundationId, AddPetDTO petDTO) {
+    public ResponseEntity<Object> create(AddPetDTO petDTO) {
         ModelMapperUtil.mapPetDTOtoPet(modelMapper);
         Pet pet = modelMapper.map(petDTO, Pet.class);
+        Long foundationId = authenticationService.getLoggedUserId();
         Foundation foundation = foundationService.findById(foundationId);
         pet.setFoundation(foundation);
         petRepository.save(pet);
