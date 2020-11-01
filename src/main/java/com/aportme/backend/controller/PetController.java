@@ -9,8 +9,6 @@ import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.SortDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +23,7 @@ public class PetController {
     @GetMapping
     @ApiOperation(value = "Find all pets", response = PetDTO.class)
     public Page<PetDTO> getAll(
-            @SortDefault(sort = "creationDate", direction = Sort.Direction.DESC) Pageable pageable,
+            Pageable pageable,
             @RequestParam(required = false) String searchQuery,
             @RequestParam boolean isFoundationCall,
             PetFilters filters) {
