@@ -4,7 +4,6 @@ import com.aportme.backend.entity.survey.SelectValue;
 import com.aportme.backend.entity.survey.SurveyQuestion;
 import com.aportme.backend.repository.survey.SelectValueRepository;
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,7 +18,7 @@ public class SelectValueService {
     public void save(SurveyQuestion question, List<String> selectValues) {
         List<SelectValue> values = selectValues
                 .stream()
-                .map(val -> new SelectValue(val))
+                .map(SelectValue::new)
                 .peek(val -> val.setQuestion(question))
                 .collect(Collectors.toList());
 
