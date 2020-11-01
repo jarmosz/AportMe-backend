@@ -2,6 +2,7 @@ package com.aportme.backend.service;
 
 import com.aportme.backend.entity.User;
 import com.aportme.backend.entity.dto.user.AuthUserDTO;
+import com.aportme.backend.entity.dto.user.ChangeUserPasswordDTO;
 import com.aportme.backend.entity.dto.user.UserDTO;
 import com.aportme.backend.event.OnRegistrationCompleteEvent;
 import com.aportme.backend.exception.UserAlreadyExistsException;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final AccessService accessService;
     private final PasswordEncoder passwordEncoder;
     private final ApplicationEventPublisher eventPublisher;
     private final ModelMapper modelMapper;
@@ -44,6 +46,13 @@ public class UserService {
         return validateEmail(userDTO.getEmail()) && validatePassword(userDTO.getPassword());
     }
 
+    private boolean validateChangePasswordData(ChangeUserPasswordDTO passwords){
+        return validatePassword(passwords.getOldPassword())
+                && validatePassword(passwords.getNewPassword())
+                && validatePassword(passwords.getRepeatNewPassword())
+                && passwords.getNewPassword() == passwords.getRepeatNewPassword();
+    }
+
     public void registerUser(AuthUserDTO userDTO) {
         if (validateData(userDTO)) {
             Boolean isUserRegistered = userRepository.existsByEmail(userDTO.getEmail());
@@ -56,6 +65,18 @@ public class UserService {
                 throw new UserAlreadyExistsException();
             }
         } else {
+            throw new WrongUserCredentialsException();
+        }
+    }
+
+    public void changeUserPassword(ChangeUserPasswordDTO passwords) {
+        if (validateChangePasswordData(passwords)){
+            // TODO - wyciągnięcie e-maila z kontekstu springa i podmienienie poniżej
+            User user = userRepository.findByEmail("adopcje.ttb@op.pl").orElseThrow(UserNotFoundException::new);
+            user.setPassword(passwordEncoder.encode(passwords.getNewPassword()));
+            userRepository.save(user);
+        }
+        else {
             throw new WrongUserCredentialsException();
         }
     }
