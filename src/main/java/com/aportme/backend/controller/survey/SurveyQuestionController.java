@@ -21,8 +21,8 @@ public class SurveyQuestionController {
 
     @GetMapping
     @ApiOperation(value = "Get logged foundation survey questions", response = SurveyQuestionDTO.class)
-    public List<SurveyQuestionDTO> getMyQuestions() {
-        return surveyQuestionService.getQuestions();
+    public List<SurveyQuestionDTO> getMyQuestions(@RequestParam(required = false) Long petId) {
+        return surveyQuestionService.getQuestions(petId);
     }
 
     @PostMapping("/add")
