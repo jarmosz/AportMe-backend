@@ -10,7 +10,6 @@ import com.aportme.backend.entity.dto.pet.PetDTO;
 import com.aportme.backend.entity.dto.pet.PetFilters;
 import com.aportme.backend.repository.PetRepository;
 import com.aportme.backend.repository.SearchPetRepository;
-import com.aportme.backend.utils.ModelMapperUtil;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,11 +60,12 @@ public class PetService {
     }
 
     public ResponseEntity<Object> create(AddPetDTO petDTO) {
-        ModelMapperUtil.mapPetDTOtoPet(modelMapper);
         Pet pet = modelMapper.map(petDTO, Pet.class);
-        Long foundationId = authenticationService.getLoggedUserId();
-        Foundation foundation = foundationService.findById(foundationId);
+        String email = authenticationService.getLoggedUserName();
+        Foundation foundation = foundationService.findByEmail(email);
         pet.setFoundation(foundation);
+        pet.setSearchableName(pet.getName().toLowerCase());
+        pet.setSearchableBreed(pet.getBreed().toLowerCase());
         petRepository.save(pet);
 
         List<PetPicture> pictures = pictureService.createPicturesForNewPet(pet, petDTO.getPictures());
