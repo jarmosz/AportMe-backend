@@ -36,6 +36,7 @@ public class SearchPetRepository implements CustomPetRepository {
         Root<Pet> pet = criteriaQuery.from(Pet.class);
 
         criteriaQuery.where(buildPredicate(pet, criteriaBuilder, name, breed, filters, isFoundationCall));
+        criteriaQuery.orderBy(criteriaBuilder.desc(pet.get(Pet_.creationDate)));
         TypedQuery<Pet> query = entityManager.createQuery(criteriaQuery);
 
         int totalRows = query.getResultList().size();
