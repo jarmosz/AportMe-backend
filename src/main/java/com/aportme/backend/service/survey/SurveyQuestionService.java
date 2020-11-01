@@ -1,12 +1,14 @@
 package com.aportme.backend.service.survey;
 
 import com.aportme.backend.entity.Foundation;
+import com.aportme.backend.entity.Pet;
 import com.aportme.backend.entity.dto.SurveyQuestionDTO;
 import com.aportme.backend.entity.dto.survey.AddSurveyQuestionDTO;
 import com.aportme.backend.entity.enums.QuestionType;
 import com.aportme.backend.entity.survey.SurveyQuestion;
 import com.aportme.backend.repository.survey.SurveyQuestionRepository;
 import com.aportme.backend.service.FoundationService;
+import com.aportme.backend.service.PetService;
 import com.aportme.backend.service.SelectValueService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -25,14 +27,25 @@ public class SurveyQuestionService {
     private final FoundationService foundationService;
     private final SelectValueService selectValueService;
     private final SurveyAnswerService surveyAnswerService;
+    private final PetService petService;
     private final ModelMapper modelMapper;
 
-    public List<SurveyQuestionDTO> getQuestions() {
-        Foundation foundation = foundationService.findByLoggedEmail();
+    public List<SurveyQuestionDTO> getQuestions(Long petId) {
+        Foundation foundation = getPetOrLoggedFoundation(petId);
+       
         return surveyQuestionRepository.findAllByFoundation(foundation)
                 .stream()
                 .map(q -> modelMapper.map(q, SurveyQuestionDTO.class))
                 .collect(Collectors.toList());
+    }
+
+    private Foundation getPetOrLoggedFoundation(Long petId) {
+        if(petId != null) {
+            Pet pet = petService.findById(petId);
+            return pet.getFoundation();
+        } else {
+            return foundationService.findByLoggedEmail();
+        }
     }
 
     @Transactional
