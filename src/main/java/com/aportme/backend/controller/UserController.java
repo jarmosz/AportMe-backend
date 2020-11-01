@@ -1,6 +1,7 @@
 package com.aportme.backend.controller;
 
 import com.aportme.backend.entity.dto.user.AuthUserDTO;
+import com.aportme.backend.entity.dto.user.ChangeUserPasswordDTO;
 import com.aportme.backend.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -20,5 +21,11 @@ public class UserController {
     @ApiOperation(value = "Register new user")
     public void registerUser(@RequestBody AuthUserDTO user) {
         userService.registerUser(user);
+    }
+
+    @PostMapping("/changePassword")
+    @ApiOperation(value = "Change user password")
+    public void changeUserPassword(@RequestBody ChangeUserPasswordDTO passwords) {
+        userService.changeUserPassword(passwords);
     }
 }
