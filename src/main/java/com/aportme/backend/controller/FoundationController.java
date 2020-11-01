@@ -24,7 +24,9 @@ public class FoundationController {
 
     @GetMapping
     @ApiOperation(value = "Find all foundations", response = FoundationDTO.class)
-    public Page<FoundationDTO> getAllFoundations(@SortDefault(value = "name", direction = Sort.Direction.ASC) Pageable pageable) {
+    public Page<FoundationDTO> getAllFoundations(
+            @SortDefault(value = "name", direction = Sort.Direction.ASC) Pageable pageable
+    ) {
         return foundationService.getAll(pageable);
     }
 
