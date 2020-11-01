@@ -10,6 +10,6 @@ import java.util.Optional;
 @Repository
 public interface FoundationRepository extends JpaRepository<Foundation, Long> {
 
-    @Query("SELECT f FROM Foundation f INNER JOIN Pet p ON p.foundation.id = f.id WHERE p.id=?1")
-    Optional<Foundation> findByPetId(Long id);
+    @Query("SELECT f FROM Foundation f INNER JOIN User u ON u.id = f.id WHERE u.email = ?1")
+    Optional<Foundation> findByEmail(String email);
 }
