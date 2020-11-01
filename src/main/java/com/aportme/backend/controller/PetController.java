@@ -27,24 +27,15 @@ public class PetController {
     public Page<PetDTO> getAll(
             @SortDefault(sort = "creationDate", direction = Sort.Direction.DESC) Pageable pageable,
             @RequestParam(required = false) String searchQuery,
+            @RequestParam boolean isFoundationCall,
             PetFilters filters) {
-        return petService.getPets(pageable, searchQuery, filters);
+        return petService.getPets(pageable, searchQuery, filters, isFoundationCall);
     }
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Find pet by id", response = PetDTO.class)
     public PetDTO getById(@PathVariable Long id) {
         return petService.getById(id);
-    }
-
-    @GetMapping("/myPets")
-    @PreAuthorize("@accessService.isFoundation()")
-    @ApiOperation(value = "Find pets which belongs to logged foundation", response = PetDTO.class)
-    public Page<PetDTO> getMyPets(
-            @SortDefault(sort = "creationDate", direction = Sort.Direction.DESC) Pageable pageable,
-            @RequestParam(required = false) String search
-    ) {
-        return petService.getMyPets(pageable, search);
     }
 
     @PutMapping("/{id}")
@@ -57,8 +48,8 @@ public class PetController {
     @PostMapping
     @PreAuthorize("@accessService.isFoundation()")
     @ApiOperation(value = "Create pet")
-    public ResponseEntity<Object> create(@RequestParam Long foundationId, @RequestBody AddPetDTO petDTO) {
-        return petService.create(foundationId, petDTO);
+    public ResponseEntity<Object> create(@RequestBody AddPetDTO petDTO) {
+        return petService.create(petDTO);
     }
 
     @DeleteMapping("/{id}")
