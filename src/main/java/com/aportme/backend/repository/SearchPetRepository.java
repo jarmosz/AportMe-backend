@@ -39,7 +39,12 @@ public class SearchPetRepository implements CustomPetRepository {
         TypedQuery<Pet> query = entityManager.createQuery(criteriaQuery);
 
         int totalRows = query.getResultList().size();
-        return new PageImpl<>(query.getResultList(), pageable, totalRows);
+        List<Pet> pets = query
+                .setFirstResult(pageable.getPageNumber() * pageable.getPageSize())
+                .setMaxResults(pageable.getPageSize())
+                .getResultList();
+
+        return new PageImpl<>(pets, pageable, totalRows);
     }
 
     private Predicate buildPredicate(Root<Pet> pet, CriteriaBuilder criteriaBuilder, String name, String breed, PetFilters filters, boolean isFoundationCall) {
