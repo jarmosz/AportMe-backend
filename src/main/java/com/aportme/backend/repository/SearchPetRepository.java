@@ -3,6 +3,7 @@ package com.aportme.backend.repository;
 import com.aportme.backend.entity.Foundation_;
 import com.aportme.backend.entity.Pet;
 import com.aportme.backend.entity.Pet_;
+import com.aportme.backend.entity.User_;
 import com.aportme.backend.entity.dto.pet.PetFilters;
 import com.aportme.backend.entity.enums.Role;
 import com.aportme.backend.service.AuthenticationService;
@@ -60,7 +61,7 @@ public class SearchPetRepository implements CustomPetRepository {
             if (isFoundationCall) {
                 Long foundationId = authenticationService.getLoggedUserId();
                 if (foundationId != null && authenticationService.getAuthorities().contains(Role.FOUNDATION)) {
-                    predicates.add(criteriaBuilder.equal(pet.get(Pet_.FOUNDATION).get(Foundation_.ID), foundationId));
+                    predicates.add(criteriaBuilder.equal(pet.get(Pet_.FOUNDATION).get(Foundation_.USER).get(User_.ID), foundationId));
                 }
             }
         }
