@@ -98,10 +98,10 @@ public class PetService {
         if (query == null || query.isBlank()) {
             return new SearchablePet("", "");
         } else if (!query.contains(",")) {
-            return new SearchablePet(query.toLowerCase(), "");
+            return new SearchablePet(query.toLowerCase().trim(), "");
         } else {
             String[] splittedQuery = query.split(",");
-            return new SearchablePet(splittedQuery[0].toLowerCase(), splittedQuery[1].toLowerCase());
+            return new SearchablePet(splittedQuery[0].toLowerCase().trim(), splittedQuery[1].toLowerCase().trim());
         }
     }
 }
