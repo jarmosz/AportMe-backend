@@ -5,11 +5,10 @@ import com.aportme.backend.entity.Pet;
 import com.aportme.backend.entity.Pet_;
 import com.aportme.backend.entity.User_;
 import com.aportme.backend.entity.dto.pet.PetFilters;
-import com.aportme.backend.entity.enums.Role;
-import com.aportme.backend.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -18,8 +17,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import org.springframework.data.domain.Pageable;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,15 +25,14 @@ import java.util.List;
 public class SearchPetRepository implements CustomPetRepository {
 
     private final EntityManager entityManager;
-    private final AuthenticationService authenticationService;
 
     @Override
-    public Page<Pet> findPetsByNameAndBreed(Pageable pageable, String name, String breed, PetFilters filters, boolean isFoundationCall) {
+    public Page<Pet> findPetsByNameAndBreed(Pageable pageable, String name, String breed, PetFilters filters, boolean isFoundationCall, Long foundationId) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Pet> criteriaQuery = criteriaBuilder.createQuery(Pet.class);
         Root<Pet> pet = criteriaQuery.from(Pet.class);
 
-        criteriaQuery.where(buildPredicate(pet, criteriaBuilder, name, breed, filters, isFoundationCall));
+        criteriaQuery.where(buildPredicate(pet, criteriaBuilder, name, breed, filters, isFoundationCall, foundationId));
         criteriaQuery.orderBy(criteriaBuilder.desc(pet.get(Pet_.creationDate)));
         TypedQuery<Pet> query = entityManager.createQuery(criteriaQuery);
 
@@ -49,7 +45,7 @@ public class SearchPetRepository implements CustomPetRepository {
         return new PageImpl<>(pets, pageable, totalRows);
     }
 
-    private Predicate buildPredicate(Root<Pet> pet, CriteriaBuilder criteriaBuilder, String name, String breed, PetFilters filters, boolean isFoundationCall) {
+    private Predicate buildPredicate(Root<Pet> pet, CriteriaBuilder criteriaBuilder, String name, String breed, PetFilters filters, boolean isFoundationCall, Long foundationId) {
         List<Predicate> predicates = new ArrayList<>();
         predicates.add(criteriaBuilder.like(pet.get(Pet_.searchableName), "%" + name + "%"));
         predicates.add(criteriaBuilder.like(pet.get(Pet_.searchableBreed), "%" + breed + "%"));
@@ -59,10 +55,7 @@ public class SearchPetRepository implements CustomPetRepository {
             if (filters.getPetType() != null) predicates.add(criteriaBuilder.equal(pet.get(Pet_.petType), filters.getPetType()));
             if (filters.getPetSex() != null) predicates.add(criteriaBuilder.equal(pet.get(Pet_.sex), filters.getPetSex()));
             if (isFoundationCall) {
-                Long foundationId = authenticationService.getLoggedUserId();
-                if (foundationId != null && authenticationService.getAuthorities().contains(Role.FOUNDATION)) {
-                    predicates.add(criteriaBuilder.equal(pet.get(Pet_.FOUNDATION).get(Foundation_.USER).get(User_.ID), foundationId));
-                }
+                predicates.add(criteriaBuilder.equal(pet.get(Pet_.FOUNDATION).get(Foundation_.USER).get(User_.ID), foundationId));
             }
         }
         return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));

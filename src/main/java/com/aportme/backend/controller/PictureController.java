@@ -25,11 +25,11 @@ public class PictureController {
         return pictureService.getById(id);
     }
 
-    @PostMapping("/new/{id}")
-    @PreAuthorize("@accessService.isFoundation() || @accessService.isFoundationPet(#id)")
+    @PostMapping("/{petId}")
+    @PreAuthorize("@accessService.isFoundation() || @accessService.isFoundationPet(#petId)")
     @ApiOperation(value = "Upload new picture for existing pet")
-    public PetPictureDTO addNewPicture(@PathVariable Long id, @RequestBody UploadPictureDTO pictureDTO) {
-        return pictureService.createPicture(id, pictureDTO);
+    public PetPictureDTO addNewPicture(@PathVariable Long petId, @RequestBody UploadPictureDTO pictureDTO) {
+        return pictureService.createPicture(petId, pictureDTO);
     }
 
     @DeleteMapping("/{id}")
