@@ -4,14 +4,11 @@ import com.aportme.backend.entity.dto.pet.AddPetDTO;
 import com.aportme.backend.entity.dto.pet.PetBaseDTO;
 import com.aportme.backend.entity.dto.pet.PetDTO;
 import com.aportme.backend.entity.dto.pet.PetFilters;
-import com.aportme.backend.entity.dto.pet.UpdatePetDTO;
 import com.aportme.backend.service.PetService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.SortDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -26,10 +23,11 @@ public class PetController {
     @GetMapping
     @ApiOperation(value = "Find all pets", response = PetDTO.class)
     public Page<PetDTO> getAll(
-            @SortDefault(sort = "creationDate", direction = Sort.Direction.DESC) Pageable pageable,
+            Pageable pageable,
             @RequestParam(required = false) String searchQuery,
+            @RequestParam boolean isFoundationCall,
             PetFilters filters) {
-        return petService.getPets(pageable, searchQuery, filters);
+        return petService.getPets(pageable, searchQuery, filters, isFoundationCall);
     }
 
     @GetMapping("/{id}")
@@ -48,8 +46,8 @@ public class PetController {
     @PostMapping
     @PreAuthorize("@accessService.isFoundation()")
     @ApiOperation(value = "Create pet")
-    public ResponseEntity<Object> create(@RequestParam Long foundationId, @RequestBody AddPetDTO petDTO) {
-        return petService.create(foundationId, petDTO);
+    public ResponseEntity<Object> create(@RequestBody AddPetDTO petDTO) {
+        return petService.create(petDTO);
     }
 
     @DeleteMapping("/{id}")
