@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class SearchablePet {
-    private String name;
     private String breed;
+    private String name;
 }
