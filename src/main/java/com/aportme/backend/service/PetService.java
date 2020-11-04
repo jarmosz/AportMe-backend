@@ -1,13 +1,11 @@
 package com.aportme.backend.service;
 
-import com.aportme.backend.entity.Foundation;
-import com.aportme.backend.entity.Pet;
-import com.aportme.backend.entity.PetPicture;
-import com.aportme.backend.entity.SearchablePet;
+import com.aportme.backend.entity.*;
 import com.aportme.backend.entity.dto.pet.AddPetDTO;
 import com.aportme.backend.entity.dto.pet.PetBaseDTO;
 import com.aportme.backend.entity.dto.pet.PetDTO;
 import com.aportme.backend.entity.dto.pet.PetFilters;
+import com.aportme.backend.entity.enums.Role;
 import com.aportme.backend.repository.PetRepository;
 import com.aportme.backend.repository.SearchPetRepository;
 import lombok.RequiredArgsConstructor;
@@ -37,12 +35,15 @@ public class PetService {
 
     public Page<PetDTO> getPets(Pageable pageable, String searchQuery, PetFilters filters, boolean isFoundationCall) {
         SearchablePet searchablePet = resolveSearchQuery(searchQuery);
+        Long foundationId = authenticationService.getLoggedUserId();
+        isFoundationCall = verifyFoundationCall(isFoundationCall, foundationId);
         Page<Pet> petsPage = searchPetRepository.findPetsByNameAndBreed(
                 pageable,
                 searchablePet.getName(),
                 searchablePet.getBreed(),
                 filters,
-                isFoundationCall);
+                isFoundationCall,
+                foundationId);
 
         return convertPetsToPage(pageable, petsPage);
     }
@@ -103,6 +104,13 @@ public class PetService {
             String[] splittedQuery = query.split(",");
             return new SearchablePet(splittedQuery[0].toLowerCase(), splittedQuery[1].toLowerCase());
         }
+    }
+
+    private boolean verifyFoundationCall(boolean isFoundatioCall, Long foundationId) {
+        if(isFoundatioCall) {
+            return foundationId != null && authenticationService.getAuthorities().contains(Role.FOUNDATION);
+        }
+        return false;
     }
 
     @Autowired
