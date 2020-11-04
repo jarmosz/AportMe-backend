@@ -1,6 +1,7 @@
 package com.aportme.backend.controller;
 
 import com.aportme.backend.entity.dto.picture.PetPictureDTO;
+import com.aportme.backend.entity.dto.picture.UploadPictureDTO;
 import com.aportme.backend.service.PictureService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -24,18 +25,11 @@ public class PictureController {
         return pictureService.getById(id);
     }
 
-    @PostMapping
-    @PreAuthorize("@accessService.isFoundation() || @accessService.isFoundationPet(#id)")
-    @ApiOperation(value = "Upload pictures for new pet")
-    public ResponseEntity<Object> upload(@RequestParam Long petId, @RequestBody List<String> base64Pictures) {
-        return pictureService.upload(petId, base64Pictures);
-    }
-
-    @PostMapping("/new/{id}")
-    @PreAuthorize("@accessService.isFoundation() || @accessService.isFoundationPet(#id)")
+    @PostMapping("/{petId}")
+    @PreAuthorize("@accessService.isFoundation() || @accessService.isFoundationPet(#petId)")
     @ApiOperation(value = "Upload new picture for existing pet")
-    public PetPictureDTO addNewPicture(@PathVariable Long id, @RequestBody String base64Picture) {
-        return pictureService.createPicture(id, base64Picture);
+    public PetPictureDTO addNewPicture(@PathVariable Long petId, @RequestBody UploadPictureDTO pictureDTO) {
+        return pictureService.createPicture(petId, pictureDTO);
     }
 
     @DeleteMapping("/{id}")

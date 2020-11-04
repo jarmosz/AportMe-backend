@@ -10,5 +10,7 @@ public class UpdateFoundationDTO extends FoundationBaseDTO {
 
     private String accountNumber;
 
-    private AddressBaseDTO addressDTO;
+    private String foundationLogo;
+
+    private AddressBaseDTO address;
 }

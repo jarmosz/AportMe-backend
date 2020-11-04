@@ -4,6 +4,7 @@ import com.aportme.backend.entity.Pet;
 import com.aportme.backend.entity.PetPicture;
 import com.aportme.backend.entity.dto.picture.AddPetPictureDTO;
 import com.aportme.backend.entity.dto.picture.PetPictureDTO;
+import com.aportme.backend.entity.dto.picture.UploadPictureDTO;
 import com.aportme.backend.repository.PictureRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -32,17 +33,6 @@ public class PictureService {
                 .stream()
                 .map(picture -> modelMapper.map(picture, PetPictureDTO.class))
                 .collect(Collectors.toList());
-    }
-
-    public ResponseEntity<Object> upload(Long petId, List<String> base64Pictures) {
-        Pet pet = petService.findById(petId);
-        List<PetPicture> pictures = base64Pictures
-                .stream()
-                .map(base64Picture -> createUploadedPicture(pet, base64Picture))
-                .collect(Collectors.toList());
-
-        pictureRepository.saveAll(pictures);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     public List<PetPicture> createPicturesForNewPet(Pet pet, List<AddPetPictureDTO> picturesDTO) {
@@ -83,9 +73,9 @@ public class PictureService {
         return petPicture;
     }
 
-    public PetPictureDTO createPicture(Long petId, String base64Picture) {
+    public PetPictureDTO createPicture(Long petId, UploadPictureDTO pictureDTO) {
         Pet pet = petService.findById(petId);
-        PetPicture petPicture = new PetPicture(base64Picture, false, pet);
+        PetPicture petPicture = new PetPicture(pictureDTO.getBase64Picture(), false, pet);
         petPicture = pictureRepository.save(petPicture);
         return modelMapper.map(petPicture, PetPictureDTO.class);
     }

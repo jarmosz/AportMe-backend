@@ -1,16 +1,13 @@
 package com.aportme.backend.service;
 
-import com.aportme.backend.entity.Foundation;
-import com.aportme.backend.entity.Pet;
-import com.aportme.backend.entity.PetPicture;
-import com.aportme.backend.entity.SearchablePet;
+import com.aportme.backend.entity.*;
 import com.aportme.backend.entity.dto.pet.AddPetDTO;
 import com.aportme.backend.entity.dto.pet.PetBaseDTO;
 import com.aportme.backend.entity.dto.pet.PetDTO;
 import com.aportme.backend.entity.dto.pet.PetFilters;
+import com.aportme.backend.entity.enums.Role;
 import com.aportme.backend.repository.PetRepository;
 import com.aportme.backend.repository.SearchPetRepository;
-import com.aportme.backend.utils.ModelMapperUtil;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,23 +30,22 @@ public class PetService {
     private final SearchPetRepository searchPetRepository;
     private final FoundationService foundationService;
     private final ModelMapper modelMapper;
+    private final AuthenticationService authenticationService;
     private PictureService pictureService;
 
-    public Page<PetDTO> getPets(Pageable pageable, String searchQuery, PetFilters filters) {
+    public Page<PetDTO> getPets(Pageable pageable, String searchQuery, PetFilters filters, boolean isFoundationCall) {
         SearchablePet searchablePet = resolveSearchQuery(searchQuery);
-        Page<Pet> pets = searchPetRepository.findPetsByNameAndBreed(
+        Long foundationId = authenticationService.getLoggedUserId();
+        isFoundationCall = verifyFoundationCall(isFoundationCall, foundationId);
+        Page<Pet> petsPage = searchPetRepository.findPetsByNameAndBreed(
                 pageable,
                 searchablePet.getName(),
                 searchablePet.getBreed(),
-                filters);
+                filters,
+                isFoundationCall,
+                foundationId);
 
-        List<PetDTO> petDTOs = pets
-                .getContent()
-                .stream()
-                .map(pet -> modelMapper.map(pet, PetDTO.class))
-                .collect(Collectors.toList());
-
-        return new PageImpl<>(petDTOs, pageable, pets.getTotalElements());
+        return convertPetsToPage(pageable, petsPage);
     }
 
     public PetDTO getById(Long id) {
@@ -64,12 +60,13 @@ public class PetService {
         return modelMapper.map(updatedPet, PetDTO.class);
     }
 
-    //TODO We should get foundation from Spring Security Context
-    public ResponseEntity<Object> create(Long foundationId, AddPetDTO petDTO) {
-        ModelMapperUtil.mapPetDTOtoPet(modelMapper);
+    public ResponseEntity<Object> create(AddPetDTO petDTO) {
         Pet pet = modelMapper.map(petDTO, Pet.class);
-        Foundation foundation = foundationService.findById(foundationId);
+        String email = authenticationService.getLoggedUserName();
+        Foundation foundation = foundationService.findByEmail(email);
         pet.setFoundation(foundation);
+        pet.setSearchableName(pet.getName().toLowerCase());
+        pet.setSearchableBreed(pet.getBreed().toLowerCase());
         petRepository.save(pet);
 
         List<PetPicture> pictures = pictureService.createPicturesForNewPet(pet, petDTO.getPictures());
@@ -89,9 +86,13 @@ public class PetService {
         return petRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Pet not found"));
     }
 
-    @Autowired
-    public void setPictureService(PictureService pictureService) {
-        this.pictureService = pictureService;
+    private Page<PetDTO> convertPetsToPage(Pageable pageable, Page<Pet> pets) {
+        List<PetDTO> petDTOs = pets.getContent()
+                .stream()
+                .map(pet -> modelMapper.map(pet, PetDTO.class))
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(petDTOs, pageable, pets.getTotalElements());
     }
 
     private SearchablePet resolveSearchQuery(String query) {
@@ -103,5 +104,17 @@ public class PetService {
             String[] splittedQuery = query.split(",");
             return new SearchablePet(splittedQuery[0].toLowerCase().trim(), splittedQuery[1].toLowerCase().trim());
         }
+    }
+
+    private boolean verifyFoundationCall(boolean isFoundatioCall, Long foundationId) {
+        if(isFoundatioCall) {
+            return foundationId != null && authenticationService.getAuthorities().contains(Role.FOUNDATION);
+        }
+        return false;
+    }
+
+    @Autowired
+    public void setPictureService(PictureService pictureService) {
+        this.pictureService = pictureService;
     }
 }
