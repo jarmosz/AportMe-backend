@@ -5,6 +5,7 @@ import com.aportme.backend.entity.Foundation;
 import com.aportme.backend.entity.User;
 import com.aportme.backend.entity.dto.foundation.AddFoundationDTO;
 import com.aportme.backend.entity.dto.foundation.FoundationDTO;
+import com.aportme.backend.entity.dto.foundation.LoggedFundationDataDTO;
 import com.aportme.backend.entity.dto.foundation.UpdateFoundationDTO;
 import com.aportme.backend.repository.FoundationRepository;
 import com.aportme.backend.utils.ModelMapperUtil;
@@ -28,6 +29,7 @@ public class FoundationService {
     private final FoundationRepository foundationRepository;
     private final UserService userService;
     private final AddressService addressService;
+    private final AuthenticationService authenticationService;
     private final ModelMapper modelMapper;
 
     public Page<FoundationDTO> getAll(Pageable pageable) {
@@ -43,13 +45,14 @@ public class FoundationService {
 
     public FoundationDTO getById(Long id) {
         Foundation foundation = findById(id);
-        ModelMapperUtil.mapUserToFoundationDTO(modelMapper);
+        ModelMapperUtil.mapFoundationEmail(modelMapper);
         return modelMapper.map(foundation, FoundationDTO.class);
     }
 
-    public ResponseEntity<Object> update(Long id, UpdateFoundationDTO foundationInfoDTO) {
-        Foundation foundation = findById(id);
-        modelMapper.map(foundationInfoDTO, foundation);
+    public ResponseEntity<Object> update(UpdateFoundationDTO foundationDTO) {
+        String email = authenticationService.getLoggedUserName();
+        Foundation foundation = findByEmail(email);
+        modelMapper.map(foundationDTO, foundation);
         foundationRepository.save(foundation);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -64,14 +67,17 @@ public class FoundationService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    public ResponseEntity<Object> uploadFoundationLogo(Long id, String base64Logo) {
-        Foundation foundation = findById(id);
-        foundation.setFoundationLogo(base64Logo);
-        foundationRepository.save(foundation);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
     public Foundation findById(Long id) {
         return foundationRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Foundation not found"));
+    }
+
+    public Foundation findByEmail(String email) {
+        return foundationRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("Foundation not found"));
+    }
+
+    public LoggedFundationDataDTO getMyData() {
+        String email = authenticationService.getLoggedUserName();
+        Foundation foundation = findByEmail(email);
+        return modelMapper.map(foundation, LoggedFundationDataDTO.class);
     }
 }
