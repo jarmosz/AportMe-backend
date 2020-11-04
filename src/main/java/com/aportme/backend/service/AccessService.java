@@ -35,9 +35,4 @@ public class AccessService {
         String foundationEmail = pet.getFoundation().getUser().getEmail();
         return authenticationService.getAuthentication().getName().equals(foundationEmail);
     }
-
-    public Boolean isMyData(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found"));
-        return authenticationService.getAuthentication().getName().equals(user.getEmail());
-    }
 }
