@@ -7,6 +7,7 @@ import com.aportme.backend.entity.dto.user.UserDTO;
 import com.aportme.backend.event.OnRegistrationCompleteEvent;
 import com.aportme.backend.exception.UserAlreadyExistsException;
 import com.aportme.backend.exception.UserNotFoundException;
+import com.aportme.backend.exception.WrongChangePasswordDataException;
 import com.aportme.backend.exception.WrongUserCredentialsException;
 import com.aportme.backend.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -46,11 +47,11 @@ public class UserService {
         return validateEmail(userDTO.getEmail()) && validatePassword(userDTO.getPassword());
     }
 
-    private boolean validateChangePasswordData(ChangeUserPasswordDTO passwords) {
+    private boolean isNewPasswordDataValid(ChangeUserPasswordDTO passwords, User loggedUser) {
         return validatePassword(passwords.getOldPassword())
+                && passwordEncoder.matches(passwords.getOldPassword(), loggedUser.getPassword())
                 && validatePassword(passwords.getNewPassword())
-                && validatePassword(passwords.getRepeatNewPassword())
-                && (passwords.getNewPassword().equals(passwords.getRepeatNewPassword()));
+                && (passwords.getNewPassword().equals(passwords.getRepeatedNewPassword()));
     }
 
     public void registerUser(AuthUserDTO userDTO) {
@@ -69,15 +70,20 @@ public class UserService {
         }
     }
 
-    public void changeUserPassword(ChangeUserPasswordDTO passwords) {
-        String userEmail = authenticationService.getAuthentication().getName();
+    private User findByEmail(){
+        String userEmail = authenticationService.getLoggedUserName();
         User user = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
+        return user;
+    }
+
+    public void changeUserPassword(ChangeUserPasswordDTO passwords) {
+        User loggedUser = findByEmail();
         String encodedNewPassword = passwordEncoder.encode(passwords.getNewPassword());
-        if (validateChangePasswordData(passwords) && passwordEncoder.matches(passwords.getOldPassword(), user.getPassword())) {
-            user.setPassword(encodedNewPassword);
-            userRepository.save(user);
+        if (isNewPasswordDataValid(passwords, loggedUser)) {
+            loggedUser.setPassword(encodedNewPassword);
+            userRepository.save(loggedUser);
         } else {
-            throw new WrongUserCredentialsException();
+            throw new WrongChangePasswordDataException();
         }
     }
 
