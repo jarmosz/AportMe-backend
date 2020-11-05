@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final AccessService accessService;
+    private final AuthenticationService authenticationService;
     private final PasswordEncoder passwordEncoder;
     private final ApplicationEventPublisher eventPublisher;
     private final ModelMapper modelMapper;
@@ -46,11 +46,11 @@ public class UserService {
         return validateEmail(userDTO.getEmail()) && validatePassword(userDTO.getPassword());
     }
 
-    private boolean validateChangePasswordData(ChangeUserPasswordDTO passwords){
+    private boolean validateChangePasswordData(ChangeUserPasswordDTO passwords) {
         return validatePassword(passwords.getOldPassword())
                 && validatePassword(passwords.getNewPassword())
                 && validatePassword(passwords.getRepeatNewPassword())
-                && passwords.getNewPassword() == passwords.getRepeatNewPassword();
+                && (passwords.getNewPassword().equals(passwords.getRepeatNewPassword()));
     }
 
     public void registerUser(AuthUserDTO userDTO) {
@@ -70,13 +70,13 @@ public class UserService {
     }
 
     public void changeUserPassword(ChangeUserPasswordDTO passwords) {
-        if (validateChangePasswordData(passwords)){
-            // TODO - wyciągnięcie e-maila z kontekstu springa i podmienienie poniżej
-            User user = userRepository.findByEmail("adopcje.ttb@op.pl").orElseThrow(UserNotFoundException::new);
-            user.setPassword(passwordEncoder.encode(passwords.getNewPassword()));
+        String userEmail = authenticationService.getAuthentication().getName();
+        User user = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
+        String encodedNewPassword = passwordEncoder.encode(passwords.getNewPassword());
+        if (validateChangePasswordData(passwords) && passwordEncoder.matches(passwords.getOldPassword(), user.getPassword())) {
+            user.setPassword(encodedNewPassword);
             userRepository.save(user);
-        }
-        else {
+        } else {
             throw new WrongUserCredentialsException();
         }
     }
