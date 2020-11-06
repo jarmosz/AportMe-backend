@@ -12,4 +12,5 @@ public class PetFilters {
     private PetType petType;
     private PetSize size;
     private PetSex petSex;
+    private Boolean onlyLikedPets;
 }
