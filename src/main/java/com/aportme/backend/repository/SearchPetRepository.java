@@ -3,6 +3,7 @@ package com.aportme.backend.repository;
 import com.aportme.backend.entity.Foundation_;
 import com.aportme.backend.entity.Pet;
 import com.aportme.backend.entity.Pet_;
+import com.aportme.backend.entity.User;
 import com.aportme.backend.entity.User_;
 import com.aportme.backend.entity.dto.pet.PetFilters;
 import lombok.RequiredArgsConstructor;
@@ -27,12 +28,12 @@ public class SearchPetRepository implements CustomPetRepository {
     private final EntityManager entityManager;
 
     @Override
-    public Page<Pet> findPetsByNameAndBreed(Pageable pageable, String name, String breed, PetFilters filters, boolean isFoundationCall, Long foundationId) {
+    public Page<Pet> findByFilters(Pageable pageable, String name, String breed, PetFilters filters, boolean isFoundationCall, Long foundationId, User user) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Pet> criteriaQuery = criteriaBuilder.createQuery(Pet.class);
         Root<Pet> pet = criteriaQuery.from(Pet.class);
 
-        criteriaQuery.where(buildPredicate(pet, criteriaBuilder, name, breed, filters, isFoundationCall, foundationId));
+        criteriaQuery.where(buildPredicate(pet, criteriaBuilder, name, breed, filters, isFoundationCall, foundationId, user));
         criteriaQuery.orderBy(criteriaBuilder.desc(pet.get(Pet_.creationDate)));
         TypedQuery<Pet> query = entityManager.createQuery(criteriaQuery);
 
@@ -45,7 +46,7 @@ public class SearchPetRepository implements CustomPetRepository {
         return new PageImpl<>(pets, pageable, totalRows);
     }
 
-    private Predicate buildPredicate(Root<Pet> pet, CriteriaBuilder criteriaBuilder, String name, String breed, PetFilters filters, boolean isFoundationCall, Long foundationId) {
+    private Predicate buildPredicate(Root<Pet> pet, CriteriaBuilder criteriaBuilder, String name, String breed, PetFilters filters, boolean isFoundationCall, Long foundationId, User user) {
         List<Predicate> predicates = new ArrayList<>();
         predicates.add(criteriaBuilder.like(pet.get(Pet_.searchableName), "%" + name + "%"));
         predicates.add(criteriaBuilder.like(pet.get(Pet_.searchableBreed), "%" + breed + "%"));
@@ -56,6 +57,9 @@ public class SearchPetRepository implements CustomPetRepository {
             if (filters.getPetSex() != null) predicates.add(criteriaBuilder.equal(pet.get(Pet_.sex), filters.getPetSex()));
             if (isFoundationCall) {
                 predicates.add(criteriaBuilder.equal(pet.get(Pet_.FOUNDATION).get(Foundation_.USER).get(User_.ID), foundationId));
+            }
+            if (filters.getOnlyLikedPets() && user != null) {
+                predicates.add(criteriaBuilder.isMember(user, pet.get(Pet_.USERS)));
             }
         }
         return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
