@@ -2,6 +2,7 @@ package com.aportme.backend.advice;
 
 import com.aportme.backend.exception.UserAlreadyExistsException;
 import com.aportme.backend.exception.UserIsAlreadyActivatedException;
+import com.aportme.backend.exception.WrongChangePasswordDataException;
 import com.aportme.backend.exception.WrongUserCredentialsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,5 +25,10 @@ public class AuthorizeControllerAdvice {
     @ExceptionHandler(WrongUserCredentialsException.class)
     public ResponseEntity<Object> wrongUserCredentialsException() {
         return new ResponseEntity<>("Wrong credentials", HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    @ExceptionHandler(WrongChangePasswordDataException.class)
+    public ResponseEntity<Object> wrongChangePasswordDataException() {
+        return new ResponseEntity<>("You have provided wrong user password or invalidate new password data", HttpStatus.BAD_REQUEST);
     }
 }

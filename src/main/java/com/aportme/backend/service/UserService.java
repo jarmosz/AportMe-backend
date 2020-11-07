@@ -2,10 +2,12 @@ package com.aportme.backend.service;
 
 import com.aportme.backend.entity.User;
 import com.aportme.backend.entity.dto.user.AuthUserDTO;
+import com.aportme.backend.entity.dto.user.ChangeUserPasswordDTO;
 import com.aportme.backend.entity.dto.user.UserDTO;
 import com.aportme.backend.event.OnRegistrationCompleteEvent;
 import com.aportme.backend.exception.UserAlreadyExistsException;
 import com.aportme.backend.exception.UserNotFoundException;
+import com.aportme.backend.exception.WrongChangePasswordDataException;
 import com.aportme.backend.exception.WrongUserCredentialsException;
 import com.aportme.backend.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final AuthenticationService authenticationService;
     private final PasswordEncoder passwordEncoder;
     private final ApplicationEventPublisher eventPublisher;
     private final ModelMapper modelMapper;
@@ -44,6 +47,13 @@ public class UserService {
         return validateEmail(userDTO.getEmail()) && validatePassword(userDTO.getPassword());
     }
 
+    private boolean isNewPasswordDataValid(ChangeUserPasswordDTO passwords, User loggedUser) {
+        return validatePassword(passwords.getOldPassword())
+                && passwordEncoder.matches(passwords.getOldPassword(), loggedUser.getPassword())
+                && validatePassword(passwords.getNewPassword())
+                && (passwords.getNewPassword().equals(passwords.getRepeatedNewPassword()));
+    }
+
     public void registerUser(AuthUserDTO userDTO) {
         if (validateData(userDTO)) {
             Boolean isUserRegistered = userRepository.existsByEmail(userDTO.getEmail());
@@ -57,6 +67,23 @@ public class UserService {
             }
         } else {
             throw new WrongUserCredentialsException();
+        }
+    }
+
+    private User findByEmail(){
+        String userEmail = authenticationService.getLoggedUserName();
+        User user = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
+        return user;
+    }
+
+    public void changeUserPassword(ChangeUserPasswordDTO passwords) {
+        User loggedUser = findByEmail();
+        String encodedNewPassword = passwordEncoder.encode(passwords.getNewPassword());
+        if (isNewPasswordDataValid(passwords, loggedUser)) {
+            loggedUser.setPassword(encodedNewPassword);
+            userRepository.save(loggedUser);
+        } else {
+            throw new WrongChangePasswordDataException();
         }
     }
 
