@@ -1,5 +1,6 @@
 package com.aportme.backend.advice;
 
+import com.aportme.backend.exception.InvalidSurveyQuestionException;
 import com.aportme.backend.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,5 +21,11 @@ public class NotFoundControllerAdvice {
     public ResponseEntity<Object> entityNotFoundException(Exception exception) {
         String message = exception.getMessage();
         return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(InvalidSurveyQuestionException.class)
+    public ResponseEntity<Object> invalidSurveyQuestion(InvalidSurveyQuestionException ex) {
+        String msg = String.format("Unable to create survey invalid question id: %d", ex.getId());
+        return new ResponseEntity<>(msg, HttpStatus.NOT_FOUND);
     }
 }

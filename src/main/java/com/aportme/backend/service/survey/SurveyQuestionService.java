@@ -7,11 +7,13 @@ import com.aportme.backend.entity.dto.survey.AddSurveyQuestionDTO;
 import com.aportme.backend.entity.enums.QuestionType;
 import com.aportme.backend.entity.survey.SurveyQuestion;
 import com.aportme.backend.repository.survey.SurveyQuestionRepository;
+import com.aportme.backend.service.AuthenticationService;
 import com.aportme.backend.service.FoundationService;
 import com.aportme.backend.service.PetService;
 import com.aportme.backend.service.SelectValueService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -20,27 +22,28 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SurveyQuestionService {
 
     private final SurveyQuestionRepository surveyQuestionRepository;
     private final FoundationService foundationService;
     private final SelectValueService selectValueService;
-    private final SurveyAnswerService surveyAnswerService;
     private final PetService petService;
+    private final AuthenticationService authenticationService;
     private final ModelMapper modelMapper;
+    private SurveyAnswerService surveyAnswerService;
 
     public List<SurveyQuestionDTO> getQuestions(Long petId) {
-        Foundation foundation = getPetOrLoggedFoundation(petId);
-       
-        return surveyQuestionRepository.findAllByFoundation(foundation)
+        Foundation foundation = getPetFoundationOrLoggedFoundation(petId);
+
+        return findAllByFoundation(foundation)
                 .stream()
                 .map(q -> modelMapper.map(q, SurveyQuestionDTO.class))
                 .collect(Collectors.toList());
     }
 
-    private Foundation getPetOrLoggedFoundation(Long petId) {
-        if(petId != null) {
+    private Foundation getPetFoundationOrLoggedFoundation(Long petId) {
+        if (petId != null) {
             Pet pet = petService.findById(petId);
             return pet.getFoundation();
         } else {
@@ -54,6 +57,19 @@ public class SurveyQuestionService {
         questions.forEach(q -> saveSurveyQuestion(foundation, q));
     }
 
+    @Transactional
+    public void deleteAll() {
+        String foundationEmail = authenticationService.getLoggedUsername();
+        Foundation foundation = foundationService.findByEmail(foundationEmail);
+        List<SurveyQuestion> questions = surveyQuestionRepository.findAllByFoundation(foundation);
+        questions.forEach(question -> {
+            surveyAnswerService.deleteAllByQuestion(question);
+            selectValueService.deleteAllByQuestion(question);
+        });
+        surveyQuestionRepository.deleteAllByFoundation(foundation);
+    }
+
+    @Transactional
     public void deleteById(Long id) {
         SurveyQuestion question = findById(id);
         surveyAnswerService.deleteAllByQuestion(question);
@@ -67,6 +83,10 @@ public class SurveyQuestionService {
                 .orElseThrow(() -> new EntityNotFoundException("Survey question not found"));
     }
 
+    public List<SurveyQuestion> findAllByFoundation(Foundation foundation) {
+        return surveyQuestionRepository.findAllByFoundation(foundation);
+    }
+
     private void saveSurveyQuestion(Foundation foundation, AddSurveyQuestionDTO questionDTO) {
         SurveyQuestion question = modelMapper.map(questionDTO, SurveyQuestion.class);
         question.setFoundation(foundation);
@@ -74,5 +94,10 @@ public class SurveyQuestionService {
         if (questionDTO.getType().equals(QuestionType.SELECT)) {
             selectValueService.save(question, questionDTO.getValues());
         }
+    }
+
+    @Autowired
+    public void setSurveyAnswerService(SurveyAnswerService service) {
+        this.surveyAnswerService = service;
     }
 }

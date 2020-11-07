@@ -1,4 +1,4 @@
-package com.aportme.backend.controller.survey;
+package com.aportme.backend.controller;
 
 import com.aportme.backend.entity.dto.SurveyQuestionDTO;
 import com.aportme.backend.entity.dto.survey.AddSurveyQuestionDTODTO;
@@ -20,7 +20,10 @@ public class SurveyQuestionController {
     private final SurveyQuestionService surveyQuestionService;
 
     @GetMapping
-    @ApiOperation(value = "Get logged foundation survey questions", response = SurveyQuestionDTO.class)
+    @ApiOperation(
+            value = "Get all survey question with petId query param to fill survey or without to print logged foundation questions",
+            response = SurveyQuestionDTO.class
+    )
     public List<SurveyQuestionDTO> getMyQuestions(@RequestParam(required = false) Long petId) {
         return surveyQuestionService.getQuestions(petId);
     }
@@ -32,8 +35,16 @@ public class SurveyQuestionController {
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping
+    @PreAuthorize("@accessService.isFoundation()")
+    @ApiOperation(value = "Delete all surveys question for logged foundation")
+    public ResponseEntity<Object> deleteAll() {
+        surveyQuestionService.deleteAll();
+        return ResponseEntity.ok().build();
+    }
+
     @DeleteMapping("/{id}")
-    @PreAuthorize("@accessService.isMyQuestion(#id)")
+    @PreAuthorize("@accessService.isFoundation() && @accessService.isMyQuestion(#id)")
     @ApiOperation(value = "Delete survey question by id")
     public ResponseEntity<Object> deleteQuestion(@PathVariable Long id) {
         surveyQuestionService.deleteById(id);
