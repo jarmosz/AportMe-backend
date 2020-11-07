@@ -11,4 +11,6 @@ import java.util.List;
 public interface SurveyQuestionRepository extends JpaRepository<SurveyQuestion, Long> {
 
     List<SurveyQuestion> findAllByFoundation(Foundation foundation);
+
+    void deleteAllByFoundation(Foundation foundation);
 }
