@@ -19,7 +19,7 @@ public class Survey {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private SurveyStatus status;
+    private SurveyStatus status = SurveyStatus.SUBMITTED;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -34,5 +34,5 @@ public class Survey {
     private Pet pet;
 
     @OneToMany(mappedBy = "survey")
-    private List<SurveyAnswer> surveyAnswers;
+    private List<SurveyAnswer> answers;
 }

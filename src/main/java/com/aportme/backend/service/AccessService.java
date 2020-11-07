@@ -34,13 +34,13 @@ public class AccessService {
     public Boolean isFoundationPet(Long petId) {
         Pet pet = petService.findById(petId);
         String foundationEmail = pet.getFoundation().getUser().getEmail();
-        return authenticationService.getAuthentication().getName().equals(foundationEmail);
+        return authenticationService.getLoggedUsername().equals(foundationEmail);
     }
 
     public Boolean isMyQuestion(Long questionId) {
         SurveyQuestion question = surveyQuestionRepository.findById(questionId).orElse(null);
         if (question != null) {
-            return authenticationService.getLoggedUserName().equals(question.getFoundation().getUser().getEmail());
+            return authenticationService.getLoggedUsername().equals(question.getFoundation().getUser().getEmail());
         }
         return false;
     }

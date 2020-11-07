@@ -1,5 +1,6 @@
 package com.aportme.backend.entity.survey;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,6 +10,13 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 public class SurveyAnswer {
+
+    @Builder
+    public SurveyAnswer(String answer, SurveyQuestion question, Survey survey) {
+        this.answer = answer;
+        this.question = question;
+        this.survey = survey;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
