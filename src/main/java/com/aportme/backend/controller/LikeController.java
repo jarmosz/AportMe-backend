@@ -11,22 +11,23 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/likes")
 public class LikeController {
+
     private final LikeService likeService;
 
-    @PreAuthorize("@accessService.isUser()")
     @PostMapping("/{petId}")
+    @PreAuthorize("@accessService.isUser()")
     public ResponseEntity<Object> like(@PathVariable Long petId) {
         return likeService.like(petId);
     }
 
-    @PreAuthorize("@accessService.isUser() && @accessService.arePetLikedByUser(#petId)")
     @DeleteMapping("/{petId}")
+    @PreAuthorize("@accessService.isUser() && @accessService.arePetLikedByUser(#petId)")
     public ResponseEntity<Object> unlike(@PathVariable Long petId) {
         return likeService.unlike(petId);
     }
 
-    @PreAuthorize("@accessService.isUser()")
     @DeleteMapping("/clear")
+    @PreAuthorize("@accessService.isUser()")
     public ResponseEntity<Object> clearLikes() {
         return likeService.clearLikes();
     }

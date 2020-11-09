@@ -35,13 +35,11 @@ public class PetService {
     private PictureService pictureService;
 
     public Page<PetDTO> getPets(Pageable pageable, String searchQuery, PetFilters filters, boolean isFoundationCall) {
-        User user = null;
 
         SearchablePet searchablePet = resolveSearchQuery(searchQuery);
         Long userId = authenticationService.getLoggedUserId();
         isFoundationCall = verifyFoundationCall(isFoundationCall, userId);
         filters.setOnlyLikedPets(verifyUserCall(filters.getOnlyLikedPets(), userId));
-        if (filters.getOnlyLikedPets()) user = userService.getLoggedUser();
         Page<Pet> petsPage = searchPetRepository.findByFilters(
                 pageable,
                 searchablePet.getName(),
@@ -49,7 +47,7 @@ public class PetService {
                 filters,
                 isFoundationCall,
                 userId,
-                user);
+                getUserForSearch(filters));
 
         return convertPetsToPage(pageable, petsPage);
     }
@@ -124,6 +122,10 @@ public class PetService {
             return userId != null && authenticationService.getAuthorities().contains(Role.USER);
         }
         return false;
+    }
+
+    private User getUserForSearch(PetFilters filters) {
+        return filters.getOnlyLikedPets() ? userService.getLoggedUser() : null;
     }
 
     @Autowired

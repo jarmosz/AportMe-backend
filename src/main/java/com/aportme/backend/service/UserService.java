@@ -98,7 +98,7 @@ public class UserService {
         return userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
     }
 
-    public void saveUser(User user) {
-        userRepository.save(user);
+    public User saveUser(User user) {
+        return userRepository.save(user);
     }
 }
