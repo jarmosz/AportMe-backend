@@ -2,8 +2,7 @@ package com.aportme.backend.service.survey;
 
 import com.aportme.backend.entity.Foundation;
 import com.aportme.backend.entity.Pet;
-import com.aportme.backend.entity.dto.SurveyQuestionDTO;
-import com.aportme.backend.entity.dto.survey.AddSurveyQuestionDTO;
+import com.aportme.backend.entity.dto.survey.SurveyQuestionDTO;
 import com.aportme.backend.entity.enums.QuestionType;
 import com.aportme.backend.entity.survey.SurveyQuestion;
 import com.aportme.backend.repository.survey.SurveyQuestionRepository;
@@ -33,12 +32,12 @@ public class SurveyQuestionService {
     private final ModelMapper modelMapper;
     private SurveyAnswerService surveyAnswerService;
 
-    public List<SurveyQuestionDTO> getQuestions(Long petId) {
+    public List<com.aportme.backend.entity.dto.SurveyQuestionDTO> getQuestions(Long petId) {
         Foundation foundation = getPetFoundationOrLoggedFoundation(petId);
 
         return findAllByFoundation(foundation)
                 .stream()
-                .map(q -> modelMapper.map(q, SurveyQuestionDTO.class))
+                .map(question -> modelMapper.map(question, com.aportme.backend.entity.dto.SurveyQuestionDTO.class))
                 .collect(Collectors.toList());
     }
 
@@ -52,9 +51,9 @@ public class SurveyQuestionService {
     }
 
     @Transactional
-    public void createQuestions(List<AddSurveyQuestionDTO> questions) {
+    public void createQuestions(List<SurveyQuestionDTO> questions) {
         Foundation foundation = foundationService.findByLoggedEmail();
-        questions.forEach(q -> saveSurveyQuestion(foundation, q));
+        questions.forEach(question -> saveSurveyQuestion(foundation, question));
     }
 
     @Transactional
@@ -87,7 +86,7 @@ public class SurveyQuestionService {
         return surveyQuestionRepository.findAllByFoundation(foundation);
     }
 
-    private void saveSurveyQuestion(Foundation foundation, AddSurveyQuestionDTO questionDTO) {
+    private void saveSurveyQuestion(Foundation foundation, SurveyQuestionDTO questionDTO) {
         SurveyQuestion question = modelMapper.map(questionDTO, SurveyQuestion.class);
         question.setFoundation(foundation);
         question = surveyQuestionRepository.save(question);

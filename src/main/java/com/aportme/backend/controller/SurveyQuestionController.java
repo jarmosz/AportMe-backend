@@ -1,7 +1,7 @@
 package com.aportme.backend.controller;
 
 import com.aportme.backend.entity.dto.SurveyQuestionDTO;
-import com.aportme.backend.entity.dto.survey.AddSurveyQuestionDTODTO;
+import com.aportme.backend.entity.dto.survey.AddSurveyQuestionsDTO;
 import com.aportme.backend.service.survey.SurveyQuestionService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -13,8 +13,8 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@PreAuthorize("@accessService.isFoundation()")
 @RequestMapping("/api/survey/questions")
+@PreAuthorize("@accessService.isFoundation()")
 public class SurveyQuestionController {
 
     private final SurveyQuestionService surveyQuestionService;
@@ -30,13 +30,12 @@ public class SurveyQuestionController {
 
     @PostMapping("/add")
     @ApiOperation(value = "Add survey questions")
-    public ResponseEntity<Object> createQuestions(@RequestBody AddSurveyQuestionDTODTO surveyQuestions) {
+    public ResponseEntity<Object> createQuestions(@RequestBody AddSurveyQuestionsDTO surveyQuestions) {
         surveyQuestionService.createQuestions(surveyQuestions.getQuestions());
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping
-    @PreAuthorize("@accessService.isFoundation()")
     @ApiOperation(value = "Delete all surveys question for logged foundation")
     public ResponseEntity<Object> deleteAll() {
         surveyQuestionService.deleteAll();
@@ -44,7 +43,7 @@ public class SurveyQuestionController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("@accessService.isFoundation() && @accessService.isMyQuestion(#id)")
+    @PreAuthorize("@accessService.isFoundationQuestion(#id)")
     @ApiOperation(value = "Delete survey question by id")
     public ResponseEntity<Object> deleteQuestion(@PathVariable Long id) {
         surveyQuestionService.deleteById(id);

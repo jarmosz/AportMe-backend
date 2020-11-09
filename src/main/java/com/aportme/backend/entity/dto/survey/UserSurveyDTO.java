@@ -1,4 +1,4 @@
-package com.aportme.backend.entity.dto;
+package com.aportme.backend.entity.dto.survey;
 
 import com.aportme.backend.entity.enums.SurveyStatus;
 import lombok.Data;
@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class SurveyDTO {
+public class UserSurveyDTO {
 
     private Long id;
 

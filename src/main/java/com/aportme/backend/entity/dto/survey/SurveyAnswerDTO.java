@@ -1,4 +1,4 @@
-package com.aportme.backend.entity.dto;
+package com.aportme.backend.entity.dto.survey;
 
 import lombok.Data;
 

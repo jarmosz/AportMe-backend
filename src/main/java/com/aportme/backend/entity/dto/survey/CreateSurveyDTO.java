@@ -5,7 +5,9 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class AddSurveyQuestionDTODTO {
+public class CreateSurveyDTO {
 
-    List<AddSurveyQuestionDTO> questions;
+    private Long petId;
+
+    private List<SurveyAnswerDTO> answers;
 }
