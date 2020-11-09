@@ -1,7 +1,7 @@
 package com.aportme.backend.controller;
 
-import com.aportme.backend.entity.dto.CreateSurveyDTO;
-import com.aportme.backend.entity.dto.SurveyDTO;
+import com.aportme.backend.entity.dto.survey.CreateSurveyDTO;
+import com.aportme.backend.entity.dto.survey.UserSurveyDTO;
 import com.aportme.backend.service.survey.SurveyService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +17,7 @@ public class SurveyController {
     private final SurveyService surveyService;
 
     @GetMapping
-    public List<SurveyDTO> getAllMySurveys() {
+    public List<UserSurveyDTO> getAllMySurveys() {
         return surveyService.getAll();
     }
 
