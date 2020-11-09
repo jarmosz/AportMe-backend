@@ -3,8 +3,8 @@ package com.aportme.backend.service.survey;
 import com.aportme.backend.entity.Pet;
 import com.aportme.backend.entity.PetPicture;
 import com.aportme.backend.entity.User;
-import com.aportme.backend.entity.dto.CreateSurveyDTO;
-import com.aportme.backend.entity.dto.SurveyDTO;
+import com.aportme.backend.entity.dto.survey.CreateSurveyDTO;
+import com.aportme.backend.entity.dto.survey.UserSurveyDTO;
 import com.aportme.backend.entity.survey.Survey;
 import com.aportme.backend.repository.survey.SurveyRepository;
 import com.aportme.backend.service.AuthenticationService;
@@ -31,7 +31,7 @@ public class SurveyService {
     private final PetService petService;
     private final ModelMapper modelMapper;
 
-    public List<SurveyDTO> getAll() {
+    public List<UserSurveyDTO> getAll() {
         ModelMapperUtil.mapSurveyDTO(modelMapper);
         Long id = authenticationService.getLoggedUserId();
         User user = userService.findById(id);
@@ -55,7 +55,7 @@ public class SurveyService {
         survey.setFoundation(pet.getFoundation());
 
         survey = surveyRepository.save(survey);
-        surveyAnswerService.createAnswers(survey, pet.getFoundation().getId(), dto.getAnswers());
+        surveyAnswerService.createSurveyAnswers(survey, pet.getFoundation().getId(), dto.getAnswers());
     }
 
     public void delete(Long id) {
@@ -67,8 +67,8 @@ public class SurveyService {
         return surveyRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Survey not found"));
     }
 
-    private SurveyDTO convertToSurveyDTO(Survey survey) {
-        SurveyDTO dto = modelMapper.map(survey, SurveyDTO.class);
+    private UserSurveyDTO convertToSurveyDTO(Survey survey) {
+        UserSurveyDTO dto = modelMapper.map(survey, UserSurveyDTO.class);
         PetPicture profilePicture = survey.getPet().getPictures()
                 .stream()
                 .filter(PetPicture::getIsProfilePicture)

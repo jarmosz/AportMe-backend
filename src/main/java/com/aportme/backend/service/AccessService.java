@@ -37,7 +37,7 @@ public class AccessService {
         return authenticationService.getLoggedUsername().equals(foundationEmail);
     }
 
-    public Boolean isMyQuestion(Long questionId) {
+    public Boolean isFoundationQuestion(Long questionId) {
         SurveyQuestion question = surveyQuestionRepository.findById(questionId).orElse(null);
         if (question != null) {
             return authenticationService.getLoggedUsername().equals(question.getFoundation().getUser().getEmail());
