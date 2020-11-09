@@ -7,7 +7,6 @@ import com.aportme.backend.repository.PetRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,7 +14,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class AccessService {
 
-    private final PetRepository petRepository;
+    private final PetService petService;
     private final AuthenticationService authenticationService;
 
     public Boolean isAdmin() {
@@ -31,13 +30,13 @@ public class AccessService {
     }
 
     public Boolean isFoundationPet(Long petId) {
-        Pet pet = petRepository.findById(petId).orElseThrow(() -> new EntityNotFoundException("Pet not found"));
+        Pet pet = petService.findById(petId);
         String foundationEmail = pet.getFoundation().getUser().getEmail();
         return authenticationService.getAuthentication().getName().equals(foundationEmail);
     }
 
     public Boolean arePetLikedByUser(Long petId) {
-        Pet pet = petRepository.findById(petId).orElseThrow(() -> new EntityNotFoundException("Pet not found"));
+        Pet pet = petService.findById(petId);
         List<String> userEmails = pet.getUsers().stream().map(User::getEmail).collect(Collectors.toList());
         return userEmails.contains(authenticationService.getAuthentication().getName());
     }
