@@ -31,19 +31,23 @@ public class PetService {
     private final FoundationService foundationService;
     private final ModelMapper modelMapper;
     private final AuthenticationService authenticationService;
+    private final UserService userService;
     private PictureService pictureService;
 
     public Page<PetDTO> getPets(Pageable pageable, String searchQuery, PetFilters filters, boolean isFoundationCall) {
+
         SearchablePet searchablePet = resolveSearchQuery(searchQuery);
-        Long foundationId = authenticationService.getLoggedUserId();
-        isFoundationCall = verifyFoundationCall(isFoundationCall, foundationId);
-        Page<Pet> petsPage = searchPetRepository.findPetsByNameAndBreed(
+        Long userId = authenticationService.getLoggedUserId();
+        isFoundationCall = verifyFoundationCall(isFoundationCall, userId);
+        filters.setOnlyLikedPets(verifyUserCall(filters.getOnlyLikedPets(), userId));
+        Page<Pet> petsPage = searchPetRepository.findByFilters(
                 pageable,
                 searchablePet.getName(),
                 searchablePet.getBreed(),
                 filters,
                 isFoundationCall,
-                foundationId);
+                userId,
+                getUserForSearch(filters));
 
         return convertPetsToPage(pageable, petsPage);
     }
@@ -111,6 +115,17 @@ public class PetService {
             return foundationId != null && authenticationService.getAuthorities().contains(Role.FOUNDATION);
         }
         return false;
+    }
+
+    private boolean verifyUserCall(Boolean onlyLikedPets, Long userId) {
+        if(onlyLikedPets != null && onlyLikedPets) {
+            return userId != null && authenticationService.getAuthorities().contains(Role.USER);
+        }
+        return false;
+    }
+
+    private User getUserForSearch(PetFilters filters) {
+        return filters.getOnlyLikedPets() ? userService.getLoggedUser() : null;
     }
 
     @Autowired
