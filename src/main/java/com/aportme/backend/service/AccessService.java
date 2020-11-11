@@ -1,6 +1,7 @@
 package com.aportme.backend.service;
 
 import com.aportme.backend.entity.Pet;
+import com.aportme.backend.entity.User;
 import com.aportme.backend.entity.enums.Role;
 import com.aportme.backend.entity.survey.SurveyQuestion;
 import com.aportme.backend.repository.PetRepository;
@@ -47,7 +48,10 @@ public class AccessService {
 
     public Boolean arePetLikedByUser(Long petId) {
         Pet pet = petService.findById(petId);
-        List<String> userEmails = pet.getUsers().stream().map(User::getEmail).collect(Collectors.toList());
+        List<String> userEmails = pet.getUsers()
+                .stream()
+                .map(User::getEmail)
+                .collect(Collectors.toList());
         return userEmails.contains(authenticationService.getAuthentication().getName());
     }
 }
