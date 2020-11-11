@@ -29,6 +29,7 @@ public class SurveyQuestionController {
     }
 
     @PostMapping("/add")
+    @PreAuthorize("@accessService.isFoundation()")
     @ApiOperation(value = "Add survey questions")
     public ResponseEntity<Object> createQuestions(@RequestBody AddSurveyQuestionsDTO surveyQuestions) {
         surveyQuestionService.createQuestions(surveyQuestions.getQuestions());
@@ -36,6 +37,7 @@ public class SurveyQuestionController {
     }
 
     @DeleteMapping
+    @PreAuthorize("@accessService.isFoundation()")
     @ApiOperation(value = "Delete all surveys question for logged foundation")
     public ResponseEntity<Object> deleteAll() {
         surveyQuestionService.deleteAll();

@@ -57,9 +57,11 @@ public class SurveyService {
         survey = surveyRepository.save(survey);
         surveyAnswerService.createSurveyAnswers(survey, pet.getFoundation().getId(), dto.getAnswers());
     }
-
+    
+    @Transactional
     public void delete(Long id) {
         Survey survey = findById(id);
+        surveyAnswerService.deleteAllBySurvey(survey);
         surveyRepository.delete(survey);
     }
 
