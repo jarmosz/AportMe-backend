@@ -66,7 +66,7 @@ public class PetService {
 
     public ResponseEntity<Object> create(AddPetDTO petDTO) {
         Pet pet = modelMapper.map(petDTO, Pet.class);
-        String email = authenticationService.getLoggedUserName();
+        String email = authenticationService.getLoggedUsername();
         Foundation foundation = foundationService.findByEmail(email);
         pet.setFoundation(foundation);
         pet.setSearchableName(pet.getName().toLowerCase());
