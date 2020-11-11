@@ -23,11 +23,6 @@ public class SurveyAnswerService {
     private final FoundationService foundationService;
     private SurveyQuestionService surveyQuestionService;
 
-    public void deleteAllByQuestion(SurveyQuestion question) {
-        List<SurveyAnswer> answers = surveyAnswerRepository.findAllByQuestion(question);
-        surveyAnswerRepository.deleteAll(answers);
-    }
-
     public void createSurveyAnswers(Survey survey, Long foundationId, List<SurveyAnswerDTO> userAnswers) {
         Foundation foundation = foundationService.findById(foundationId);
         List<SurveyQuestion> questions = surveyQuestionService.findAllByFoundation(foundation);
@@ -54,6 +49,14 @@ public class SurveyAnswerService {
                 .filter(question -> question.getId().equals(questionId))
                 .findFirst()
                 .orElseThrow(() -> new InvalidSurveyQuestionException(questionId));
+    }
+
+    public void deleteAllByQuestion(SurveyQuestion question) {
+        surveyAnswerRepository.deleteAllByQuestion(question);
+    }
+
+    public void deleteAllBySurvey(Survey survey) {
+        surveyAnswerRepository.deleteAllBySurvey(survey);
     }
 
     @Autowired
