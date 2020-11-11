@@ -18,11 +18,11 @@ public class AuthenticationService {
         return getAuthentication().getAuthorities();
     }
 
-    public String getLoggedUserName() {
+    public String getLoggedUsername() {
         return getAuthentication().getName();
     }
 
     public Long getLoggedUserId() {
-        return getLoggedUserName().equals("anonymousUser") ? null : (Long) getAuthentication().getPrincipal();
+        return getLoggedUsername().equals("anonymousUser") ? null : (Long) getAuthentication().getPrincipal();
     }
 }
