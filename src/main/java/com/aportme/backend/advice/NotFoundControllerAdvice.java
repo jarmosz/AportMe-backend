@@ -1,6 +1,7 @@
 package com.aportme.backend.advice;
 
 import com.aportme.backend.exception.InvalidSurveyQuestionException;
+import com.aportme.backend.exception.ResetPasswordLinkTokenNotFound;
 import com.aportme.backend.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,4 +29,10 @@ public class NotFoundControllerAdvice {
         String msg = String.format("Unable to create survey invalid question id: %d", ex.getId());
         return new ResponseEntity<>(msg, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(ResetPasswordLinkTokenNotFound.class)
+    public ResponseEntity<Object> resetPasswordTokenNotFoundException() {
+        return new ResponseEntity<>("Reset password token not found", HttpStatus.NOT_FOUND);
+    }
+
 }
