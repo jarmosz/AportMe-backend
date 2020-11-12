@@ -1,5 +1,6 @@
 package com.aportme.backend.service;
 
+import com.aportme.backend.exception.EmailProblemException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -19,12 +20,12 @@ public class MailSenderService {
     @Value("${spring.mail.username}")
     private String mailSenderAddress;
 
-    public void sendActivationMail(String receiver, String subject, String content) {
+    public void sendResetPasswordConfirmMail(String receiver, String subject, String content) {
         try {
             MimeMessagePreparator messagePreparator = prepareMail(receiver, subject, content);
             mailSender.send(messagePreparator);
         } catch (MailException e) {
-            //TODO Handle mail exceptions
+            throw new EmailProblemException();
         }
     }
 
