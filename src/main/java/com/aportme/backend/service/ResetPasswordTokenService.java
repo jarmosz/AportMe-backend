@@ -1,6 +1,6 @@
 package com.aportme.backend.service;
 
-import com.aportme.backend.entity.ResetPasswordLinkToken;
+import com.aportme.backend.entity.ResetPasswordLink;
 import com.aportme.backend.entity.User;
 import com.aportme.backend.entity.dto.user.ResetUserPasswordFormDTO;
 import com.aportme.backend.exception.ResetPasswordLinkTokenHasExpired;
@@ -8,13 +8,18 @@ import com.aportme.backend.exception.ResetPasswordLinkTokenNotFound;
 import com.aportme.backend.exception.WrongResetPasswordDataException;
 import com.aportme.backend.repository.ResetPasswordTokenRepository;
 import com.aportme.backend.repository.UserRepository;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class ResetPasswordTokenService {
+
+    private static final String PASSWORD_REGEX_PATTERN = "^.{8,256}$";
 
     @Value("${confirm.reset.password.token.expiration.seconds}")
     private int tokenExpirationTime;
@@ -23,33 +28,24 @@ public class ResetPasswordTokenService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    private static final String PASSWORD_REGEX_PATTERN = "^.{8,256}$";
-
-    public ResetPasswordTokenService(ResetPasswordTokenRepository resetPasswordLinkTokenRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.resetPasswordLinkTokenRepository = resetPasswordLinkTokenRepository;
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
-
-
     public void saveToken(User user, String token) {
-        ResetPasswordLinkToken resetPasswordLinkToken = new ResetPasswordLinkToken();
-        resetPasswordLinkToken.setUser(user);
-        resetPasswordLinkToken.setToken(token);
-        resetPasswordLinkToken.setExpiryDate(new DateTime().plusSeconds(tokenExpirationTime));
+        ResetPasswordLink resetPasswordLink = new ResetPasswordLink();
+        resetPasswordLink.setUser(user);
+        resetPasswordLink.setToken(token);
+        resetPasswordLink.setExpiryDate(new DateTime().plusSeconds(tokenExpirationTime));
 
-        resetPasswordLinkTokenRepository.save(resetPasswordLinkToken);
+        resetPasswordLinkTokenRepository.save(resetPasswordLink);
     }
 
-    private boolean checkIfTokenIsExpired(ResetPasswordLinkToken token) {
+    private boolean checkIfTokenIsExpired(ResetPasswordLink token) {
         return token.getExpiryDate().isBeforeNow();
     }
 
     public void checkResetPasswordToken(String linkToken) {
-        ResetPasswordLinkToken resetPasswordLinkToken = resetPasswordLinkTokenRepository
+        ResetPasswordLink resetPasswordLink = resetPasswordLinkTokenRepository
                 .findResetPasswordLinkTokenByToken(linkToken)
                 .orElseThrow(ResetPasswordLinkTokenNotFound::new);
-        if (checkIfTokenIsExpired(resetPasswordLinkToken)) {
+        if (checkIfTokenIsExpired(resetPasswordLink)) {
             throw new ResetPasswordLinkTokenHasExpired();
         }
     }
@@ -58,26 +54,23 @@ public class ResetPasswordTokenService {
         return password.equals(repeatPassword) && password.matches(PASSWORD_REGEX_PATTERN);
     }
 
-
     public void changeUserPassword(ResetUserPasswordFormDTO resetUserPasswordFormDTO) {
         String linkToken = resetUserPasswordFormDTO.getResetPasswordLinkToken();
-        ResetPasswordLinkToken resetPasswordLinkToken =
+        ResetPasswordLink resetPasswordLink =
                 resetPasswordLinkTokenRepository.findResetPasswordLinkTokenByToken(linkToken).orElseThrow(ResetPasswordLinkTokenNotFound::new);
-        if (checkIfTokenIsExpired(resetPasswordLinkToken)) {
+        if (checkIfTokenIsExpired(resetPasswordLink)) {
             throw new ResetPasswordLinkTokenHasExpired();
         }
-        User user = resetPasswordLinkToken.getUser();
+        User user = resetPasswordLink.getUser();
         String newPassword = resetUserPasswordFormDTO.getNewPassword();
-        String repeatNewPassword = resetUserPasswordFormDTO.getRepeatNewPassword();
-        if(validatePassword(newPassword, repeatNewPassword)){
+        String repeatedNewPassword = resetUserPasswordFormDTO.getRepeatedNewPassword();
+        if (validatePassword(newPassword, repeatedNewPassword)) {
             String encodedPassword = passwordEncoder.encode(newPassword);
             user.setPassword(encodedPassword);
             userRepository.save(user);
-            resetPasswordLinkTokenRepository.delete(resetPasswordLinkToken);
-        }
-        else {
+            resetPasswordLinkTokenRepository.delete(resetPasswordLink);
+        } else {
             throw new WrongResetPasswordDataException();
         }
-
     }
 }
