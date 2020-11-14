@@ -8,6 +8,8 @@ import java.util.List;
 @Data
 public class SurveyQuestionDTO {
 
+    private Long id;
+
     private String questionText;
 
     private QuestionType type;
