@@ -3,6 +3,7 @@ package com.aportme.backend.entity.dto.survey;
 import com.aportme.backend.entity.enums.SurveyStatus;
 import lombok.Data;
 
+import javax.persistence.Lob;
 import java.util.List;
 
 @Data
@@ -24,7 +25,8 @@ public class UserSurveyDTO {
 
     private String breed;
 
+    @Lob
     private String picture;
 
-    private List<SurveyAnswerDTO> answers;
+    private List<UserSurveyAnswer> answers;
 }

@@ -35,7 +35,7 @@ public class SurveyAnswerService {
     }
 
     private SurveyAnswer createSurveyAnswer(Survey survey, List<SurveyQuestion> questions, SurveyAnswerDTO dto) {
-        SurveyQuestion question = findQuestion(questions, dto.getId());
+        SurveyQuestion question = findQuestion(questions, dto.getQuestionId());
         return SurveyAnswer.builder()
                 .answer(dto.getAnswer())
                 .question(question)

@@ -1,9 +1,11 @@
 package com.aportme.backend.utils;
 
 import com.aportme.backend.entity.Foundation;
+import com.aportme.backend.entity.dto.survey.UserSurveyAnswer;
 import com.aportme.backend.entity.dto.survey.UserSurveyDTO;
 import com.aportme.backend.entity.dto.foundation.FoundationDTO;
 import com.aportme.backend.entity.survey.Survey;
+import com.aportme.backend.entity.survey.SurveyAnswer;
 import org.modelmapper.ModelMapper;
 
 public class ModelMapperUtil {
@@ -26,5 +28,8 @@ public class ModelMapperUtil {
                             mapper.map(src -> src.getPet().getBreed(), UserSurveyDTO::setBreed);
                         }
                 );
+
+        modelMapper.typeMap(SurveyAnswer.class, UserSurveyAnswer.class)
+                .addMappings(mapper -> mapper.map(src -> src.getQuestion().getQuestionText(), UserSurveyAnswer::setQuestionText));
     }
 }
