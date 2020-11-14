@@ -7,13 +7,13 @@ import org.thymeleaf.context.Context;
 
 @Service
 @AllArgsConstructor
-public class ActivationEmailBuilderService {
+public class ConfirmResetPasswordEmailBuilderService {
 
     private final TemplateEngine templateEngine;
 
-    public String build(String activationLink) {
+    public String build(String confirmationUrl) {
         Context context = new Context();
-        context.setVariable("activationLink", activationLink);
-        return templateEngine.process("activationEmailTemplate", context);
+        context.setVariable("confirmationUrl", confirmationUrl);
+        return templateEngine.process("resetPasswordEmailTemplate", context);
     }
 }

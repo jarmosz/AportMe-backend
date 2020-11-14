@@ -3,7 +3,8 @@ package com.aportme.backend.service;
 import com.aportme.backend.entity.User;
 import com.aportme.backend.entity.dto.user.AuthUserDTO;
 import com.aportme.backend.entity.dto.user.ChangeUserPasswordDTO;
-import com.aportme.backend.event.OnRegistrationCompleteEvent;
+import com.aportme.backend.entity.dto.user.ResetUserPasswordDTO;
+import com.aportme.backend.event.SendResetPasswordLinkEvent;
 import com.aportme.backend.exception.UserAlreadyExistsException;
 import com.aportme.backend.exception.UserNotFoundException;
 import com.aportme.backend.exception.WrongChangePasswordDataException;
@@ -27,7 +28,7 @@ public class UserService {
     private final ModelMapper modelMapper;
 
     private static final String EMAIL_REGEX_PATTERN = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)])";
-    private static final String PASSWORD_REGEX_PATTERN = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,15}$";
+    private static final String PASSWORD_REGEX_PATTERN = "^.{8,256}$";
 
     private boolean validateEmail(String email) {
         return email.matches(EMAIL_REGEX_PATTERN);
@@ -55,13 +56,18 @@ public class UserService {
                 User user = modelMapper.map(userDTO, User.class);
                 user.setPassword(passwordEncoder.encode(user.getPassword()));
                 saveUser(user);
-                eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user, DateTime.now()));
             } else {
                 throw new UserAlreadyExistsException();
             }
         } else {
             throw new WrongUserCredentialsException();
         }
+    }
+
+    public void sendResetPasswordLink(ResetUserPasswordDTO resetUserPasswordDTO) {
+        String userEmail = resetUserPasswordDTO.getEmail();
+        User user = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
+        eventPublisher.publishEvent(new SendResetPasswordLinkEvent(user, DateTime.now()));
     }
 
     public void changeUserPassword(ChangeUserPasswordDTO passwords) {
@@ -73,12 +79,6 @@ public class UserService {
         } else {
             throw new WrongChangePasswordDataException();
         }
-    }
-
-    public void activeUser(Long id) {
-        User user = findById(id);
-        user.setActive(true);
-        saveUser(user);
     }
 
     public User findById(Long id) {
