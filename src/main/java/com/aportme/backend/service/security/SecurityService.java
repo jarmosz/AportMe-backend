@@ -65,7 +65,7 @@ public class SecurityService {
     }
 
     private TokenPairDTO createTokenPair(User user) {
-        String accessToken = generateAccessToken(user.getId());
+        String accessToken = generateAccessToken(user);
         Optional<RefreshToken> refreshTokenFromDB = refreshTokenRepository.findTokenByUser(user);
         RefreshToken newRefreshToken = generateRefreshToken(user);
         if (refreshTokenFromDB.isPresent()) {
@@ -98,16 +98,18 @@ public class SecurityService {
         RefreshToken newRefreshToken = generateRefreshToken(user);
         refreshTokenRepository.deleteTokenById(oldRefreshToken.getId());
         refreshTokenRepository.save(newRefreshToken);
-        String token = generateAccessToken(user.getId());
+        String token = generateAccessToken(user);
         String refreshToken = newRefreshToken.getToken();
         return new TokenPairDTO(token, refreshToken);
     }
 
-    public String generateAccessToken(long userId) {
+    public String generateAccessToken(User user) {
         long expirationDateInMillis = System.currentTimeMillis() + securityProperties.getExpirationTimeInSeconds() * 1000;
         Date expirationDate = new Date(expirationDateInMillis);
         return JWT.create()
-                .withSubject(String.valueOf(userId))
+                .withSubject(String.valueOf(user.getId()))
+                .withClaim("Role", user.getRole().toString())
+                .withClaim("Email", user.getEmail())
                 .withIssuedAt(new Date())
                 .withExpiresAt(expirationDate)
                 .sign(Algorithm.HMAC256(securityProperties.getSecret().getBytes()));
