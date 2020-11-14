@@ -1,6 +1,7 @@
 package com.aportme.backend.security;
 
 import com.aportme.backend.entity.User;
+import com.aportme.backend.entity.enums.Role;
 import com.aportme.backend.exception.UserNotFoundException;
 import com.aportme.backend.repository.UserRepository;
 import com.auth0.jwt.JWT;
@@ -52,6 +53,8 @@ public class JWTAuthorizationFilter extends GenericFilterBean {
     private Authentication getAuthentication(String token)   {
 
         final String username;
+        final String email;
+        final Role role;
         try {
             String[] tokenParts = token.split(" ");
             String mainToken = tokenParts[1];
@@ -59,6 +62,8 @@ public class JWTAuthorizationFilter extends GenericFilterBean {
                     .build()
                     .verify(mainToken);
             username = jwt.getSubject();
+            role = Role.valueOf(jwt.getClaim("Role").toString());
+            email = jwt.getClaim("Email").toString();
         } catch (JWTVerificationException e) {
             return null;
         }
@@ -70,9 +75,7 @@ public class JWTAuthorizationFilter extends GenericFilterBean {
             return null;
         }
 
-        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-
-        return new JWTAuthentication(user);
+        return new JWTAuthentication(userId, email, role);
     }
 
 }
