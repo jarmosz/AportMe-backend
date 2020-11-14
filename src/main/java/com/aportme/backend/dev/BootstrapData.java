@@ -1,22 +1,9 @@
 package com.aportme.backend.dev;
 
-import com.aportme.backend.entity.ActivationToken;
+import com.aportme.backend.entity.*;
 import com.aportme.backend.entity.enums.*;
-import com.aportme.backend.entity.survey.SelectValue;
 import com.aportme.backend.entity.survey.SurveyQuestion;
-import com.aportme.backend.repository.ActivationTokenRepository;
-import com.aportme.backend.entity.Address;
-import com.aportme.backend.repository.AddressRepository;
-import com.aportme.backend.entity.Foundation;
-import com.aportme.backend.repository.FoundationRepository;
-import com.aportme.backend.entity.Pet;
-import com.aportme.backend.entity.PetPicture;
-import com.aportme.backend.repository.PetRepository;
-import com.aportme.backend.repository.PictureRepository;
-import com.aportme.backend.entity.User;
-import com.aportme.backend.entity.enums.Role;
-import com.aportme.backend.repository.UserRepository;
-import com.aportme.backend.repository.survey.SelectValueRepository;
+import com.aportme.backend.repository.*;
 import com.aportme.backend.repository.survey.SurveyQuestionRepository;
 import com.aportme.backend.service.SelectValueService;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +26,7 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
     private final UserRepository userRepository;
     private final FoundationRepository foundationRepository;
     private final AddressRepository addressRepository;
-    private final ActivationTokenRepository activationTokenRepository;
+    private final ResetPasswordTokenRepository resetPasswordTokenRepository;
     private final PetRepository petRepository;
     private final PictureRepository pictureRepository;
     private final PasswordEncoder passwordEncoder;
@@ -139,6 +126,7 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
 
         createUser("mateusz.lesiecki@gmail.com", passwordEncoder.encode("Haslo123"));
         createUser("jacek.krakowski@apilia.pl", passwordEncoder.encode("Haslo123"));
+        createUser("jarmoszw@gmail.com", passwordEncoder.encode("Haslo123"));
 
     }
 
@@ -190,17 +178,11 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
         user.setRole(Role.USER);
         user.setActive(true);
         userRepository.save(user);
-        ActivationToken activationToken = new ActivationToken();
-        activationToken.setToken("2945729834n34h9d7h573h2375dh273h76ch29376");
-        activationToken.setUser(user);
-        activationToken.setExpiryDate(new DateTime().plusMinutes(1440));
-        activationTokenRepository.save(activationToken);
-
         return user;
     }
 
     private Foundation createFoundation(String email, String password, String phoneNumber, String description,
-            String name, String nip, Address address, String logo, String krs, String accountNumber) {
+                                        String name, String nip, Address address, String logo, String krs, String accountNumber) {
         User foundation = new User();
         foundation.setEmail(email);
         foundation.setPassword(password);
@@ -231,8 +213,8 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
     }
 
     private Pet createPet(String name, String breed, int age, PetSex sex, AgeSuffix ageSuffix, PetSize petSize,
-            PetType petType, String diseases, String behaviorToChildren, String behaviorToAnimals,
-            Boolean trainingNeeded, Boolean behavioristNeeded, String description, Foundation foundation) {
+                          PetType petType, String diseases, String behaviorToChildren, String behaviorToAnimals,
+                          Boolean trainingNeeded, Boolean behavioristNeeded, String description, Foundation foundation) {
         Pet pet = new Pet();
         pet.setAge(age);
         pet.setAgeCategory(prepareAgeCategory(age, ageSuffix));
