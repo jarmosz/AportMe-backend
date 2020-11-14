@@ -1,5 +1,7 @@
 package com.aportme.backend.advice;
 
+import com.aportme.backend.exception.ResetPasswordLinkTokenHasExpired;
+import com.aportme.backend.exception.WrongResetPasswordDataException;
 import com.aportme.backend.exception.security.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,5 +40,15 @@ public class SecurityControllerAdvice extends ResponseEntityExceptionHandler {
     @ExceptionHandler(RefreshTokenHasExpiredException.class)
     public ResponseEntity<String> handleRefreshTokenHasExpiredException(){
         return new ResponseEntity<>("Token has expired.", HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(ResetPasswordLinkTokenHasExpired.class)
+    public ResponseEntity<String> handleResetPasswordTokenExpiration(){
+        return new ResponseEntity<>("Reset password link has expired", HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(WrongResetPasswordDataException.class)
+    public ResponseEntity<String> handleWrongResetPasswordTokenExpiration(){
+        return new ResponseEntity<>("Passwords do not match or have invalid format", HttpStatus.BAD_REQUEST);
     }
 }

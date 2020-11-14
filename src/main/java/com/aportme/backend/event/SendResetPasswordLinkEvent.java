@@ -8,14 +8,14 @@ import org.springframework.context.ApplicationEvent;
 
 @Getter
 @Setter
-public class OnRegistrationCompleteEvent extends ApplicationEvent {
+public class SendResetPasswordLinkEvent extends ApplicationEvent {
 
-    private DateTime registrationTime;
+    private DateTime resetPasswordTime;
     private User user;
 
-    public OnRegistrationCompleteEvent(User user, DateTime registrationTime) {
+    public SendResetPasswordLinkEvent(User user, DateTime resetPasswordTime) {
         super(user);
         this.user = user;
-        this.registrationTime = registrationTime;
+        this.resetPasswordTime = resetPasswordTime;
     }
 }
