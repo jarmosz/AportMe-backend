@@ -108,8 +108,8 @@ public class SecurityService {
         Date expirationDate = new Date(expirationDateInMillis);
         return JWT.create()
                 .withSubject(String.valueOf(user.getId()))
-                .withClaim("Role", user.getRole().toString())
-                .withClaim("Email", user.getEmail())
+                .withClaim("role", user.getRole().toString())
+                .withClaim("email", user.getEmail())
                 .withIssuedAt(new Date())
                 .withExpiresAt(expirationDate)
                 .sign(Algorithm.HMAC256(securityProperties.getSecret().getBytes()));
