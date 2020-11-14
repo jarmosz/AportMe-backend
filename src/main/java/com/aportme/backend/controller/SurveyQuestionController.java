@@ -1,6 +1,6 @@
 package com.aportme.backend.controller;
 
-import com.aportme.backend.entity.dto.SurveyQuestionDTO;
+import com.aportme.backend.entity.dto.survey.SurveyQuestionDTO;
 import com.aportme.backend.entity.dto.survey.AddSurveyQuestionsDTO;
 import com.aportme.backend.service.survey.SurveyQuestionService;
 import io.swagger.annotations.ApiOperation;

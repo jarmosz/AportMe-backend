@@ -32,12 +32,12 @@ public class SurveyQuestionService {
     private final ModelMapper modelMapper;
     private SurveyAnswerService surveyAnswerService;
 
-    public List<com.aportme.backend.entity.dto.SurveyQuestionDTO> getQuestions(Long petId) {
+    public List<SurveyQuestionDTO> getQuestions(Long petId) {
         Foundation foundation = getPetFoundationOrLoggedFoundation(petId);
 
         return findAllByFoundation(foundation)
                 .stream()
-                .map(question -> modelMapper.map(question, com.aportme.backend.entity.dto.SurveyQuestionDTO.class))
+                .map(question -> modelMapper.map(question, SurveyQuestionDTO.class))
                 .collect(Collectors.toList());
     }
 
@@ -53,7 +53,10 @@ public class SurveyQuestionService {
     @Transactional
     public void createQuestions(List<SurveyQuestionDTO> questions) {
         Foundation foundation = foundationService.findByLoggedEmail();
-        questions.forEach(question -> saveSurveyQuestion(foundation, question));
+        questions.
+                stream()
+                .filter(question -> question.getId() == null)
+                .forEach(question -> saveSurveyQuestion(foundation, question));
     }
 
     @Transactional
