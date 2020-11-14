@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @Data
 @NoArgsConstructor
-public class ResetPasswordLinkToken {
+public class ResetPasswordLink {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

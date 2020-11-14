@@ -3,6 +3,7 @@ package com.aportme.backend.controller;
 import com.aportme.backend.entity.dto.user.AuthUserDTO;
 import com.aportme.backend.entity.dto.user.ChangeUserPasswordDTO;
 import com.aportme.backend.entity.dto.user.ResetUserPasswordDTO;
+import com.aportme.backend.entity.dto.user.ResetUserPasswordFormDTO;
 import com.aportme.backend.service.ResetPasswordTokenService;
 import com.aportme.backend.service.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -18,6 +19,7 @@ public class UserController {
     private final UserService userService;
     private final ResetPasswordTokenService resetPasswordTokenService;
 
+
     @PostMapping("/register")
     @ApiOperation(value = "Register new user")
     public void registerUser(@RequestBody AuthUserDTO user) {
@@ -31,18 +33,24 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/sendResetPasswordLink")
+    @PostMapping("/password/reset/link")
     @ApiOperation(value = "Send email with link to reset password")
     public ResponseEntity sendResetPasswordLink(@RequestBody ResetUserPasswordDTO resetUserPasswordDTO) {
         userService.sendResetPasswordLink(resetUserPasswordDTO);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/resetPassword")
-    @ApiOperation("Reset user password")
-    public ResponseEntity<Object> resetUserPasswordFromForm(@RequestParam("linkToken") String linkToken, ChangeUserPasswordDTO changeUserPasswordDTO) {
+    @GetMapping("/password/token/validate")
+    @ApiOperation("Validate token from reset password link")
+    public ResponseEntity<Object> checkResetPasswordToken(@RequestParam("linkToken") String linkToken) {
         resetPasswordTokenService.checkResetPasswordToken(linkToken);
-        userService.changeUserPassword(changeUserPasswordDTO);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/password/token/reset")
+    @ApiOperation("Change user password from reset password")
+    public ResponseEntity<Object> changeUserPassword(@RequestBody ResetUserPasswordFormDTO resetUserPasswordFormDTO) {
+        resetPasswordTokenService.changeUserPassword(resetUserPasswordFormDTO);
         return ResponseEntity.ok().build();
     }
 }
