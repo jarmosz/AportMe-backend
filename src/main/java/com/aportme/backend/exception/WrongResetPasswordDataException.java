@@ -5,5 +5,4 @@ public class WrongResetPasswordDataException extends RuntimeException {
     public WrongResetPasswordDataException() {
         super();
     }
-
 }

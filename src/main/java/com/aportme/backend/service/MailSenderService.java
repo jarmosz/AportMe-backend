@@ -1,6 +1,6 @@
 package com.aportme.backend.service;
 
-import com.aportme.backend.exception.EmailProblemException;
+import com.aportme.backend.exception.EmailServerException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -25,7 +25,7 @@ public class MailSenderService {
             MimeMessagePreparator messagePreparator = prepareMail(receiver, subject, content);
             mailSender.send(messagePreparator);
         } catch (MailException e) {
-            throw new EmailProblemException();
+            throw new EmailServerException();
         }
     }
 

@@ -128,7 +128,6 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
         createUser("jacek.krakowski@apilia.pl", passwordEncoder.encode("Haslo123"));
         createUser("jarmoszw@gmail.com", passwordEncoder.encode("Haslo123"));
 
-
     }
 
     private void createTBBFoundationSurvey() {
