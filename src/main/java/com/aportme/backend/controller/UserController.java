@@ -26,7 +26,7 @@ public class UserController {
 
     @PostMapping("/changePassword")
     @ApiOperation(value = "Change user password")
-    public ResponseEntity changeUserPassword(@RequestBody ChangeUserPasswordDTO passwords) {
+    public ResponseEntity<Object> changeUserPassword(@RequestBody ChangeUserPasswordDTO passwords) {
         userService.changeUserPassword(passwords);
         return ResponseEntity.ok().build();
     }
