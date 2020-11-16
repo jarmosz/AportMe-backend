@@ -13,6 +13,7 @@ public class PetFilters {
     private PetSize size;
     private PetSex petSex;
     private Boolean onlyLikedPets;
+    private Boolean isFoundationCall;
     private String searchBreedQuery;
     private String searchNameQuery;
 }
