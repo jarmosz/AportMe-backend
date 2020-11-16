@@ -31,8 +31,8 @@ public class PetService {
     private final SearchService searchService;
     private PictureService pictureService;
 
-    public Page<PetDTO> getPets(Pageable pageable, PetFilters filters, boolean isFoundationCall) {
-        Page<Pet> petsPage = searchService.findPetsByFilters(pageable, filters, isFoundationCall);
+    public Page<PetDTO> getPets(Pageable pageable, PetFilters filters) {
+        Page<Pet> petsPage = searchService.findPetsByFilters(pageable, filters);
         return convertPetsToPage(pageable, petsPage);
     }
 
