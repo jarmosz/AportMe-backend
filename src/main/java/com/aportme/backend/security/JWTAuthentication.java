@@ -1,10 +1,9 @@
 package com.aportme.backend.security;
 
-import com.aportme.backend.entity.enums.Role;
+import com.aportme.backend.entity.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
-import java.util.Arrays;
 import java.util.Collection;
 
 public class JWTAuthentication implements Authentication {
@@ -13,10 +12,10 @@ public class JWTAuthentication implements Authentication {
     private final String email;
     private final Collection<GrantedAuthority> grantedAuthorities;
 
-    public JWTAuthentication(Long userId, String email, Role role) {
-        this.userId = userId;
-        this.email = email;
-        this.grantedAuthorities = Arrays.asList(role);
+    public JWTAuthentication(User user) {
+        this.userId = user.getId();
+        this.email = user.getEmail();
+        this.grantedAuthorities = user.getAuthorities();
     }
 
     @Override
@@ -32,6 +31,10 @@ public class JWTAuthentication implements Authentication {
     @Override
     public Object getDetails() {
         return null;
+    }
+
+    public long getUserId() {
+        return userId;
     }
 
     @Override
