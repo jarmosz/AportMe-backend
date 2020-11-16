@@ -5,9 +5,7 @@ import com.aportme.backend.entity.dto.pet.AddPetDTO;
 import com.aportme.backend.entity.dto.pet.PetBaseDTO;
 import com.aportme.backend.entity.dto.pet.PetDTO;
 import com.aportme.backend.entity.dto.pet.PetFilters;
-import com.aportme.backend.entity.enums.Role;
 import com.aportme.backend.repository.PetRepository;
-import com.aportme.backend.repository.SearchPetRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,28 +25,14 @@ import java.util.stream.Collectors;
 public class PetService {
 
     private final PetRepository petRepository;
-    private final SearchPetRepository searchPetRepository;
     private final FoundationService foundationService;
     private final ModelMapper modelMapper;
     private final AuthenticationService authenticationService;
-    private final UserService userService;
+    private final SearchService searchService;
     private PictureService pictureService;
 
-    public Page<PetDTO> getPets(Pageable pageable, String searchQuery, PetFilters filters, boolean isFoundationCall) {
-
-        SearchablePet searchablePet = resolveSearchQuery(searchQuery);
-        Long userId = authenticationService.getLoggedUserId();
-        isFoundationCall = verifyFoundationCall(isFoundationCall, userId);
-        filters.setOnlyLikedPets(verifyUserCall(filters.getOnlyLikedPets(), userId));
-        Page<Pet> petsPage = searchPetRepository.findByFilters(
-                pageable,
-                searchablePet.getName(),
-                searchablePet.getBreed(),
-                filters,
-                isFoundationCall,
-                userId,
-                getUserForSearch(filters));
-
+    public Page<PetDTO> getPets(Pageable pageable, PetFilters filters, boolean isFoundationCall) {
+        Page<Pet> petsPage = searchService.findPetsByFilters(pageable, filters, isFoundationCall);
         return convertPetsToPage(pageable, petsPage);
     }
 
@@ -97,35 +81,6 @@ public class PetService {
                 .collect(Collectors.toList());
 
         return new PageImpl<>(petDTOs, pageable, pets.getTotalElements());
-    }
-
-    private SearchablePet resolveSearchQuery(String query) {
-        if (query == null || query.isBlank()) {
-            return new SearchablePet("", "");
-        } else if (!query.contains(",")) {
-            return new SearchablePet(query.toLowerCase().trim(), "");
-        } else {
-            String[] splittedQuery = query.split(",");
-            return new SearchablePet(splittedQuery[0].toLowerCase().trim(), splittedQuery[1].toLowerCase().trim());
-        }
-    }
-
-    private boolean verifyFoundationCall(boolean isFoundatioCall, Long foundationId) {
-        if(isFoundatioCall) {
-            return foundationId != null && authenticationService.getAuthorities().contains(Role.FOUNDATION);
-        }
-        return false;
-    }
-
-    private boolean verifyUserCall(Boolean onlyLikedPets, Long userId) {
-        if(onlyLikedPets != null && onlyLikedPets) {
-            return userId != null && authenticationService.getAuthorities().contains(Role.USER);
-        }
-        return false;
-    }
-
-    private User getUserForSearch(PetFilters filters) {
-        return filters.getOnlyLikedPets() ? userService.getLoggedUser() : null;
     }
 
     @Autowired
