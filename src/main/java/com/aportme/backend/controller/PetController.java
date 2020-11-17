@@ -24,10 +24,8 @@ public class PetController {
     @ApiOperation(value = "Find all pets", response = PetDTO.class)
     public Page<PetDTO> getAll(
             Pageable pageable,
-            @RequestParam(required = false) String searchQuery,
-            @RequestParam boolean isFoundationCall,
             PetFilters filters) {
-        return petService.getPets(pageable, searchQuery, filters, isFoundationCall);
+        return petService.getPets(pageable, filters);
     }
 
     @GetMapping("/{id}")

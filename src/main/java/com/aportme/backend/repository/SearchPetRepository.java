@@ -28,12 +28,12 @@ public class SearchPetRepository implements CustomPetRepository {
     private final EntityManager entityManager;
 
     @Override
-    public Page<Pet> findByFilters(Pageable pageable, String name, String breed, PetFilters filters, boolean isFoundationCall, Long foundationId, User user) {
+    public Page<Pet> findByFilters(Pageable pageable, String name, String breed, PetFilters filters, User user) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Pet> criteriaQuery = criteriaBuilder.createQuery(Pet.class);
         Root<Pet> pet = criteriaQuery.from(Pet.class);
 
-        criteriaQuery.where(buildPredicate(pet, criteriaBuilder, name, breed, filters, isFoundationCall, foundationId, user));
+        criteriaQuery.where(buildPredicate(pet, criteriaBuilder, name, breed, filters, user));
         criteriaQuery.orderBy(criteriaBuilder.desc(pet.get(Pet_.creationDate)));
         TypedQuery<Pet> query = entityManager.createQuery(criteriaQuery);
 
@@ -46,7 +46,7 @@ public class SearchPetRepository implements CustomPetRepository {
         return new PageImpl<>(pets, pageable, totalRows);
     }
 
-    private Predicate buildPredicate(Root<Pet> pet, CriteriaBuilder criteriaBuilder, String name, String breed, PetFilters filters, boolean isFoundationCall, Long foundationId, User user) {
+    private Predicate buildPredicate(Root<Pet> pet, CriteriaBuilder criteriaBuilder, String name, String breed, PetFilters filters, User user) {
         List<Predicate> predicates = new ArrayList<>();
         predicates.add(criteriaBuilder.like(pet.get(Pet_.searchableName), "%" + name + "%"));
         predicates.add(criteriaBuilder.like(pet.get(Pet_.searchableBreed), "%" + breed + "%"));
@@ -55,8 +55,8 @@ public class SearchPetRepository implements CustomPetRepository {
             if (filters.getAgeCategory() != null) predicates.add(criteriaBuilder.equal(pet.get(Pet_.ageCategory), filters.getAgeCategory()));
             if (filters.getPetType() != null) predicates.add(criteriaBuilder.equal(pet.get(Pet_.petType), filters.getPetType()));
             if (filters.getPetSex() != null) predicates.add(criteriaBuilder.equal(pet.get(Pet_.sex), filters.getPetSex()));
-            if (isFoundationCall) {
-                predicates.add(criteriaBuilder.equal(pet.get(Pet_.FOUNDATION).get(Foundation_.USER).get(User_.ID), foundationId));
+            if (filters.getIsFoundationCall() && user != null) {
+                predicates.add(criteriaBuilder.equal(pet.get(Pet_.FOUNDATION).get(Foundation_.USER).get(User_.ID), user.getId()));
             }
             if (filters.getOnlyLikedPets() && user != null) {
                 predicates.add(criteriaBuilder.isMember(user, pet.get(Pet_.USERS)));
