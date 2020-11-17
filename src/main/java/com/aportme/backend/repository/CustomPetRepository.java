@@ -7,5 +7,5 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface CustomPetRepository {
-    Page<Pet> findByFilters(Pageable pageable, String name, String breed, PetFilters filters, boolean isFoundationCall, Long foundationId, User user);
+    Page<Pet> findByFilters(Pageable pageable, String name, String breed, PetFilters filters, User user);
 }
