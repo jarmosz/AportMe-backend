@@ -29,6 +29,7 @@ public class PetService {
     private final ModelMapper modelMapper;
     private final AuthenticationService authenticationService;
     private final SearchService searchService;
+    private final CanonicalService canonicalService;
     private PictureService pictureService;
 
     public Page<PetDTO> getPets(Pageable pageable, PetFilters filters) {
@@ -53,8 +54,8 @@ public class PetService {
         String email = authenticationService.getLoggedUsername();
         Foundation foundation = foundationService.findByEmail(email);
         pet.setFoundation(foundation);
-        pet.setSearchableName(pet.getName().toLowerCase());
-        pet.setSearchableBreed(pet.getBreed().toLowerCase());
+        pet.setSearchableName(canonicalService.replaceCanonicalLetters(pet.getName().toLowerCase()));
+        pet.setSearchableBreed(canonicalService.replaceCanonicalLetters(pet.getBreed().toLowerCase()));
         petRepository.save(pet);
 
         List<PetPicture> pictures = pictureService.createPicturesForNewPet(pet, petDTO.getPictures());
