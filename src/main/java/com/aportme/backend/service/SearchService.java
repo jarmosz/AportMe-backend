@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 public class SearchService {
     private final AuthenticationService authenticationService;
     private final SearchPetRepository searchPetRepository;
+    private final CanonicalService canonicalService;
     private final UserService userService;
 
     public Page<Pet> findPetsByFilters(Pageable pageable, PetFilters filters) {
@@ -36,7 +37,8 @@ public class SearchService {
     }
 
     private String prepareSearchableField(String query) {
-        return query == null || query.isBlank() ? "" : query.toLowerCase().trim();
+        query = query == null || query.isBlank() ? "" : query.toLowerCase().trim();
+        return canonicalService.replaceCanonicalLetters(query);
     }
 
     private boolean verifyFoundationCall(Boolean isFoundatioCall, Long foundationId) {
