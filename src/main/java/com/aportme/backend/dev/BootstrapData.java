@@ -5,9 +5,9 @@ import com.aportme.backend.entity.enums.*;
 import com.aportme.backend.entity.survey.SurveyQuestion;
 import com.aportme.backend.repository.*;
 import com.aportme.backend.repository.survey.SurveyQuestionRepository;
+import com.aportme.backend.service.CanonicalService;
 import com.aportme.backend.service.SelectValueService;
 import lombok.RequiredArgsConstructor;
-import org.joda.time.DateTime;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,6 +32,7 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
     private final PasswordEncoder passwordEncoder;
     private final SurveyQuestionRepository surveyQuestionRepository;
     private final SelectValueService selectValueService;
+    private final CanonicalService canonicalService;
 
     @Override
     @Transactional
@@ -223,13 +224,13 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
         pet.setBehaviorToAnimals(behaviorToAnimals);
         pet.setBehaviorToChildren(behaviorToChildren);
         pet.setBreed(breed);
-        pet.setSearchableBreed(breed.toLowerCase());
+        pet.setSearchableBreed(canonicalService.replaceCanonicalLetters(breed.toLowerCase()));
         pet.setSex(sex);
         pet.setDescription(description);
         pet.setDiseases(diseases);
         pet.setFoundation(foundation);
         pet.setName(name);
-        pet.setSearchableName(name.toLowerCase());
+        pet.setSearchableName(canonicalService.replaceCanonicalLetters(name.toLowerCase()));
         pet.setSize(petSize);
         pet.setPetType(petType);
         pet.setTrainingNeeded(trainingNeeded);
