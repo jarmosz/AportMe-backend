@@ -1,8 +1,6 @@
 package com.aportme.backend.security;
 
-import com.aportme.backend.entity.User;
-import com.aportme.backend.exception.UserNotFoundException;
-import com.aportme.backend.repository.UserRepository;
+import com.aportme.backend.entity.enums.Role;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
@@ -24,12 +22,6 @@ import java.io.IOException;
 @Component
 public class JWTAuthorizationFilter extends GenericFilterBean {
 
-    private final UserRepository userRepository;
-
-    public JWTAuthorizationFilter(UserRepository userRepository){
-        this.userRepository = userRepository;
-    }
-
     @Value("${jwt.header.string}")
     private String HEADER_STRING;
 
@@ -49,30 +41,26 @@ public class JWTAuthorizationFilter extends GenericFilterBean {
         chain.doFilter(httpRequest, httpResponse);
     }
 
-    private Authentication getAuthentication(String token)   {
+    private Authentication getAuthentication(String token) {
 
-        final String username;
+        final Long id;
+        final Role role;
+        final String email;
         try {
             String[] tokenParts = token.split(" ");
             String mainToken = tokenParts[1];
             DecodedJWT jwt = JWT.require(Algorithm.HMAC256(SECRET.getBytes()))
                     .build()
                     .verify(mainToken);
-            username = jwt.getSubject();
+
+            id = jwt.getClaim("id").asLong();
+            email = jwt.getSubject();
+            role = jwt.getClaim("role").as(Role.class);
         } catch (JWTVerificationException e) {
             return null;
         }
 
-        final Long userId;
-        try {
-            userId = Long.valueOf(username);
-        } catch (NumberFormatException e) {
-            return null;
-        }
-
-        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-
-        return new JWTAuthentication(user);
+        return new JWTAuthentication(id, email, role);
     }
 
 }
