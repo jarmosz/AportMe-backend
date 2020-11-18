@@ -1,16 +1,16 @@
 package com.aportme.backend.service.security;
 
+import com.aportme.backend.entity.RefreshToken;
 import com.aportme.backend.entity.User;
 import com.aportme.backend.entity.dto.TokenPairDTO;
-import com.aportme.backend.repository.UserRepository;
-import com.aportme.backend.security.SecurityProperties;
 import com.aportme.backend.entity.dto.UserLoginDTO;
-import com.aportme.backend.entity.RefreshToken;
 import com.aportme.backend.exception.security.RefreshTokenHasExpiredException;
 import com.aportme.backend.exception.security.TokenDoesNotExsistsException;
 import com.aportme.backend.exception.security.UserDoesNotExistsException;
 import com.aportme.backend.exception.security.WrongPasswordException;
 import com.aportme.backend.repository.RefreshTokenRepository;
+import com.aportme.backend.repository.UserRepository;
+import com.aportme.backend.security.SecurityProperties;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import lombok.AllArgsConstructor;
@@ -65,7 +65,7 @@ public class SecurityService {
     }
 
     private TokenPairDTO createTokenPair(User user) {
-        String accessToken = generateAccessToken(user.getId());
+        String accessToken = generateAccessToken(user);
         Optional<RefreshToken> refreshTokenFromDB = refreshTokenRepository.findTokenByUser(user);
         RefreshToken newRefreshToken = generateRefreshToken(user);
         if (refreshTokenFromDB.isPresent()) {
@@ -98,18 +98,20 @@ public class SecurityService {
         RefreshToken newRefreshToken = generateRefreshToken(user);
         refreshTokenRepository.deleteTokenById(oldRefreshToken.getId());
         refreshTokenRepository.save(newRefreshToken);
-        String token = generateAccessToken(user.getId());
+        String token = generateAccessToken(user);
         String refreshToken = newRefreshToken.getToken();
         return new TokenPairDTO(token, refreshToken);
     }
 
-    public String generateAccessToken(long userId) {
+    public String generateAccessToken(User user) {
         long expirationDateInMillis = System.currentTimeMillis() + securityProperties.getExpirationTimeInSeconds() * 1000;
         Date expirationDate = new Date(expirationDateInMillis);
         return JWT.create()
-                .withSubject(String.valueOf(userId))
+                .withSubject(String.valueOf(user.getEmail()))
                 .withIssuedAt(new Date())
                 .withExpiresAt(expirationDate)
+                .withClaim("id", user.getId())
+                .withClaim("role", user.getRole().toString())
                 .sign(Algorithm.HMAC256(securityProperties.getSecret().getBytes()));
     }
 
