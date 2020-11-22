@@ -1,6 +1,6 @@
 package com.aportme.backend.repository.survey;
 
-import com.aportme.backend.entity.survey.Survey;
+import com.aportme.backend.entity.survey.UserSurvey;
 import com.aportme.backend.entity.survey.SurveyAnswer;
 import com.aportme.backend.entity.survey.SurveyQuestion;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,5 +11,7 @@ public interface SurveyAnswerRepository extends JpaRepository<SurveyAnswer, Long
 
     void deleteAllByQuestion(SurveyQuestion question);
 
-    void deleteAllBySurvey(Survey survey);
+    void deleteAllByUserSurvey(UserSurvey userSurvey);
+
+    boolean existsByQuestion(SurveyQuestion question);
 }
