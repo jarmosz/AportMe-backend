@@ -51,12 +51,9 @@ public class SurveyQuestionService {
     }
 
     @Transactional
-    public void createQuestions(List<SurveyQuestionDTO> questions) {
+    public void createQuestions(SurveyQuestionDTO question) {
         Foundation foundation = foundationService.findByLoggedEmail();
-        questions.
-                stream()
-                .filter(question -> question.getId() == null)
-                .forEach(question -> saveSurveyQuestion(foundation, question));
+        saveSurveyQuestion(foundation, question);
     }
 
     @Transactional
