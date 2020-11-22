@@ -4,7 +4,7 @@ import com.aportme.backend.entity.Foundation;
 import com.aportme.backend.entity.dto.survey.UserSurveyAnswer;
 import com.aportme.backend.entity.dto.survey.UserSurveyDTO;
 import com.aportme.backend.entity.dto.foundation.FoundationDTO;
-import com.aportme.backend.entity.survey.Survey;
+import com.aportme.backend.entity.survey.UserSurvey;
 import com.aportme.backend.entity.survey.SurveyAnswer;
 import org.modelmapper.ModelMapper;
 
@@ -18,7 +18,7 @@ public class ModelMapperUtil {
     }
 
     public static void mapSurveyDTO(ModelMapper modelMapper) {
-        modelMapper.typeMap(Survey.class, UserSurveyDTO.class)
+        modelMapper.typeMap(UserSurvey.class, UserSurveyDTO.class)
                 .addMappings(mapper -> {
                             mapper.map(src -> src.getFoundation().getName(), UserSurveyDTO::setFoundationName);
                             mapper.map(src -> src.getFoundation().getUser().getEmail(), UserSurveyDTO::setFoundationEmail);

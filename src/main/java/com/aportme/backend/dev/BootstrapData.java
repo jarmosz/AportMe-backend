@@ -242,6 +242,7 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
         question.setFoundation(foundation);
         question.setType(QuestionType.TEXTFIELD);
         question.setQuestionText(questionText);
+        question.setQuestionStatus(QuestionStatus.ACTIVE);
         question.setSelectValues(Collections.emptyList());
         surveyQuestionRepository.save(question);
     }
@@ -250,6 +251,7 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
         SurveyQuestion question = new SurveyQuestion();
         question.setFoundation(foundation);
         question.setType(QuestionType.SELECT);
+        question.setQuestionStatus(QuestionStatus.ACTIVE);
         question.setQuestionText(questionText);
         question = surveyQuestionRepository.save(question);
         selectValueService.save(question, values);
@@ -260,6 +262,7 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
         question.setFoundation(foundation);
         question.setType(QuestionType.CHECKBOX);
         question.setQuestionText(questionText);
+        question.setQuestionStatus(QuestionStatus.ACTIVE);
         question.setSelectValues(Collections.emptyList());
         surveyQuestionRepository.save(question);
     }

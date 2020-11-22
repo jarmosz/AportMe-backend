@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 @Entity
 @NoArgsConstructor
-public class Survey {
+public class UserSurvey {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,6 +34,6 @@ public class Survey {
     @JoinColumn(name = "pet_id")
     private Pet pet;
 
-    @OneToMany(mappedBy = "survey")
+    @OneToMany(mappedBy = "userSurvey")
     private List<SurveyAnswer> answers;
 }
