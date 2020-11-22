@@ -13,17 +13,17 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/survey/questions")
-@PreAuthorize("@accessService.isFoundation()")
 public class SurveyQuestionController {
 
     private final SurveyQuestionService surveyQuestionService;
 
     @GetMapping
+    @PreAuthorize("@accessService.isFoundation() || @accessService.isUser()")
     @ApiOperation(
             value = "Get all survey question with petId query param to fill survey or without to print logged foundation questions",
             response = SurveyQuestionDTO.class
     )
-    public List<SurveyQuestionDTO> getMyQuestions(@RequestParam(required = false) Long petId) {
+    public List<SurveyQuestionDTO> getQuestions(@RequestParam(required = false) Long petId) {
         return surveyQuestionService.getQuestions(petId);
     }
 

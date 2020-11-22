@@ -1,6 +1,7 @@
 package com.aportme.backend.entity;
 
-import com.aportme.backend.entity.survey.Survey;
+import com.aportme.backend.entity.survey.FoundationSurvey;
+import com.aportme.backend.entity.survey.UserSurvey;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -40,7 +41,10 @@ public class Foundation {
     private Address address;
 
     @OneToMany(mappedBy = "foundation")
-    private List<Survey> surveys;
+    private List<UserSurvey> userSurveys;
+
+    @OneToOne
+    private FoundationSurvey foundationSurvey;
 
     @OneToMany(
             mappedBy = "foundation",

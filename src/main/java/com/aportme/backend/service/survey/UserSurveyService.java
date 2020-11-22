@@ -5,8 +5,8 @@ import com.aportme.backend.entity.PetPicture;
 import com.aportme.backend.entity.User;
 import com.aportme.backend.entity.dto.survey.CreateSurveyDTO;
 import com.aportme.backend.entity.dto.survey.UserSurveyDTO;
-import com.aportme.backend.entity.survey.Survey;
-import com.aportme.backend.repository.survey.SurveyRepository;
+import com.aportme.backend.entity.survey.UserSurvey;
+import com.aportme.backend.repository.survey.UserSurveyRepository;
 import com.aportme.backend.service.AuthenticationService;
 import com.aportme.backend.service.PetService;
 import com.aportme.backend.service.UserService;
@@ -22,9 +22,9 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-public class SurveyService {
+public class UserSurveyService {
 
-    private final SurveyRepository surveyRepository;
+    private final UserSurveyRepository userSurveyRepository;
     private final AuthenticationService authenticationService;
     private final SurveyAnswerService surveyAnswerService;
     private final UserService userService;
@@ -36,7 +36,7 @@ public class SurveyService {
         Long id = authenticationService.getLoggedUserId();
         User user = userService.findById(id);
 
-        return surveyRepository.findAllByUser(user)
+        return userSurveyRepository.findAllByUser(user)
                 .stream()
                 .map(this::convertToSurveyDTO)
                 .collect(Collectors.toList());
@@ -44,38 +44,38 @@ public class SurveyService {
 
     @Transactional
     public void createSurvey(CreateSurveyDTO dto) {
-        Survey survey = new Survey();
+        UserSurvey userSurvey = new UserSurvey();
 
         Long loggedUserId = authenticationService.getLoggedUserId();
         User user = userService.findById(loggedUserId);
-        survey.setUser(user);
+        userSurvey.setUser(user);
 
         Pet pet = petService.findById(dto.getPetId());
-        survey.setPet(pet);
-        survey.setFoundation(pet.getFoundation());
+        userSurvey.setPet(pet);
+        userSurvey.setFoundation(pet.getFoundation());
 
-        survey = surveyRepository.save(survey);
-        surveyAnswerService.createSurveyAnswers(survey, pet.getFoundation().getId(), dto.getAnswers());
+        userSurvey = userSurveyRepository.save(userSurvey);
+        surveyAnswerService.createSurveyAnswers(userSurvey, pet.getFoundation().getId(), dto.getAnswers());
     }
     
     @Transactional
     public void delete(Long id) {
-        Survey survey = findById(id);
-        surveyAnswerService.deleteAllBySurvey(survey);
-        surveyRepository.delete(survey);
+        UserSurvey userSurvey = findById(id);
+        surveyAnswerService.deleteAllBySurvey(userSurvey);
+        userSurveyRepository.delete(userSurvey);
     }
 
-    public Survey findById(Long id) {
-        return surveyRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Survey not found"));
+    public UserSurvey findById(Long id) {
+        return userSurveyRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Survey not found"));
     }
 
-    private UserSurveyDTO convertToSurveyDTO(Survey survey) {
-        UserSurveyDTO dto = modelMapper.map(survey, UserSurveyDTO.class);
-        PetPicture profilePicture = survey.getPet().getPictures()
+    private UserSurveyDTO convertToSurveyDTO(UserSurvey userSurvey) {
+        UserSurveyDTO dto = modelMapper.map(userSurvey, UserSurveyDTO.class);
+        PetPicture profilePicture = userSurvey.getPet().getPictures()
                 .stream()
                 .filter(PetPicture::getIsProfilePicture)
                 .findFirst()
-                .orElse(survey.getPet().getPictures().get(0));
+                .orElse(userSurvey.getPet().getPictures().get(0));
 
         dto.setPicture(profilePicture.getPictureInBase64());
         return dto;
