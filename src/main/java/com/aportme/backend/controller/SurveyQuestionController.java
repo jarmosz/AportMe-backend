@@ -31,8 +31,8 @@ public class SurveyQuestionController {
     @PostMapping("/add")
     @PreAuthorize("@accessService.isFoundation()")
     @ApiOperation(value = "Add survey questions")
-    public ResponseEntity<Object> createQuestions(@RequestBody AddSurveyQuestionsDTO surveyQuestions) {
-        surveyQuestionService.createQuestions(surveyQuestions.getQuestions());
+    public ResponseEntity<Object> createQuestions(@RequestBody SurveyQuestionDTO question) {
+        surveyQuestionService.createQuestions(question);
         return ResponseEntity.ok().build();
     }
 
