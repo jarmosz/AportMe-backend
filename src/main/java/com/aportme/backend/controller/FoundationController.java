@@ -55,6 +55,7 @@ public class FoundationController {
     @PreAuthorize("@accessService.isAdmin()")
     @ApiOperation(value = "Create foundation")
     public ResponseEntity<Object> createFoundation(@RequestParam Long userId, @RequestBody AddFoundationDTO addFoundationDTO) {
-        return foundationService.create(userId, addFoundationDTO);
+        foundationService.create(userId, addFoundationDTO);
+        return ResponseEntity.ok().build();
     }
 }

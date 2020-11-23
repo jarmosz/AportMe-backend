@@ -19,11 +19,11 @@ public class FoundationSurvey {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    private FoundationSurveyStatus surveyStatus;
+    private FoundationSurveyStatus surveyStatus = FoundationSurveyStatus.INACTIVE;
 
     @OneToOne
     private Foundation foundation;
 
     @OneToMany(mappedBy = "foundationSurvey")
-    private List<SurveyQuestion> surveyQuestion = new ArrayList<>();
+    private List<SurveyQuestion> surveyQuestions = new ArrayList<>();
 }

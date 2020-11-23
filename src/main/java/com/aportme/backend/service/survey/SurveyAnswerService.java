@@ -2,9 +2,9 @@ package com.aportme.backend.service.survey;
 
 import com.aportme.backend.entity.Foundation;
 import com.aportme.backend.entity.dto.survey.SurveyAnswerDTO;
-import com.aportme.backend.entity.survey.UserSurvey;
 import com.aportme.backend.entity.survey.SurveyAnswer;
 import com.aportme.backend.entity.survey.SurveyQuestion;
+import com.aportme.backend.entity.survey.UserSurvey;
 import com.aportme.backend.exception.InvalidSurveyQuestionException;
 import com.aportme.backend.repository.survey.SurveyAnswerRepository;
 import com.aportme.backend.service.FoundationService;
@@ -49,10 +49,6 @@ public class SurveyAnswerService {
                 .filter(question -> question.getId().equals(questionId))
                 .findFirst()
                 .orElseThrow(() -> new InvalidSurveyQuestionException(questionId));
-    }
-
-    public void deleteAllByQuestion(SurveyQuestion question) {
-        surveyAnswerRepository.deleteAllByQuestion(question);
     }
 
     public boolean isAtLeastOneAnswerToQuestion(SurveyQuestion question) {
