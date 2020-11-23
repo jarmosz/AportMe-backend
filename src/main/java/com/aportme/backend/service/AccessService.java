@@ -1,16 +1,11 @@
 package com.aportme.backend.service;
 
 import com.aportme.backend.entity.Pet;
-import com.aportme.backend.entity.User;
 import com.aportme.backend.entity.enums.Role;
 import com.aportme.backend.entity.survey.SurveyQuestion;
-import com.aportme.backend.repository.PetRepository;
 import com.aportme.backend.repository.survey.SurveyQuestionRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -44,14 +39,5 @@ public class AccessService {
             return authenticationService.getLoggedUsername().equals(question.getFoundation().getUser().getEmail());
         }
         return false;
-    }
-
-    public Boolean arePetLikedByUser(Long petId) {
-        Pet pet = petService.findById(petId);
-        List<String> userEmails = pet.getUsers()
-                .stream()
-                .map(User::getEmail)
-                .collect(Collectors.toList());
-        return userEmails.contains(authenticationService.getAuthentication().getName());
     }
 }
