@@ -85,6 +85,8 @@ public class UserService {
         return userRepository.findById(id).orElseThrow(UserNotFoundException::new);
     }
 
+    public User findByEmail(String email){ return userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);}
+
     public User getLoggedUser() {
         String userEmail = authenticationService.getLoggedUsername();
         return userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
