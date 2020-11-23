@@ -6,6 +6,7 @@ import com.aportme.backend.entity.Pet_;
 import com.aportme.backend.entity.User;
 import com.aportme.backend.entity.User_;
 import com.aportme.backend.entity.dto.pet.PetFilters;
+import com.aportme.backend.exception.SearchedPetsNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -38,6 +39,9 @@ public class SearchPetRepository implements CustomPetRepository {
         TypedQuery<Pet> query = entityManager.createQuery(criteriaQuery);
 
         int totalRows = query.getResultList().size();
+
+        if (totalRows == 0) throw new SearchedPetsNotFoundException();
+
         List<Pet> pets = query
                 .setFirstResult(pageable.getPageNumber() * pageable.getPageSize())
                 .setMaxResults(pageable.getPageSize())
