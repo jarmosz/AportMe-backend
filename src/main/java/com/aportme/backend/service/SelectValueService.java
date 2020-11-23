@@ -15,14 +15,14 @@ public class SelectValueService {
 
     private final SelectValueRepository selectValueRepository;
 
-    public void save(SurveyQuestion question, List<String> selectValues) {
+    public List<SelectValue> save(SurveyQuestion question, List<String> selectValues) {
         List<SelectValue> values = selectValues
                 .stream()
                 .map(SelectValue::new)
                 .peek(val -> val.setQuestion(question))
                 .collect(Collectors.toList());
 
-        selectValueRepository.saveAll(values);
+        return selectValueRepository.saveAll(values);
     }
 
     public void deleteAllByQuestion(SurveyQuestion question) {

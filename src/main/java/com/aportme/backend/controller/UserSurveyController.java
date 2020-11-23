@@ -2,9 +2,11 @@ package com.aportme.backend.controller;
 
 import com.aportme.backend.entity.dto.survey.CreateSurveyDTO;
 import com.aportme.backend.entity.dto.survey.UserSurveyDTO;
+import com.aportme.backend.exception.UnableToDeleteNotSubmittedSurveyException;
 import com.aportme.backend.service.survey.UserSurveyService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +15,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/surveys")
+@RequestMapping("/api/user-surveys")
 public class UserSurveyController {
 
     private final UserSurveyService userSurveyService;
@@ -39,5 +41,10 @@ public class UserSurveyController {
     public ResponseEntity<Object> deleteSurvey(@PathVariable Long id){
         userSurveyService.delete(id);
         return ResponseEntity.ok().build();
+    }
+
+    @ExceptionHandler(UnableToDeleteNotSubmittedSurveyException.class)
+    public ResponseEntity<Object> cannotDeleteSurvey() {
+        return new ResponseEntity<>("Unable to delete survey with different status than submitted", HttpStatus.CONFLICT);
     }
 }

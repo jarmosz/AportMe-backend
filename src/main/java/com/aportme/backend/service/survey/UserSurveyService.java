@@ -1,11 +1,14 @@
 package com.aportme.backend.service.survey;
 
+import com.aportme.backend.entity.Foundation;
 import com.aportme.backend.entity.Pet;
 import com.aportme.backend.entity.PetPicture;
 import com.aportme.backend.entity.User;
 import com.aportme.backend.entity.dto.survey.CreateSurveyDTO;
 import com.aportme.backend.entity.dto.survey.UserSurveyDTO;
+import com.aportme.backend.entity.enums.SurveyStatus;
 import com.aportme.backend.entity.survey.UserSurvey;
+import com.aportme.backend.exception.UnableToDeleteNotSubmittedSurveyException;
 import com.aportme.backend.repository.survey.UserSurveyRepository;
 import com.aportme.backend.service.AuthenticationService;
 import com.aportme.backend.service.PetService;
@@ -32,7 +35,7 @@ public class UserSurveyService {
     private final ModelMapper modelMapper;
 
     public List<UserSurveyDTO> getAll() {
-        ModelMapperUtil.mapSurveyDTO(modelMapper);
+        ModelMapperUtil.mapUserSurveyDTO(modelMapper);
         Long id = authenticationService.getLoggedUserId();
         User user = userService.findById(id);
 
@@ -57,12 +60,20 @@ public class UserSurveyService {
         userSurvey = userSurveyRepository.save(userSurvey);
         surveyAnswerService.createSurveyAnswers(userSurvey, pet.getFoundation().getId(), dto.getAnswers());
     }
-    
+
+    public boolean isAnyUserSurveyWithoutDecision(Foundation foundation) {
+        return userSurveyRepository.existsByFoundationAndStatus(foundation, SurveyStatus.SUBMITTED);
+    }
+
     @Transactional
     public void delete(Long id) {
         UserSurvey userSurvey = findById(id);
-        surveyAnswerService.deleteAllBySurvey(userSurvey);
-        userSurveyRepository.delete(userSurvey);
+        if (userSurvey.getStatus().equals(SurveyStatus.SUBMITTED)) {
+            surveyAnswerService.deleteAllBySurvey(userSurvey);
+            userSurveyRepository.delete(userSurvey);
+        } else {
+            throw new UnableToDeleteNotSubmittedSurveyException();
+        }
     }
 
     public UserSurvey findById(Long id) {

@@ -1,5 +1,6 @@
 package com.aportme.backend.controller;
 
+import com.aportme.backend.entity.dto.survey.CreateSurveyQuestionDTO;
 import com.aportme.backend.entity.dto.survey.SurveyQuestionDTO;
 import com.aportme.backend.service.survey.SurveyQuestionService;
 import io.swagger.annotations.ApiOperation;
@@ -12,27 +13,27 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/survey/questions")
+@RequestMapping("/api/survey-questions")
 public class SurveyQuestionController {
 
     private final SurveyQuestionService surveyQuestionService;
 
     @GetMapping
-    @PreAuthorize("@accessService.isFoundation() || @accessService.isUser()")
+    @PreAuthorize("@accessService.isUser()")
     @ApiOperation(
-            value = "Get all survey question with petId query param to fill survey or without to print logged foundation questions",
+            value = "Get all survey question for pet",
             response = SurveyQuestionDTO.class
     )
-    public List<SurveyQuestionDTO> getQuestions(@RequestParam(required = false) Long petId) {
+    public List<SurveyQuestionDTO> getQuestions(@RequestParam Long petId) {
         return surveyQuestionService.getQuestions(petId);
     }
 
     @PostMapping("/add")
     @PreAuthorize("@accessService.isFoundation()")
     @ApiOperation(value = "Add survey questions")
-    public ResponseEntity<Object> createQuestions(@RequestBody SurveyQuestionDTO question) {
-        surveyQuestionService.createQuestions(question);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Object> createQuestions(@RequestBody CreateSurveyQuestionDTO question) {
+        SurveyQuestionDTO response = surveyQuestionService.createQuestions(question);
+        return ResponseEntity.ok().body(response);
     }
 
     @DeleteMapping
