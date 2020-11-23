@@ -40,7 +40,9 @@ public class SearchPetRepository implements CustomPetRepository {
 
         int totalRows = query.getResultList().size();
 
-        if (totalRows == 0) throw new SearchedPetsNotFoundException();
+        if (totalRows == 0) {
+            throw new SearchedPetsNotFoundException();
+        }
 
         List<Pet> pets = query
                 .setFirstResult(pageable.getPageNumber() * pageable.getPageSize())
