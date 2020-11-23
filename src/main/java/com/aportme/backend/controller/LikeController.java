@@ -21,7 +21,7 @@ public class LikeController {
     }
 
     @DeleteMapping("/{petId}")
-    @PreAuthorize("@accessService.isUser() && @accessService.arePetLikedByUser(#petId)")
+    @PreAuthorize("@accessService.isUser()")
     public ResponseEntity<Object> unlike(@PathVariable Long petId) {
         return likeService.unlike(petId);
     }
