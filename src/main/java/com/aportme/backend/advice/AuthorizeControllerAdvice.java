@@ -1,9 +1,6 @@
 package com.aportme.backend.advice;
 
-import com.aportme.backend.exception.UserAlreadyExistsException;
-import com.aportme.backend.exception.UserIsAlreadyActivatedException;
-import com.aportme.backend.exception.WrongChangePasswordDataException;
-import com.aportme.backend.exception.WrongUserCredentialsException;
+import com.aportme.backend.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -30,5 +27,10 @@ public class AuthorizeControllerAdvice {
     @ExceptionHandler(WrongChangePasswordDataException.class)
     public ResponseEntity<Object> wrongChangePasswordDataException() {
         return new ResponseEntity<>("You have provided wrong user password or invalidate new password data", HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(SearchedPetsNotFoundException.class)
+    public ResponseEntity<Object> searchedPetsNotFoundException() {
+        return new ResponseEntity<>("Cannot found matching pets", HttpStatus.NOT_FOUND);
     }
 }
