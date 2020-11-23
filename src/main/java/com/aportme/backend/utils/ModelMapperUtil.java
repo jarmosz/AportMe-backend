@@ -1,7 +1,7 @@
 package com.aportme.backend.utils;
 
 import com.aportme.backend.entity.Foundation;
-import com.aportme.backend.entity.dto.survey.UserSurveyAnswer;
+import com.aportme.backend.entity.dto.survey.UserSurveyAnswerDTO;
 import com.aportme.backend.entity.dto.survey.UserSurveyDTO;
 import com.aportme.backend.entity.dto.foundation.FoundationDTO;
 import com.aportme.backend.entity.survey.UserSurvey;
@@ -17,7 +17,7 @@ public class ModelMapperUtil {
                 );
     }
 
-    public static void mapSurveyDTO(ModelMapper modelMapper) {
+    public static void mapUserSurveyDTO(ModelMapper modelMapper) {
         modelMapper.typeMap(UserSurvey.class, UserSurveyDTO.class)
                 .addMappings(mapper -> {
                             mapper.map(src -> src.getFoundation().getName(), UserSurveyDTO::setFoundationName);
@@ -29,7 +29,7 @@ public class ModelMapperUtil {
                         }
                 );
 
-        modelMapper.typeMap(SurveyAnswer.class, UserSurveyAnswer.class)
-                .addMappings(mapper -> mapper.map(src -> src.getQuestion().getQuestionText(), UserSurveyAnswer::setQuestionText));
+        modelMapper.typeMap(SurveyAnswer.class, UserSurveyAnswerDTO.class)
+                .addMappings(mapper -> mapper.map(src -> src.getQuestion().getQuestionText(), UserSurveyAnswerDTO::setQuestionText));
     }
 }

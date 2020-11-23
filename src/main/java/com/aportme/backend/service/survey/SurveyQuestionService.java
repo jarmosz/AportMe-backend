@@ -2,9 +2,11 @@ package com.aportme.backend.service.survey;
 
 import com.aportme.backend.entity.Foundation;
 import com.aportme.backend.entity.Pet;
+import com.aportme.backend.entity.dto.survey.CreateSurveyQuestionDTO;
 import com.aportme.backend.entity.dto.survey.SurveyQuestionDTO;
 import com.aportme.backend.entity.enums.QuestionStatus;
 import com.aportme.backend.entity.enums.QuestionType;
+import com.aportme.backend.entity.survey.SelectValue;
 import com.aportme.backend.entity.survey.SurveyQuestion;
 import com.aportme.backend.repository.survey.SurveyQuestionRepository;
 import com.aportme.backend.service.AuthenticationService;
@@ -34,7 +36,8 @@ public class SurveyQuestionService {
     private SurveyAnswerService surveyAnswerService;
 
     public List<SurveyQuestionDTO> getQuestions(Long petId) {
-        Foundation foundation = getPetFoundationOrLoggedFoundation(petId);
+        Pet pet = petService.findById(petId);
+        Foundation foundation = pet.getFoundation();
 
         return findAllActiveQuestionByFoundation(foundation)
                 .stream()
@@ -42,21 +45,11 @@ public class SurveyQuestionService {
                 .collect(Collectors.toList());
     }
 
-    private Foundation getPetFoundationOrLoggedFoundation(Long petId) {
-        if (petId != null) {
-            Pet pet = petService.findById(petId);
-            return pet.getFoundation();
-        } else {
-            String email = authenticationService.getLoggedUsername();
-            return foundationService.findByEmail(email);
-        }
-    }
-
     @Transactional
-    public void createQuestions(SurveyQuestionDTO question) {
+    public SurveyQuestionDTO createQuestions(CreateSurveyQuestionDTO question) {
         String email = authenticationService.getLoggedUsername();
         Foundation foundation = foundationService.findByEmail(email);
-        saveSurveyQuestion(foundation, question);
+        return saveSurveyQuestion(foundation, question);
     }
 
     @Transactional
@@ -64,26 +57,14 @@ public class SurveyQuestionService {
         String foundationEmail = authenticationService.getLoggedUsername();
         Foundation foundation = foundationService.findByEmail(foundationEmail);
         List<SurveyQuestion> questions = findAllActiveQuestionByFoundation(foundation);
-        questions.forEach(question -> {
-            surveyAnswerService.deleteAllByQuestion(question);
-            selectValueService.deleteAllByQuestion(question);
-        });
-        surveyQuestionRepository.deleteAllByFoundation(foundation);
+
+        questions.forEach(this::deprecateQuestionOrDelete);
     }
 
     @Transactional
     public void deleteById(Long id) {
         SurveyQuestion question = findById(id);
-        boolean isAnswerPresent = surveyAnswerService.isAtLeastOneAnswerToQuestion(question);
-
-        if(isAnswerPresent) {
-            question.setQuestionStatus(QuestionStatus.DEPRECATED);
-        } else {
-            if(question.getType().equals(QuestionType.SELECT)) {
-                selectValueService.deleteAllByQuestion(question);
-            }
-            surveyQuestionRepository.delete(question);
-        }
+        deprecateQuestionOrDelete(question);
     }
 
     public SurveyQuestion findById(Long id) {
@@ -92,17 +73,38 @@ public class SurveyQuestionService {
                 .orElseThrow(() -> new EntityNotFoundException("Survey question not found"));
     }
 
+    private void deprecateQuestionOrDelete(SurveyQuestion question) {
+        boolean isAnswerPresent = surveyAnswerService.isAtLeastOneAnswerToQuestion(question);
+
+        if (isAnswerPresent) {
+            question.setQuestionStatus(QuestionStatus.DEPRECATED);
+            save(question);
+        } else {
+            if (question.getType().equals(QuestionType.SELECT)) {
+                selectValueService.deleteAllByQuestion(question);
+            }
+            surveyQuestionRepository.delete(question);
+        }
+    }
+
     public List<SurveyQuestion> findAllActiveQuestionByFoundation(Foundation foundation) {
         return surveyQuestionRepository.findAllByFoundationAndQuestionStatus(foundation, QuestionStatus.ACTIVE);
     }
 
-    private void saveSurveyQuestion(Foundation foundation, SurveyQuestionDTO questionDTO) {
+    private SurveyQuestionDTO saveSurveyQuestion(Foundation foundation, CreateSurveyQuestionDTO questionDTO) {
         SurveyQuestion question = modelMapper.map(questionDTO, SurveyQuestion.class);
         question.setFoundation(foundation);
-        question = surveyQuestionRepository.save(question);
+        question.setFoundationSurvey(foundation.getFoundationSurvey());
+        question = save(question);
         if (questionDTO.getType().equals(QuestionType.SELECT)) {
-            selectValueService.save(question, questionDTO.getValues());
+            List<SelectValue> values = selectValueService.save(question, questionDTO.getValues());
+            question.setSelectValues(values);
         }
+        return modelMapper.map(question, SurveyQuestionDTO.class);
+    }
+
+    private SurveyQuestion save(SurveyQuestion surveyQuestion) {
+        return surveyQuestionRepository.save(surveyQuestion);
     }
 
     @Autowired

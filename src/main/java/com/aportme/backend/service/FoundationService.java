@@ -7,9 +7,11 @@ import com.aportme.backend.entity.dto.foundation.AddFoundationDTO;
 import com.aportme.backend.entity.dto.foundation.FoundationDTO;
 import com.aportme.backend.entity.dto.foundation.LoggedFundationDataDTO;
 import com.aportme.backend.entity.dto.foundation.UpdateFoundationDTO;
+import com.aportme.backend.entity.survey.FoundationSurvey;
 import com.aportme.backend.repository.FoundationRepository;
+import com.aportme.backend.service.survey.FoundationSurveyService;
 import com.aportme.backend.utils.ModelMapperUtil;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -31,6 +33,7 @@ public class FoundationService {
     private final AddressService addressService;
     private final AuthenticationService authenticationService;
     private final ModelMapper modelMapper;
+    private FoundationSurveyService foundationSurveyService;
     private final SearchService searchService;
 
     public Page<FoundationDTO> getAll(String searchCityQuery, Pageable pageable) {
@@ -59,14 +62,17 @@ public class FoundationService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    public ResponseEntity<Object> create(Long userId, AddFoundationDTO addFoundationDTO) {
+    public void create(Long userId, AddFoundationDTO addFoundationDTO) {
         Foundation foundation = modelMapper.map(addFoundationDTO, Foundation.class);
-        Address address = addressService.create(addFoundationDTO.getAddress());
+        Address address = addressService.save(addFoundationDTO.getAddress());
         User user = userService.findById(userId);
 
         foundation.setUser(user);
         foundation.setAddress(address);
-        return new ResponseEntity<>(HttpStatus.OK);
+        foundation = foundationRepository.save(foundation);
+
+        FoundationSurvey foundationSurvey = foundationSurveyService.findOrCreateFoundationSurvey(foundation);
+        foundation.setFoundationSurvey(foundationSurvey);
     }
 
     public Foundation findById(Long id) {

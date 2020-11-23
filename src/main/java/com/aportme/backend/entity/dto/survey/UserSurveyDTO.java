@@ -28,5 +28,5 @@ public class UserSurveyDTO {
     @Lob
     private String picture;
 
-    private List<UserSurveyAnswer> answers;
+    private List<UserSurveyAnswerDTO> answers;
 }
