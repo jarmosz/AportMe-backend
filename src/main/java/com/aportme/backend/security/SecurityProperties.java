@@ -17,6 +17,6 @@ public class SecurityProperties {
     @Value("${jwt.encryption.secret}")
     private String secret;
 
-    @Value("${jwt.access.token.expiration.seconds}")
+    @Value("${jwt.auth.token.expiration.seconds}")
     private long expirationTimeInSeconds;
 }
