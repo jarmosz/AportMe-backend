@@ -32,13 +32,13 @@ public class SearchService {
                 getUserForSearch(filters));
     }
 
-    private SearchablePet resolveSearchQuery(String searchBreedQuery, String searchNameQuery) {
-        return new SearchablePet(prepareSearchableField(searchBreedQuery), prepareSearchableField(searchNameQuery));
-    }
-
-    private String prepareSearchableField(String query) {
+    public String prepareSearchableField(String query) {
         query = query == null || query.isBlank() ? "" : query.toLowerCase().trim();
         return canonicalService.replaceCanonicalLetters(query);
+    }
+
+    private SearchablePet resolveSearchQuery(String searchBreedQuery, String searchNameQuery) {
+        return new SearchablePet(prepareSearchableField(searchBreedQuery), prepareSearchableField(searchNameQuery));
     }
 
     private boolean verifyFoundationCall(Boolean isFoundatioCall, Long foundationId) {
