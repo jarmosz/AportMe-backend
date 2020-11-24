@@ -2,13 +2,11 @@ package com.aportme.backend.service;
 
 import com.aportme.backend.entity.Pet;
 import com.aportme.backend.entity.User;
+import com.aportme.backend.exception.WrongLikeRequestDataException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,14 +25,14 @@ public class LikeService {
     }
 
     public ResponseEntity<Object> unlike(Long petId) {
-        if (arePetLikedByUser(petId)) {
-            Pet pet = petService.findById(petId);
+        Pet pet = petService.findById(petId);
+        if (isPetLikedByUser(pet)) {
             User user = userService.getLoggedUser();
             user.getLikedPets().remove(pet);
             userService.saveUser(user);
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            throw new WrongLikeRequestDataException();
         }
     }
 
@@ -45,12 +43,11 @@ public class LikeService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    private Boolean arePetLikedByUser(Long petId) {
-        Pet pet = petService.findById(petId);
-        List<String> userEmails = pet.getUsers()
+    private Boolean isPetLikedByUser(Pet pet) {
+        String loggedUserEmail = authenticationService.getAuthentication().getName();
+        return pet.getUsers()
                 .stream()
                 .map(User::getEmail)
-                .collect(Collectors.toList());
-        return userEmails.contains(authenticationService.getAuthentication().getName());
+                .anyMatch(userEmail -> userEmail.equals(loggedUserEmail));
     }
 }

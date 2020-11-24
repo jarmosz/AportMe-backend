@@ -33,4 +33,9 @@ public class AuthorizeControllerAdvice {
     public ResponseEntity<Object> searchedPetsNotFoundException() {
         return new ResponseEntity<>("Cannot found matching pets", HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(WrongLikeRequestDataException.class)
+    public ResponseEntity<Object> wrongLikeRequestDataException() {
+        return new ResponseEntity<>("You have provided wrong param request data", HttpStatus.CONFLICT);
+    }
 }
