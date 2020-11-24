@@ -31,9 +31,11 @@ public class FoundationService {
     private final AddressService addressService;
     private final AuthenticationService authenticationService;
     private final ModelMapper modelMapper;
+    private final SearchService searchService;
 
-    public Page<FoundationDTO> getAll(Pageable pageable) {
-        Page<Foundation> foundationsInfo = foundationRepository.findAll(pageable);
+    public Page<FoundationDTO> getAll(String searchCityQuery, Pageable pageable) {
+        Page<Foundation> foundationsInfo = foundationRepository
+                    .findAllByAddress_SearchableCityContains(pageable, searchService.prepareSearchableField(searchCityQuery));
         List<FoundationDTO> foundationsInfoDTOs = foundationsInfo
                 .getContent()
                 .stream()
