@@ -34,15 +34,15 @@ public class FoundationService {
     private final SearchService searchService;
 
     public Page<FoundationDTO> getAll(String searchCityQuery, Pageable pageable) {
-        Page<Foundation> foundationsInfo = foundationRepository
-                    .findAllByAddress_SearchableCityContains(pageable, searchService.prepareSearchableField(searchCityQuery));
-        List<FoundationDTO> foundationsInfoDTOs = foundationsInfo
+        String searchedCity = searchService.prepareSearchableField(searchCityQuery);
+        Page<Foundation> foundations = foundationRepository.findAllByAddress_SearchableCityContains(pageable, searchedCity);
+        List<FoundationDTO> foundationDTOs = foundations
                 .getContent()
                 .stream()
-                .map(foundationInfo -> modelMapper.map(foundationInfo, FoundationDTO.class))
+                .map(foundation -> modelMapper.map(foundation, FoundationDTO.class))
                 .collect(Collectors.toList());
 
-        return new PageImpl<>(foundationsInfoDTOs, pageable, foundationsInfo.getTotalElements());
+        return new PageImpl<>(foundationDTOs, pageable, foundations.getTotalElements());
     }
 
     public FoundationDTO getById(Long id) {
