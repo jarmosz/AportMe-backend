@@ -31,16 +31,18 @@ public class FoundationService {
     private final AddressService addressService;
     private final AuthenticationService authenticationService;
     private final ModelMapper modelMapper;
+    private final SearchService searchService;
 
-    public Page<FoundationDTO> getAll(Pageable pageable) {
-        Page<Foundation> foundationsInfo = foundationRepository.findAll(pageable);
-        List<FoundationDTO> foundationsInfoDTOs = foundationsInfo
+    public Page<FoundationDTO> getAll(String searchCityQuery, Pageable pageable) {
+        String searchedCity = searchService.prepareSearchableField(searchCityQuery);
+        Page<Foundation> foundations = foundationRepository.findAllByAddress_SearchableCityContains(pageable, searchedCity);
+        List<FoundationDTO> foundationDTOs = foundations
                 .getContent()
                 .stream()
-                .map(foundationInfo -> modelMapper.map(foundationInfo, FoundationDTO.class))
+                .map(foundation -> modelMapper.map(foundation, FoundationDTO.class))
                 .collect(Collectors.toList());
 
-        return new PageImpl<>(foundationsInfoDTOs, pageable, foundationsInfo.getTotalElements());
+        return new PageImpl<>(foundationDTOs, pageable, foundations.getTotalElements());
     }
 
     public FoundationDTO getById(Long id) {
