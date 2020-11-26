@@ -183,22 +183,22 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
 
     private Foundation createFoundation(String email, String password, String phoneNumber, String description,
                                         String name, String nip, Address address, String logo, String krs, String accountNumber) {
-        User foundation = new User();
-        foundation.setEmail(email);
-        foundation.setPassword(password);
-        foundation.setRole(Role.FOUNDATION);
-        userRepository.save(foundation);
-        Foundation foundationInfo = new Foundation();
-        foundationInfo.setName(name);
-        foundationInfo.setNip(nip);
-        foundationInfo.setKrs(krs);
-        foundationInfo.setAccountNumber(accountNumber);
-        foundationInfo.setFoundationLogo(logo);
-        foundationInfo.setDescription(description);
-        foundationInfo.setAddress(address);
-        foundationInfo.setPhoneNumber(phoneNumber);
-        foundationInfo.setUser(foundation);
-        return foundationRepository.save(foundationInfo);
+        User user = new User();
+        user.setEmail(email);
+        user.setPassword(password);
+        user.setRole(Role.FOUNDATION);
+        userRepository.save(user);
+        Foundation foundation = new Foundation();
+        foundation.setName(name);
+        foundation.setNip(nip);
+        foundation.setKrs(krs);
+        foundation.setAccountNumber(accountNumber);
+        foundation.setFoundationLogo(logo);
+        foundation.setDescription(description);
+        foundation.setAddress(address);
+        foundation.setPhoneNumber(phoneNumber);
+        foundation.setUser(user);
+        return foundationRepository.save(foundation);
     }
 
     private Address createAddress(String city, String street, String houseNumber, String zipCode, String flatNumber) {
