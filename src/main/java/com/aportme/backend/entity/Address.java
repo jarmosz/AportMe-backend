@@ -19,6 +19,8 @@ public class Address {
 
     private String city;
 
+    private String searchableCity;
+
     private String street;
 
     private String houseNumber;
