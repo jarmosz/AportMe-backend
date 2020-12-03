@@ -47,7 +47,7 @@ public class FoundationController {
     @PutMapping
     @PreAuthorize("@accessService.isFoundation() || @accessService.isAdmin()")
     @ApiOperation(value = "Update foundation")
-    public ResponseEntity<Object> updateFoundation(@RequestBody UpdateFoundationDTO updateFoundationDTO) {
+    public FoundationDTO updateFoundation(@RequestBody UpdateFoundationDTO updateFoundationDTO) {
         return foundationService.update(updateFoundationDTO);
     }
 

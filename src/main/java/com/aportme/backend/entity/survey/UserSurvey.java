@@ -6,8 +6,10 @@ import com.aportme.backend.entity.User;
 import com.aportme.backend.entity.enums.SurveyStatus;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -21,6 +23,9 @@ public class UserSurvey {
 
     @Enumerated(EnumType.STRING)
     private SurveyStatus status = SurveyStatus.SUBMITTED;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

@@ -6,8 +6,8 @@ import com.aportme.backend.entity.survey.SurveyQuestion;
 import com.aportme.backend.repository.*;
 import com.aportme.backend.repository.survey.SurveyQuestionRepository;
 import com.aportme.backend.service.CanonicalService;
-import com.aportme.backend.service.SelectValueService;
 import com.aportme.backend.service.survey.FoundationSurveyService;
+import com.aportme.backend.service.survey.SelectValueService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -257,7 +257,7 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
         question.setQuestionStatus(status);
         question.setQuestionText(questionText);
         question = surveyQuestionRepository.save(question);
-        selectValueService.save(question, values);
+        selectValueService.convertAndSave(question, values);
     }
 
     private void createCheckboxQuestion(Foundation foundation, String questionText, QuestionStatus status) {
