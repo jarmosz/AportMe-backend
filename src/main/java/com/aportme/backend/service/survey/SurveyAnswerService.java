@@ -1,15 +1,12 @@
 package com.aportme.backend.service.survey;
 
-import com.aportme.backend.entity.Foundation;
 import com.aportme.backend.entity.dto.survey.SurveyAnswerDTO;
 import com.aportme.backend.entity.survey.SurveyAnswer;
 import com.aportme.backend.entity.survey.SurveyQuestion;
 import com.aportme.backend.entity.survey.UserSurvey;
 import com.aportme.backend.exception.InvalidSurveyQuestionException;
 import com.aportme.backend.repository.survey.SurveyAnswerRepository;
-import com.aportme.backend.service.FoundationService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,13 +17,8 @@ import java.util.stream.Collectors;
 public class SurveyAnswerService {
 
     private final SurveyAnswerRepository surveyAnswerRepository;
-    private final FoundationService foundationService;
-    private SurveyQuestionService surveyQuestionService;
 
-    public void createSurveyAnswers(UserSurvey userSurvey, Long foundationId, List<SurveyAnswerDTO> userAnswers) {
-        Foundation foundation = foundationService.findById(foundationId);
-        List<SurveyQuestion> questions = surveyQuestionService.findAllActiveQuestionByFoundation(foundation);
-
+    public void createSurveyAnswers(UserSurvey userSurvey, List<SurveyQuestion> questions, List<SurveyAnswerDTO> userAnswers) {
         List<SurveyAnswer> answers = userAnswers.stream()
                 .map(answer -> createSurveyAnswer(userSurvey, questions, answer))
                 .collect(Collectors.toList());
@@ -57,10 +49,5 @@ public class SurveyAnswerService {
 
     public void deleteAllBySurvey(UserSurvey userSurvey) {
         surveyAnswerRepository.deleteAllByUserSurvey(userSurvey);
-    }
-
-    @Autowired
-    public void setSurveyQuestionService(SurveyQuestionService service) {
-        this.surveyQuestionService = service;
     }
 }
