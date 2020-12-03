@@ -1,6 +1,7 @@
 package com.aportme.backend.utils;
 
 import com.aportme.backend.entity.Foundation;
+import com.aportme.backend.entity.dto.UserSurveyForFoundationDTO;
 import com.aportme.backend.entity.dto.foundation.FoundationDTO;
 import com.aportme.backend.entity.dto.survey.UserSurveyAnswerDTO;
 import com.aportme.backend.entity.dto.survey.UserSurveyDTO;
@@ -34,10 +35,11 @@ public class ModelMapperUtil {
     }
 
     public static void mapUserSurveyForFoundationDTO(ModelMapper modelMapper) {
-        modelMapper.typeMap(UserSurvey.class, UserSurveyDTO.class)
+        modelMapper.typeMap(UserSurvey.class, UserSurveyForFoundationDTO.class)
                 .addMappings(mapper -> {
-                            mapper.map(src -> src.getPet().getId(), UserSurveyDTO::setPetId);
-                            mapper.map(src -> src.getPet().getName(), UserSurveyDTO::setPetName);
+                            mapper.map(src -> src.getPet().getId(), UserSurveyForFoundationDTO::setPetId);
+                            mapper.map(src -> src.getPet().getName(), UserSurveyForFoundationDTO::setPetName);
+                            mapper.map(src -> src.getUser().getEmail(), UserSurveyForFoundationDTO::setUserEmail);
                         }
                 );
 
