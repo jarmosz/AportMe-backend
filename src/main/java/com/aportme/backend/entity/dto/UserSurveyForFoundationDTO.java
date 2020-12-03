@@ -17,5 +17,7 @@ public class UserSurveyForFoundationDTO {
 
     private String petName;
 
+    private String userEmail;
+
     private List<UserSurveyAnswerDTO> answers;
 }
