@@ -16,8 +16,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -33,8 +31,8 @@ public class FoundationService {
     private final AddressService addressService;
     private final AuthenticationService authenticationService;
     private final ModelMapper modelMapper;
-    private FoundationSurveyService foundationSurveyService;
     private final SearchService searchService;
+    private final FoundationSurveyService foundationSurveyService;
 
     public Page<FoundationDTO> getAll(String searchCityQuery, Pageable pageable) {
         String searchedCity = searchService.prepareSearchableField(searchCityQuery);
@@ -54,12 +52,12 @@ public class FoundationService {
         return modelMapper.map(foundation, FoundationDTO.class);
     }
 
-    public ResponseEntity<Object> update(UpdateFoundationDTO foundationDTO) {
+    public FoundationDTO update(UpdateFoundationDTO foundationDTO) {
         String email = authenticationService.getLoggedUsername();
         Foundation foundation = findByEmail(email);
         modelMapper.map(foundationDTO, foundation);
-        foundationRepository.save(foundation);
-        return new ResponseEntity<>(HttpStatus.OK);
+        foundation = foundationRepository.save(foundation);
+        return modelMapper.map(foundation, FoundationDTO.class);
     }
 
     public void create(Long userId, AddFoundationDTO addFoundationDTO) {
