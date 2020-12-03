@@ -11,6 +11,7 @@ import com.aportme.backend.entity.survey.FoundationSurvey;
 import com.aportme.backend.repository.FoundationRepository;
 import com.aportme.backend.service.survey.FoundationSurveyService;
 import com.aportme.backend.utils.ModelMapperUtil;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
