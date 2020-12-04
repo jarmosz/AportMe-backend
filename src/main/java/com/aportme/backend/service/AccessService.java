@@ -53,12 +53,4 @@ public class AccessService {
         return isUser() && userSurvey.getUser().getEmail().equals(authenticationService.getLoggedUsername());
     }
 
-    public Boolean arePetLikedByUser(Long petId) {
-        Pet pet = petService.findById(petId);
-        List<String> userEmails = pet.getUsers()
-                .stream()
-                .map(User::getEmail)
-                .collect(Collectors.toList());
-        return userEmails.contains(authenticationService.getAuthentication().getName());
-    }
 }
