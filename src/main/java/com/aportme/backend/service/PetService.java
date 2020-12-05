@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
@@ -32,6 +33,7 @@ public class PetService {
     private final CanonicalService canonicalService;
     private PictureService pictureService;
 
+    @Transactional
     public Page<PetDTO> getPets(Pageable pageable, PetFilters filters) {
         Page<Pet> petsPage = searchService.findPetsByFilters(pageable, filters);
         return convertPetsToPage(pageable, petsPage);
