@@ -57,15 +57,15 @@ public class SecurityService {
     }
 
     private TokenPairDTO createTokenPair(User user) {
-        String accessToken = generateAuthToken(user);
-        String newRefreshToken = generateRefreshToken(user);
-        return new TokenPairDTO(accessToken, newRefreshToken);
+        String authToken = generateAuthToken(user);
+        String refreshToken = generateRefreshToken(user);
+        return new TokenPairDTO(authToken, refreshToken);
     }
 
     @Transactional
     public TokenPairDTO refreshAccessToken(HttpServletRequest request) {
         String token = extractToken(request);
-        if(token == null){
+        if (token == null) {
             throw new TokenDoesNotExsistsException();
         }
         DecodedJWT refreshToken = JWT.require(Algorithm.HMAC256(secret.getBytes()))
@@ -95,10 +95,10 @@ public class SecurityService {
         return createTokenByType(user, refreshTokenExpirationTime, TokenType.REFRESH_TOKEN);
     }
 
-    private String createTokenByType(User user, long expirationTimeInSeconds, TokenType tokenType){
+    private String createTokenByType(User user, long expirationTimeInSeconds, TokenType tokenType) {
         long expirationDateInMillis = System.currentTimeMillis() + expirationTimeInSeconds * 1000;
         Date expirationDate = new Date(expirationDateInMillis);
-        switch(tokenType){
+        switch (tokenType) {
             case AUTH_TOKEN:
                 return JWT.create()
                         .withSubject(String.valueOf(user.getEmail()))
