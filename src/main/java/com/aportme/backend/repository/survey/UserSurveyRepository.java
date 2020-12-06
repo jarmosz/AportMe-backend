@@ -8,6 +8,7 @@ import com.aportme.backend.entity.survey.UserSurvey;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -21,6 +22,9 @@ public interface UserSurveyRepository extends JpaRepository<UserSurvey, Long> {
     Optional<UserSurvey> findByUserAndPet(User user, Pet pet);
 
     Page<UserSurvey> findAllByFoundation(Pageable pageable, Foundation foundation);
+
+    @Query(value = "SELECT us FROM UserSurvey us INNER JOIN Pet p ON p.id = us.pet.id where p.name = ?2")
+    Page<UserSurvey> findAllByPetName(Pageable pageable, String petName);
 
     Page<UserSurvey> findAllByPet(Pageable pageable, Pet pet);
 
