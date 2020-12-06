@@ -51,7 +51,7 @@ public class UserSurveyService {
     }
 
     public Page<UserSurvey> findAllByPetName(Pageable pageable, String petName) {
-        return userSurveyRepository.findAllByPetName(pageable, petName);
+        return userSurveyRepository.findAllByPetName(pageable, petName.toLowerCase());
     }
 
     public UserSurvey save(UserSurvey survey) {

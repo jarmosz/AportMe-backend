@@ -31,9 +31,9 @@ public class UserSurveyForFoundationService {
 
     public Page<UserSurveyForFoundationDTO> getSurveysForFoundation(Pageable pageable, Long petId, String search) {
         Page<UserSurvey> page;
-        if (petId != null) {
+        if (petId != null && search == null) {
             page = getAllUserSurveysForFoundationByPet(pageable, petId);
-        } else if (search != null) {
+        } else if (search != null && petId == null) {
             page = surveyService.findAllByPetName(pageable, search);
         } else {
             page = getAllUserSurveysForFoundation(pageable);
