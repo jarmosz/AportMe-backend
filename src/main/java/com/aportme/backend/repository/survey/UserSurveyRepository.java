@@ -26,7 +26,5 @@ public interface UserSurveyRepository extends JpaRepository<UserSurvey, Long> {
     @Query(value = "SELECT us FROM UserSurvey us INNER JOIN Pet p ON p.id = us.pet.id WHERE p.searchableName LIKE %?1%")
     Page<UserSurvey> findAllByPetName(Pageable pageable, String petName);
 
-    Page<UserSurvey> findAllByPet(Pageable pageable, Pet pet);
-
     boolean existsByFoundationAndStatus(Foundation foundation, SurveyStatus survey);
 }

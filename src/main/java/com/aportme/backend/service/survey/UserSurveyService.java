@@ -42,10 +42,6 @@ public class UserSurveyService {
         return userSurveyRepository.findAllByUser(user);
     }
 
-    public Page<UserSurvey> findAllByPet(Pageable pageable, Pet pet) {
-        return userSurveyRepository.findAllByPet(pageable, pet);
-    }
-
     public Page<UserSurvey> findAllByFoundation(Pageable pageable, Foundation foundation) {
         return userSurveyRepository.findAllByFoundation(pageable, foundation);
     }

@@ -6,7 +6,6 @@ import com.aportme.backend.service.survey.UserSurveyForFoundationService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.SortDefault;
@@ -25,10 +24,9 @@ public class UserSurveyForFoundationController {
     @ApiOperation(value = "Return all user surveys for foundation", response = UserSurveyForFoundationDTO.class)
     public Page<UserSurveyForFoundationDTO> getUserSurveysForFoundation(
             @RequestParam(required = false) String search,
-            @RequestParam(required = false) Long petId,
             @SortDefault(value = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        return userSurveyService.getSurveysForFoundation(pageable, petId, search);
+        return userSurveyService.getSurveysForFoundation(pageable, search);
     }
 
     @PutMapping("/change-status")
