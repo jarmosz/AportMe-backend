@@ -29,12 +29,14 @@ public class UserSurveyForFoundationService {
     private final PetService petService;
     private final FoundationService foundationService;
 
-    public Page<UserSurveyForFoundationDTO> getSurveysForFoundation(Pageable pageable, Long petId) {
+    public Page<UserSurveyForFoundationDTO> getSurveysForFoundation(Pageable pageable, Long petId, String search) {
         Page<UserSurvey> page;
-        if (petId == null) {
-            page = getAllUserSurveysForFoundation(pageable);
-        } else {
+        if (petId != null) {
             page = getAllUserSurveysForFoundationByPet(pageable, petId);
+        } else if (search != null) {
+            page = surveyService.findAllByPetName(pageable, search);
+        } else {
+            page = getAllUserSurveysForFoundation(pageable);
         }
 
         List<UserSurveyForFoundationDTO> surveys = convertToUserSurveysForFoundationDTO(page);
