@@ -24,9 +24,10 @@ public class UserSurveyForFoundationController {
     @ApiOperation(value = "Return all user surveys for foundation", response = UserSurveyForFoundationDTO.class)
     public Page<UserSurveyForFoundationDTO> getUserSurveysForFoundation(
             @RequestParam(required = false) Long petId,
+            @RequestParam(required = false) String search,
             @SortDefault(value = "createdAt", direction = Sort.Direction.ASC) Pageable pageable
     ) {
-        return userSurveyService.getSurveysForFoundation(pageable, petId);
+        return userSurveyService.getSurveysForFoundation(pageable, petId, search);
     }
 
     @PutMapping("/change-status")

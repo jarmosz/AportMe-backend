@@ -50,6 +50,10 @@ public class UserSurveyService {
         return userSurveyRepository.findAllByFoundation(pageable, foundation);
     }
 
+    public Page<UserSurvey> findAllByPetName(Pageable pageable, String petName) {
+        return userSurveyRepository.findAllByPetName(pageable, petName);
+    }
+
     public UserSurvey save(UserSurvey survey) {
         return userSurveyRepository.save(survey);
     }
