@@ -9,7 +9,6 @@ import com.aportme.backend.entity.dto.pet.PetDTO;
 import com.aportme.backend.entity.dto.pet.PetFilters;
 import com.aportme.backend.repository.PetRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,7 +36,6 @@ public class PetService {
     private final CanonicalService canonicalService;
     private PictureService pictureService;
 
-    @Transactional
     public Page<PetDTO> getPets(Pageable pageable, PetFilters filters) {
         Page<Pet> petsPage = searchService.findPetsByFilters(pageable, filters);
         return convertPetsToPage(pageable, petsPage);
