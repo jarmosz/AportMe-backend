@@ -5,14 +5,13 @@ import com.aportme.backend.entity.Foundation;
 import com.aportme.backend.entity.User;
 import com.aportme.backend.entity.dto.foundation.AddFoundationDTO;
 import com.aportme.backend.entity.dto.foundation.FoundationDTO;
-import com.aportme.backend.entity.dto.foundation.LoggedFundationDataDTO;
+import com.aportme.backend.entity.dto.foundation.LoggedFoundationDataDTO;
 import com.aportme.backend.entity.dto.foundation.UpdateFoundationDTO;
 import com.aportme.backend.entity.survey.FoundationSurvey;
 import com.aportme.backend.repository.FoundationRepository;
 import com.aportme.backend.service.survey.FoundationSurveyService;
 import com.aportme.backend.utils.ModelMapperUtil;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -82,9 +81,9 @@ public class FoundationService {
         return foundationRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("Foundation not found"));
     }
 
-    public LoggedFundationDataDTO getMyData() {
+    public LoggedFoundationDataDTO getMyData() {
         String email = authenticationService.getLoggedUsername();
         Foundation foundation = findByEmail(email);
-        return modelMapper.map(foundation, LoggedFundationDataDTO.class);
+        return modelMapper.map(foundation, LoggedFoundationDataDTO.class);
     }
 }

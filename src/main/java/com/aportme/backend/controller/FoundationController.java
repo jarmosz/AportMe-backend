@@ -2,7 +2,7 @@ package com.aportme.backend.controller;
 
 import com.aportme.backend.entity.dto.foundation.AddFoundationDTO;
 import com.aportme.backend.entity.dto.foundation.FoundationDTO;
-import com.aportme.backend.entity.dto.foundation.LoggedFundationDataDTO;
+import com.aportme.backend.entity.dto.foundation.LoggedFoundationDataDTO;
 import com.aportme.backend.entity.dto.foundation.UpdateFoundationDTO;
 import com.aportme.backend.service.FoundationService;
 import io.swagger.annotations.ApiOperation;
@@ -40,7 +40,7 @@ public class FoundationController {
     @GetMapping("/profile")
     @PreAuthorize("@accessService.isFoundation()")
     @ApiOperation(value = "Find all foundations", response = FoundationDTO.class)
-    public LoggedFundationDataDTO getMyData() {
+    public LoggedFoundationDataDTO getMyData() {
         return foundationService.getMyData();
     }
 
