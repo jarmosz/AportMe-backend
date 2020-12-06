@@ -9,6 +9,7 @@ import com.aportme.backend.entity.dto.pet.PetDTO;
 import com.aportme.backend.entity.dto.pet.PetFilters;
 import com.aportme.backend.repository.PetRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
