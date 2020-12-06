@@ -1,13 +1,11 @@
 package com.aportme.backend.service.survey;
 
 import com.aportme.backend.entity.Foundation;
-import com.aportme.backend.entity.Pet;
 import com.aportme.backend.entity.dto.UpdateSurveyStatusDTO;
 import com.aportme.backend.entity.dto.UserSurveyForFoundationDTO;
 import com.aportme.backend.entity.survey.UserSurvey;
 import com.aportme.backend.service.AuthenticationService;
 import com.aportme.backend.service.FoundationService;
-import com.aportme.backend.service.PetService;
 import com.aportme.backend.utils.ModelMapperUtil;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -26,14 +24,11 @@ public class UserSurveyForFoundationService {
     private final ModelMapper modelMapper;
     private final UserSurveyService surveyService;
     private final AuthenticationService authenticationService;
-    private final PetService petService;
     private final FoundationService foundationService;
 
-    public Page<UserSurveyForFoundationDTO> getSurveysForFoundation(Pageable pageable, Long petId, String search) {
+    public Page<UserSurveyForFoundationDTO> getSurveysForFoundation(Pageable pageable, String search) {
         Page<UserSurvey> page;
-        if (petId != null && search == null) {
-            page = getAllUserSurveysForFoundationByPet(pageable, petId);
-        } else if (search != null && petId == null) {
+        if (search != null) {
             page = surveyService.findAllByPetName(pageable, search);
         } else {
             page = getAllUserSurveysForFoundation(pageable);
@@ -54,11 +49,6 @@ public class UserSurveyForFoundationService {
     private UserSurveyForFoundationDTO mapToUserSurveyFoundationDTO(UserSurvey userSurvey) {
         ModelMapperUtil.mapUserSurveyForFoundationDTO(modelMapper);
         return modelMapper.map(userSurvey, UserSurveyForFoundationDTO.class);
-    }
-
-    private Page<UserSurvey> getAllUserSurveysForFoundationByPet(Pageable pageable, Long petId) {
-        Pet pet = petService.findById(petId);
-        return surveyService.findAllByPet(pageable, pet);
     }
 
     private Page<UserSurvey> getAllUserSurveysForFoundation(Pageable pageable) {
