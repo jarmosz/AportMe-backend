@@ -9,6 +9,7 @@ import com.aportme.backend.service.CanonicalService;
 import com.aportme.backend.service.SelectValueService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@Profile("!prod")
 public class BootstrapData implements ApplicationListener<ContextRefreshedEvent> {
 
     private final UserRepository userRepository;

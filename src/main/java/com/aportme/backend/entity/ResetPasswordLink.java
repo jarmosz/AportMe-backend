@@ -19,7 +19,7 @@ public class ResetPasswordLink {
     private String token;
 
     @OneToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "users_id")
     private User user;
 
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
