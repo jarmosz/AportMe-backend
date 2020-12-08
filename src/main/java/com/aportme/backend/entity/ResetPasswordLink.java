@@ -26,7 +26,7 @@ public class ResetPasswordLink {
     private String token;
 
     @OneToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "users_id")
     private User user;
 
     private LocalDateTime expiryDate;
