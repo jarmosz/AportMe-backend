@@ -3,6 +3,7 @@ package com.aportme.backend.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -64,6 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     @Bean
+    @Profile("!prod")
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
@@ -71,6 +73,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 registry.addMapping("/api/**")
                         .allowCredentials(true)
                         .allowedOrigins("http://localhost:8081")
+                        .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE")
+                        .allowedHeaders("Authorization", "Content-Type", "Access-Control-Allow-Headers", "X-Requested-With", "Accept", "X-XSRF-TOKEN")
+                        .exposedHeaders("Authorization");
+            }
+        };
+    }
+
+    @Bean
+    @Profile("prod")
+    public WebMvcConfigurer productionCorsConfigure() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/api/**")
+                        .allowCredentials(true)
+                        .allowedOrigins("https://146.59.17.80:8080", "https://www.aportme.com:8080", "https://aportme.com:8080")
                         .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE")
                         .allowedHeaders("Authorization", "Content-Type", "Access-Control-Allow-Headers", "X-Requested-With", "Accept", "X-XSRF-TOKEN")
                         .exposedHeaders("Authorization");
