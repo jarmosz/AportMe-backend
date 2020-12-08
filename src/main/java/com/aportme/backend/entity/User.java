@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@Entity
+@Entity(name = "users")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -42,7 +42,7 @@ public class User implements UserDetails {
 
     @ManyToMany
     @JoinTable(name = "user_pet",
-            joinColumns = @JoinColumn(name = "user_id"),
+            joinColumns = @JoinColumn(name = "users_id"),
             inverseJoinColumns = @JoinColumn(name = "pet_id")
     )
     private List<Pet> likedPets = new ArrayList<>();
