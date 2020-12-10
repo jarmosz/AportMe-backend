@@ -1,7 +1,7 @@
 package com.aportme.backend.service.survey;
 
 import com.aportme.backend.entity.Foundation;
-import com.aportme.backend.entity.dto.FoundationSurveyDTO;
+import com.aportme.backend.entity.dto.survey.FoundationSurveyDTO;
 import com.aportme.backend.entity.dto.survey.SurveyQuestionDTO;
 import com.aportme.backend.entity.enums.QuestionStatus;
 import com.aportme.backend.entity.survey.FoundationSurvey;

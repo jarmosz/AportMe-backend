@@ -9,7 +9,7 @@ import com.aportme.backend.entity.enums.SurveyStatus;
 import com.aportme.backend.entity.survey.UserSurvey;
 import com.aportme.backend.repository.survey.UserSurveyRepository;
 import com.aportme.backend.utils.ModelMapperUtil;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserSurveyService {
 
     private final UserSurveyRepository userSurveyRepository;
@@ -47,7 +47,7 @@ public class UserSurveyService {
     }
 
     public Page<UserSurvey> findAllByPetName(Pageable pageable, String petName) {
-        return userSurveyRepository.findAllByPetName(pageable, petName.toLowerCase());
+        return userSurveyRepository.findAllByPet_SearchableNameContains(pageable, petName.toLowerCase());
     }
 
     public UserSurvey save(UserSurvey survey) {

@@ -1,7 +1,7 @@
 package com.aportme.backend.utils;
 
 import com.aportme.backend.entity.Foundation;
-import com.aportme.backend.entity.dto.UserSurveyForFoundationDTO;
+import com.aportme.backend.entity.dto.survey.CompletedSurveyDTO;
 import com.aportme.backend.entity.dto.foundation.FoundationDTO;
 import com.aportme.backend.entity.dto.survey.UserSurveyAnswerDTO;
 import com.aportme.backend.entity.dto.survey.UserSurveyDTO;
@@ -34,12 +34,12 @@ public class ModelMapperUtil {
                 .addMappings(mapper -> mapper.map(src -> src.getQuestion().getQuestionText(), UserSurveyAnswerDTO::setQuestionText));
     }
 
-    public static void mapUserSurveyForFoundationDTO(ModelMapper modelMapper) {
-        modelMapper.typeMap(UserSurvey.class, UserSurveyForFoundationDTO.class)
+    public static void mapToCompletedSurveyDTO(ModelMapper modelMapper) {
+        modelMapper.typeMap(UserSurvey.class, CompletedSurveyDTO.class)
                 .addMappings(mapper -> {
-                            mapper.map(src -> src.getPet().getId(), UserSurveyForFoundationDTO::setPetId);
-                            mapper.map(src -> src.getPet().getName(), UserSurveyForFoundationDTO::setPetName);
-                            mapper.map(src -> src.getUser().getEmail(), UserSurveyForFoundationDTO::setUserEmail);
+                            mapper.map(src -> src.getPet().getId(), CompletedSurveyDTO::setPetId);
+                            mapper.map(src -> src.getPet().getName(), CompletedSurveyDTO::setPetName);
+                            mapper.map(src -> src.getUser().getEmail(), CompletedSurveyDTO::setUserEmail);
                         }
                 );
 

@@ -1,7 +1,7 @@
 package com.aportme.backend.facade;
 
 import com.aportme.backend.entity.Foundation;
-import com.aportme.backend.entity.dto.FoundationSurveyDTO;
+import com.aportme.backend.entity.dto.survey.FoundationSurveyDTO;
 import com.aportme.backend.entity.enums.FoundationSurveyStatus;
 import com.aportme.backend.entity.survey.FoundationSurvey;
 import com.aportme.backend.exception.UserSurveyWithoutDecisionException;
@@ -24,7 +24,7 @@ public class FoundationSurveyFacade {
     private final FoundationSurveyService foundationSurveyService;
     private final UserSurveyService userSurveyService;
 
-    public FoundationSurveyDTO getMySurvey() {
+    public FoundationSurveyDTO getLoggedFoundationSurvey() {
         String email = authenticationService.getLoggedUsername();
         Foundation foundation = foundationService.findByEmail(email);
         FoundationSurvey foundationSurvey = foundationSurveyService.findByFoundation(foundation);
