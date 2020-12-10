@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/survey-questions")
+@RequestMapping("/api/surveys/questions")
 public class SurveyQuestionController {
 
     private final SurveyQuestionFacade surveyQuestionFacade;
@@ -30,10 +30,10 @@ public class SurveyQuestionController {
         return surveyQuestionFacade.getQuestions(petId);
     }
 
-    @PostMapping("/add")
+    @PostMapping
     @PreAuthorize("@accessService.isFoundation()")
     @ApiOperation(value = "Add survey questions")
-    public ResponseEntity<Object> createQuestions(@RequestBody CreateSurveyQuestionDTO question) {
+    public ResponseEntity<Object> createQuestion(@RequestBody CreateSurveyQuestionDTO question) {
         SurveyQuestionDTO response = surveyQuestionFacade.createQuestion(question);
         return ResponseEntity.ok().body(response);
     }

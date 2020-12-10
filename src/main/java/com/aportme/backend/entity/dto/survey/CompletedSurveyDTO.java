@@ -1,6 +1,5 @@
-package com.aportme.backend.entity.dto;
+package com.aportme.backend.entity.dto.survey;
 
-import com.aportme.backend.entity.dto.survey.UserSurveyAnswerDTO;
 import com.aportme.backend.entity.enums.SurveyStatus;
 import lombok.Data;
 
@@ -8,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-public class UserSurveyForFoundationDTO {
+public class CompletedSurveyDTO {
 
     private Long id;
 

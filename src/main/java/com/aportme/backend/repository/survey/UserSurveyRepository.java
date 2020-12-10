@@ -8,7 +8,6 @@ import com.aportme.backend.entity.survey.UserSurvey;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,8 +22,7 @@ public interface UserSurveyRepository extends JpaRepository<UserSurvey, Long> {
 
     Page<UserSurvey> findAllByFoundation(Pageable pageable, Foundation foundation);
 
-    @Query(value = "SELECT us FROM UserSurvey us INNER JOIN Pet p ON p.id = us.pet.id WHERE p.searchableName LIKE %?1%")
-    Page<UserSurvey> findAllByPetName(Pageable pageable, String petName);
+    Page<UserSurvey> findAllByPet_SearchableNameContains(Pageable pageable, String petName);
 
     boolean existsByFoundationAndStatus(Foundation foundation, SurveyStatus survey);
 }
