@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -19,10 +20,26 @@ import javax.servlet.http.HttpServletResponse;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-@EnableGlobalMethodSecurity(prePostEnabled=true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JWTAuthorizationFilter jwtAuthorizationFilter;
+    private String[] permitUrls = {
+            "/favicon.ico",
+            "/",
+            "/index.html",
+            "/js/**",
+            "/css/**",
+            "/fonts/**",
+            "/assets/**",
+            "/_ah/**"};
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web
+                .ignoring()
+                .antMatchers(permitUrls);
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -40,13 +57,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/logout").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/refreshToken").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
-                .antMatchers(HttpMethod.GET,"/api/pets").permitAll()
-                .antMatchers(HttpMethod.GET,"/api/pets/{id}").permitAll()
-                .antMatchers(HttpMethod.POST,"/api/users/password/reset/link").permitAll()
-                .antMatchers(HttpMethod.GET,"/api/users/password/token/validate").permitAll()
-                .antMatchers(HttpMethod.POST,"/api/users/password/token/reset").permitAll()
-                .antMatchers(HttpMethod.GET,"/api/foundations").permitAll()
-                .antMatchers(HttpMethod.GET,"/api/foundations/{id}").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/pets").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/pets/{id}").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/users/password/reset/link").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/users/password/token/validate").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/users/password/token/validate").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/users/password/token/reset").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/foundations").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/foundations/{id}").permitAll()
                 .anyRequest()
                 .authenticated();
 
@@ -61,7 +79,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint((request, response, authException) -> {
                     response.setHeader("WWW-Authenticate", "Bearer");
                     response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
-        });
+                });
     }
 
 
