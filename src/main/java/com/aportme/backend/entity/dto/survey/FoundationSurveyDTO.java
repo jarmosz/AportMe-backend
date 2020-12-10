@@ -1,6 +1,5 @@
-package com.aportme.backend.entity.dto;
+package com.aportme.backend.entity.dto.survey;
 
-import com.aportme.backend.entity.dto.survey.SurveyQuestionDTO;
 import com.aportme.backend.entity.enums.FoundationSurveyStatus;
 import lombok.Data;
 
