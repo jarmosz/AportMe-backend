@@ -27,6 +27,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private String[] permitUrls = {
             "/favicon.ico",
             "/",
+            "/{_:^(?!index\\\\.html|api).*$}",
             "/index.html",
             "/js/**",
             "/css/**",
@@ -107,7 +108,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**")
                         .allowCredentials(true)
-                        .allowedOrigins("https://146.59.17.80", "https://www.aportme.com", "https://aportme.com")
+                        .allowedOrigins("https://146.59.17.80x", "https://www.aportme.com", "https://aportme.com")
                         .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE")
                         .allowedHeaders("Authorization", "Content-Type", "Access-Control-Allow-Headers", "X-Requested-With", "Accept", "X-XSRF-TOKEN")
                         .exposedHeaders("Authorization");
