@@ -105,7 +105,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**")
                         .allowCredentials(true)
-                        .allowedOrigins("https://146.59.17.80:8080", "https://www.aportme.com:8080", "https://aportme.com:8080")
+                        .allowedOrigins("https://146.59.17.80", "https://www.aportme.com", "https://aportme.com")
                         .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE")
                         .allowedHeaders("Authorization", "Content-Type", "Access-Control-Allow-Headers", "X-Requested-With", "Accept", "X-XSRF-TOKEN")
                         .exposedHeaders("Authorization");
