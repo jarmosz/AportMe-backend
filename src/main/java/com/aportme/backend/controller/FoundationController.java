@@ -2,7 +2,7 @@ package com.aportme.backend.controller;
 
 import com.aportme.backend.entity.dto.foundation.AddFoundationDTO;
 import com.aportme.backend.entity.dto.foundation.FoundationDTO;
-import com.aportme.backend.entity.dto.foundation.LoggedFundationDataDTO;
+import com.aportme.backend.entity.dto.foundation.LoggedFoundationDataDTO;
 import com.aportme.backend.entity.dto.foundation.UpdateFoundationDTO;
 import com.aportme.backend.service.FoundationService;
 import io.swagger.annotations.ApiOperation;
@@ -40,14 +40,14 @@ public class FoundationController {
     @GetMapping("/profile")
     @PreAuthorize("@accessService.isFoundation()")
     @ApiOperation(value = "Find all foundations", response = FoundationDTO.class)
-    public LoggedFundationDataDTO getMyData() {
+    public LoggedFoundationDataDTO getMyData() {
         return foundationService.getMyData();
     }
 
     @PutMapping
     @PreAuthorize("@accessService.isFoundation() || @accessService.isAdmin()")
     @ApiOperation(value = "Update foundation")
-    public ResponseEntity<Object> updateFoundation(@RequestBody UpdateFoundationDTO updateFoundationDTO) {
+    public UpdateFoundationDTO updateFoundation(@RequestBody UpdateFoundationDTO updateFoundationDTO) {
         return foundationService.update(updateFoundationDTO);
     }
 
@@ -55,6 +55,7 @@ public class FoundationController {
     @PreAuthorize("@accessService.isAdmin()")
     @ApiOperation(value = "Create foundation")
     public ResponseEntity<Object> createFoundation(@RequestParam Long userId, @RequestBody AddFoundationDTO addFoundationDTO) {
-        return foundationService.create(userId, addFoundationDTO);
+        foundationService.create(userId, addFoundationDTO);
+        return ResponseEntity.ok().build();
     }
 }

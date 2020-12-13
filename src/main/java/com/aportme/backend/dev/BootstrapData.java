@@ -6,7 +6,8 @@ import com.aportme.backend.entity.survey.SurveyQuestion;
 import com.aportme.backend.repository.*;
 import com.aportme.backend.repository.survey.SurveyQuestionRepository;
 import com.aportme.backend.service.CanonicalService;
-import com.aportme.backend.service.SelectValueService;
+import com.aportme.backend.service.survey.FoundationSurveyService;
+import com.aportme.backend.service.survey.SelectValueService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
@@ -17,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -33,6 +33,7 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
     private final PasswordEncoder passwordEncoder;
     private final SurveyQuestionRepository surveyQuestionRepository;
     private final SelectValueService selectValueService;
+    private final FoundationSurveyService foundationSurveyService;
     private final CanonicalService canonicalService;
 
     @Override
@@ -135,25 +136,25 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
     private void createTBBFoundationSurvey() {
         String email = "adopcje.ttb@op.pl";
         Foundation foundation = foundationRepository.findByEmail(email).get();
-        createCheckboxQuestion(foundation, "Czy masz ogród?");
-        createCheckboxQuestion(foundation, "Czy mialeś wczesniej kontakt z psami typu bull?");
-        createCheckboxQuestion(foundation, "Czy masz małe dzieci lub planujesz mieć?");
-        createTextFieldQuestion(foundation, "Opisz dlaczego chcesz adoptowac akurat tego psa?");
-        createTextFieldQuestion(foundation, "Opisz swój dzienny tryb życia, pozwoli nam to wybrać psa o najbardziej pasujacym charakterze");
-        createSelectQuestion(foundation, "W jakim rodzaju nieruchomosci mieszkasz?", List.of("Blok", "Dom", "Apartament"));
-        createSelectQuestion(foundation, "Jak dużo aktywnosci ruchowej mogłbyś uprawiać z psem tygodniowo?", List.of("Mało", "Średnio", "Dużo"));
+        createCheckboxQuestion(foundation, "Czy masz ogród?", QuestionStatus.ACTIVE);
+        createCheckboxQuestion(foundation, "Czy mialeś wczesniej kontakt z psami typu bull?", QuestionStatus.DEPRECATED);
+        createCheckboxQuestion(foundation, "Czy masz małe dzieci lub planujesz mieć?", QuestionStatus.ACTIVE);
+        createTextFieldQuestion(foundation, "Opisz dlaczego chcesz adoptowac akurat tego psa?", QuestionStatus.DEPRECATED);
+        createTextFieldQuestion(foundation, "Opisz swój dzienny tryb życia, pozwoli nam to wybrać psa o najbardziej pasujacym charakterze", QuestionStatus.ACTIVE);
+        createSelectQuestion(foundation, "W jakim rodzaju nieruchomosci mieszkasz?", List.of("Blok", "Dom", "Apartament"), QuestionStatus.DEPRECATED);
+        createSelectQuestion(foundation, "Jak dużo aktywnosci ruchowej mogłbyś uprawiać z psem tygodniowo?", List.of("Mało", "Średnio", "Dużo"), QuestionStatus.ACTIVE);
     }
 
     private void createKociSzczecinFoundationSurvey() {
         String email = "kociszczecin@viva.org.pl";
         Foundation foundation = foundationRepository.findByEmail(email).get();
-        createCheckboxQuestion(foundation, "Czy masz balkon?");
-        createCheckboxQuestion(foundation, "Czy masz doświadczenie w pracy z kotem?");
-        createCheckboxQuestion(foundation, "Czy jestes uczulony na sierść zwierząt?");
-        createTextFieldQuestion(foundation, "Opisz dlaczego chcesz adoptowac akurat tego kota?");
-        createTextFieldQuestion(foundation, "Jak planujesz opiekować sie tym zwierzakiem?");
-        createSelectQuestion(foundation, "W jakim rodzaju nieruchomosci mieszkasz?", List.of("Blok", "Dom", "Apartament"));
-        createSelectQuestion(foundation, "Jak dużo aktywnosci ruchowej mogłbyś uprawiać z kotem tygodniowo?", List.of("Mało", "Średnio", "Dużo"));
+        createCheckboxQuestion(foundation, "Czy masz balkon?", QuestionStatus.ACTIVE);
+        createCheckboxQuestion(foundation, "Czy masz doświadczenie w pracy z kotem?", QuestionStatus.DEPRECATED);
+        createCheckboxQuestion(foundation, "Czy jestes uczulony na sierść zwierząt?", QuestionStatus.ACTIVE);
+        createTextFieldQuestion(foundation, "Opisz dlaczego chcesz adoptowac akurat tego kota?", QuestionStatus.DEPRECATED);
+        createTextFieldQuestion(foundation, "Jak planujesz opiekować sie tym zwierzakiem?", QuestionStatus.ACTIVE);
+        createSelectQuestion(foundation, "W jakim rodzaju nieruchomosci mieszkasz?", List.of("Blok", "Dom", "Apartament"), QuestionStatus.DEPRECATED);
+        createSelectQuestion(foundation, "Jak dużo aktywnosci ruchowej mogłbyś uprawiać z kotem tygodniowo?", List.of("Mało", "Średnio", "Dużo"), QuestionStatus.ACTIVE);
     }
 
     private void createPicture(Pet pet, String base64image, Boolean isProfilePicture) {
@@ -173,34 +174,35 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
         return addresses;
     }
 
-    private User createUser(String email, String password) {
+    private void createUser(String email, String password) {
         User user = new User();
         user.setEmail(email);
         user.setPassword(password);
         user.setRole(Role.USER);
         user.setActive(true);
         userRepository.save(user);
-        return user;
     }
 
     private Foundation createFoundation(String email, String password, String phoneNumber, String description,
                                         String name, String nip, Address address, String logo, String krs, String accountNumber) {
-        User user = new User();
-        user.setEmail(email);
-        user.setPassword(password);
-        user.setRole(Role.FOUNDATION);
-        userRepository.save(user);
-        Foundation foundation = new Foundation();
-        foundation.setName(name);
-        foundation.setNip(nip);
-        foundation.setKrs(krs);
-        foundation.setAccountNumber(accountNumber);
-        foundation.setFoundationLogo(logo);
-        foundation.setDescription(description);
-        foundation.setAddress(address);
-        foundation.setPhoneNumber(phoneNumber);
-        foundation.setUser(user);
-        return foundationRepository.save(foundation);
+        User foundation = new User();
+        foundation.setEmail(email);
+        foundation.setPassword(password);
+        foundation.setRole(Role.FOUNDATION);
+        userRepository.save(foundation);
+        Foundation foundationInfo = new Foundation();
+        foundationInfo.setName(name);
+        foundationInfo.setNip(nip);
+        foundationInfo.setKrs(krs);
+        foundationInfo.setAccountNumber(accountNumber);
+        foundationInfo.setFoundationLogo(logo);
+        foundationInfo.setDescription(description);
+        foundationInfo.setAddress(address);
+        foundationInfo.setPhoneNumber(phoneNumber);
+        foundationInfo.setUser(foundation);
+        foundationInfo = foundationRepository.save(foundationInfo);
+        foundationInfo.setFoundationSurvey(foundationSurveyService.findOrCreateFoundationSurvey(foundationInfo));
+        return foundationInfo;
     }
 
     private Address createAddress(String city, String street, String houseNumber, String zipCode, String flatNumber) {
@@ -239,30 +241,34 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
         return petRepository.save(pet);
     }
 
-    private void createTextFieldQuestion(Foundation foundation, String questionText) {
+    private void createTextFieldQuestion(Foundation foundation, String questionText, QuestionStatus status) {
         SurveyQuestion question = new SurveyQuestion();
+        question.setFoundationSurvey(foundation.getFoundationSurvey());
         question.setFoundation(foundation);
         question.setType(QuestionType.TEXTFIELD);
         question.setQuestionText(questionText);
-        question.setSelectValues(Collections.emptyList());
+        question.setQuestionStatus(status);
         surveyQuestionRepository.save(question);
     }
 
-    private void createSelectQuestion(Foundation foundation, String questionText, List<String> values) {
+    private void createSelectQuestion(Foundation foundation, String questionText, List<String> values, QuestionStatus status) {
         SurveyQuestion question = new SurveyQuestion();
         question.setFoundation(foundation);
+        question.setFoundationSurvey(foundation.getFoundationSurvey());
         question.setType(QuestionType.SELECT);
+        question.setQuestionStatus(status);
         question.setQuestionText(questionText);
         question = surveyQuestionRepository.save(question);
-        selectValueService.save(question, values);
+        selectValueService.convertAndSave(question, values);
     }
 
-    private void createCheckboxQuestion(Foundation foundation, String questionText) {
+    private void createCheckboxQuestion(Foundation foundation, String questionText, QuestionStatus status) {
         SurveyQuestion question = new SurveyQuestion();
+        question.setFoundationSurvey(foundation.getFoundationSurvey());
         question.setFoundation(foundation);
         question.setType(QuestionType.CHECKBOX);
         question.setQuestionText(questionText);
-        question.setSelectValues(Collections.emptyList());
+        question.setQuestionStatus(status);
         surveyQuestionRepository.save(question);
     }
 
