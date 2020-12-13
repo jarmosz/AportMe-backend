@@ -1,7 +1,7 @@
 package com.aportme.backend.entity;
 
 import com.aportme.backend.entity.enums.*;
-import com.aportme.backend.entity.survey.Survey;
+import com.aportme.backend.entity.survey.UserSurvey;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -64,7 +64,7 @@ public class Pet {
     private LocalDateTime updateDate;
 
     @OneToMany(mappedBy = "pet")
-    private List<Survey> surveys;
+    private List<UserSurvey> userSurveys;
 
     @ManyToOne
     @JoinColumn(name = "foundation_id")

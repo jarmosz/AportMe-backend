@@ -1,9 +1,12 @@
 package com.aportme.backend.controller;
 
+import com.aportme.backend.entity.dto.survey.CreateSurveyQuestionDTO;
 import com.aportme.backend.entity.dto.survey.SurveyQuestionDTO;
-import com.aportme.backend.service.survey.SurveyQuestionService;
+import com.aportme.backend.exception.UserSurveyAlreadyExistsException;
+import com.aportme.backend.facade.SurveyQuestionFacade;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -12,34 +15,34 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/survey/questions")
-@PreAuthorize("@accessService.isFoundation()")
+@RequestMapping("/api/surveys/questions")
 public class SurveyQuestionController {
 
-    private final SurveyQuestionService surveyQuestionService;
+    private final SurveyQuestionFacade surveyQuestionFacade;
 
     @GetMapping
+    @PreAuthorize("@accessService.isUser()")
     @ApiOperation(
-            value = "Get all survey question with petId query param to fill survey or without to print logged foundation questions",
+            value = "Get all survey question for pet",
             response = SurveyQuestionDTO.class
     )
-    public List<SurveyQuestionDTO> getMyQuestions(@RequestParam(required = false) Long petId) {
-        return surveyQuestionService.getQuestions(petId);
+    public List<SurveyQuestionDTO> getQuestions(@RequestParam Long petId) {
+        return surveyQuestionFacade.getQuestions(petId);
     }
 
-    @PostMapping("/add")
+    @PostMapping
     @PreAuthorize("@accessService.isFoundation()")
     @ApiOperation(value = "Add survey questions")
-    public ResponseEntity<Object> createQuestions(@RequestBody SurveyQuestionDTO question) {
-        surveyQuestionService.createQuestions(question);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Object> createQuestion(@RequestBody CreateSurveyQuestionDTO question) {
+        SurveyQuestionDTO response = surveyQuestionFacade.createQuestion(question);
+        return ResponseEntity.ok().body(response);
     }
 
     @DeleteMapping
     @PreAuthorize("@accessService.isFoundation()")
     @ApiOperation(value = "Delete all surveys question for logged foundation")
     public ResponseEntity<Object> deleteAll() {
-        surveyQuestionService.deleteAll();
+        surveyQuestionFacade.deleteAll();
         return ResponseEntity.ok().build();
     }
 
@@ -47,8 +50,13 @@ public class SurveyQuestionController {
     @PreAuthorize("@accessService.isFoundationQuestion(#id)")
     @ApiOperation(value = "Delete survey question by id")
     public ResponseEntity<Object> deleteQuestion(@PathVariable Long id) {
-        surveyQuestionService.deleteById(id);
+        surveyQuestionFacade.deleteById(id);
         return ResponseEntity.ok().build();
 
+    }
+
+    @ExceptionHandler(UserSurveyAlreadyExistsException.class)
+    public ResponseEntity<Object> userSurveyAlreadyExists() {
+        return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
 }
