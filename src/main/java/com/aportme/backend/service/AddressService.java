@@ -14,8 +14,8 @@ public class AddressService {
     private final AddressRepository addressRepository;
     private final ModelMapper modelMapper;
 
-    public Address create(AddressBaseDTO addressDTO) {
-        Address dbAddress = modelMapper.map(addressDTO, Address.class);
-        return addressRepository.save(dbAddress);
+    public Address save(AddressBaseDTO addressDTO) {
+        Address address = modelMapper.map(addressDTO, Address.class);
+        return addressRepository.save(address);
     }
 }
