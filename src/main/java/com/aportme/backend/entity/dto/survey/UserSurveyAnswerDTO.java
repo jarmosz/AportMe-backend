@@ -3,7 +3,7 @@ package com.aportme.backend.entity.dto.survey;
 import lombok.Data;
 
 @Data
-public class UserSurveyAnswer {
+public class UserSurveyAnswerDTO {
 
     private String questionText;
 

@@ -44,7 +44,7 @@ public class PetController {
     @PostMapping
     @PreAuthorize("@accessService.isFoundation()")
     @ApiOperation(value = "Create pet")
-    public ResponseEntity<Object> create(@RequestBody AddPetDTO petDTO) {
+    public PetDTO create(@RequestBody AddPetDTO petDTO) {
         return petService.create(petDTO);
     }
 

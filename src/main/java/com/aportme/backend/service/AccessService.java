@@ -1,11 +1,17 @@
 package com.aportme.backend.service;
 
 import com.aportme.backend.entity.Pet;
+import com.aportme.backend.entity.User;
 import com.aportme.backend.entity.enums.Role;
 import com.aportme.backend.entity.survey.SurveyQuestion;
+import com.aportme.backend.entity.survey.UserSurvey;
 import com.aportme.backend.repository.survey.SurveyQuestionRepository;
+import com.aportme.backend.service.survey.UserSurveyService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -14,6 +20,7 @@ public class AccessService {
     private final PetService petService;
     private final AuthenticationService authenticationService;
     private final SurveyQuestionRepository surveyQuestionRepository;
+    private final UserSurveyService userSurveyService;
 
     public Boolean isAdmin() {
         return authenticationService.getAuthorities().contains(Role.ADMIN);
@@ -40,4 +47,10 @@ public class AccessService {
         }
         return false;
     }
+
+    public Boolean isSurveyOwner(Long id) {
+        UserSurvey userSurvey = userSurveyService.findById(id);
+        return isUser() && userSurvey.getUser().getEmail().equals(authenticationService.getLoggedUsername());
+    }
+
 }

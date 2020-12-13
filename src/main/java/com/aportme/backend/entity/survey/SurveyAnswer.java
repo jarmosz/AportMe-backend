@@ -12,10 +12,10 @@ import javax.persistence.*;
 public class SurveyAnswer {
 
     @Builder
-    public SurveyAnswer(String answer, SurveyQuestion question, Survey survey) {
+    public SurveyAnswer(String answer, SurveyQuestion question, UserSurvey userSurvey) {
         this.answer = answer;
         this.question = question;
-        this.survey = survey;
+        this.userSurvey = userSurvey;
     }
 
     @Id
@@ -29,6 +29,6 @@ public class SurveyAnswer {
 
     @ManyToOne
     @JoinColumn(name = "survey_id")
-    private Survey survey;
+    private UserSurvey userSurvey;
 
 }

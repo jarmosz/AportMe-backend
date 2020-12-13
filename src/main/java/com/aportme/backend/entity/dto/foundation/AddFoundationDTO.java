@@ -11,5 +11,4 @@ public class AddFoundationDTO extends FoundationBaseDTO {
     private String accountNumber;
 
     private AddressBaseDTO address;
-
 }
