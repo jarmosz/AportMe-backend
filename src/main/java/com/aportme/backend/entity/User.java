@@ -1,7 +1,7 @@
 package com.aportme.backend.entity;
 
 import com.aportme.backend.entity.enums.Role;
-import com.aportme.backend.entity.survey.Survey;
+import com.aportme.backend.entity.survey.UserSurvey;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -40,7 +40,7 @@ public class User implements UserDetails {
     private List<Pet> likedPets = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private List<Survey> surveys;
+    private List<UserSurvey> userSurveys;
 
     @Override
     public Collection<GrantedAuthority> getAuthorities() {
