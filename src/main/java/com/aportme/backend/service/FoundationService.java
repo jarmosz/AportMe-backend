@@ -52,12 +52,12 @@ public class FoundationService {
         return modelMapper.map(foundation, FoundationDTO.class);
     }
 
-    public FoundationDTO update(UpdateFoundationDTO foundationDTO) {
+    public UpdateFoundationDTO update(UpdateFoundationDTO foundationDTO) {
         String email = authenticationService.getLoggedUsername();
         Foundation foundation = findByEmail(email);
         modelMapper.map(foundationDTO, foundation);
         foundation = foundationRepository.save(foundation);
-        return modelMapper.map(foundation, FoundationDTO.class);
+        return modelMapper.map(foundation, UpdateFoundationDTO.class);
     }
 
     public void create(Long userId, AddFoundationDTO addFoundationDTO) {
