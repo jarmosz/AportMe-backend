@@ -3,8 +3,8 @@ package com.aportme.backend.service.security;
 import com.aportme.backend.entity.User;
 import com.aportme.backend.entity.dto.TokenPairDTO;
 import com.aportme.backend.entity.dto.UserLoginDTO;
-import com.aportme.backend.exception.security.RefreshTokenHasExpiredException;
-import com.aportme.backend.exception.security.TokenDoesNotExsistsException;
+import com.aportme.backend.entity.dto.user.AuthUserDTO;
+import com.aportme.backend.entity.dto.user.ChangeUserPasswordDTO;
 import com.aportme.backend.exception.security.WrongPasswordException;
 import com.aportme.backend.security.SecurityProperties;
 import com.aportme.backend.security.TokenType;
@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -33,10 +32,12 @@ public class SecurityService {
     @Value("${jwt.auth.token.expiration.seconds}")
     private int authTokenExpirationTime;
 
+    private static final String EMAIL_REGEX_PATTERN = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)])";
+    private static final String PASSWORD_REGEX_PATTERN = "^.{8,256}$";
+
     private final SecurityProperties securityProperties;
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
-
 
     public TokenPairDTO loginUser(UserLoginDTO userLoginDTO) {
         String userEmail = userLoginDTO.getEmail();
@@ -44,44 +45,24 @@ public class SecurityService {
         return checkUserPassword(userLoginDTO, user);
     }
 
-    private TokenPairDTO checkUserPassword(UserLoginDTO userLoginDTO, User user) {
+    public TokenPairDTO checkUserPassword(UserLoginDTO userLoginDTO, User user) {
         if (isPasswordMatch(userLoginDTO, user)) {
             return createTokenPair(user);
-        } else {
-            throw new WrongPasswordException();
         }
+        throw new WrongPasswordException();
     }
 
     private boolean isPasswordMatch(UserLoginDTO userLoginDTO, User user) {
         return passwordEncoder.matches(userLoginDTO.getPassword(), user.getPassword());
     }
 
-    private TokenPairDTO createTokenPair(User user) {
+    public TokenPairDTO createTokenPair(User user) {
         String authToken = generateAuthToken(user);
         String refreshToken = generateRefreshToken(user);
         return new TokenPairDTO(authToken, refreshToken);
     }
 
-    @Transactional
-    public TokenPairDTO refreshAccessToken(HttpServletRequest request) {
-        String token = extractToken(request);
-        if (token == null) {
-            throw new TokenDoesNotExsistsException();
-        }
-        DecodedJWT refreshToken = JWT.require(Algorithm.HMAC256(secret.getBytes()))
-                .build()
-                .verify(token);
-
-        if (refreshToken.getExpiresAt().after(new Date())) {
-            long userId = refreshToken.getClaim("id").asLong();
-            User user = userService.findById(userId);
-            return recreateTokens(user);
-        } else {
-            throw new RefreshTokenHasExpiredException();
-        }
-    }
-
-    private TokenPairDTO recreateTokens(User user) {
+    public TokenPairDTO recreateTokens(User user) {
         String authToken = generateAuthToken(user);
         String refreshToken = generateRefreshToken(user);
         return new TokenPairDTO(authToken, refreshToken);
@@ -118,7 +99,7 @@ public class SecurityService {
         return "";
     }
 
-    private String extractToken(HttpServletRequest request) {
+    public String extractToken(HttpServletRequest request) {
         String authHeader = request.getHeader(securityProperties.getHeaderString());
         if (authHeader.startsWith(securityProperties.getTokenType())) {
             authHeader = authHeader.substring(securityProperties.getTokenType().length());
@@ -126,4 +107,30 @@ public class SecurityService {
         }
         return null;
     }
+
+    public DecodedJWT verifyToken(String token) {
+        return JWT.require(Algorithm.HMAC256(secret.getBytes()))
+                .build()
+                .verify(token);
+    }
+
+    public boolean validateEmail(String email) {
+        return email.matches(EMAIL_REGEX_PATTERN);
+    }
+
+    public boolean validatePassword(String password) {
+        return password.matches(PASSWORD_REGEX_PATTERN);
+    }
+
+    public boolean validateData(AuthUserDTO userDTO) {
+        return validateEmail(userDTO.getEmail()) && validatePassword(userDTO.getPassword());
+    }
+
+    public boolean isNewPasswordDataValid(ChangeUserPasswordDTO passwords, User loggedUser) {
+        return validatePassword(passwords.getOldPassword())
+                && passwordEncoder.matches(passwords.getOldPassword(), loggedUser.getPassword())
+                && validatePassword(passwords.getNewPassword())
+                && (passwords.getNewPassword().equals(passwords.getRepeatedNewPassword()));
+    }
+
 }
