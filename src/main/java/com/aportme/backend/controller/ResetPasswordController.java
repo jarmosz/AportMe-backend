@@ -4,13 +4,13 @@ import com.aportme.backend.entity.dto.user.ResetUserPasswordDTO;
 import com.aportme.backend.entity.dto.user.ResetUserPasswordFormDTO;
 import com.aportme.backend.service.ResetPasswordService;
 import io.swagger.annotations.ApiOperation;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@AllArgsConstructor
-@RequestMapping("/api/reset/password")
+@RequiredArgsConstructor
+@RequestMapping("/api/reset-password")
 public class ResetPasswordController {
 
     private final ResetPasswordService resetPasswordService;
@@ -30,7 +30,7 @@ public class ResetPasswordController {
     }
 
     @PostMapping
-    @ApiOperation("Change user password")
+    @ApiOperation("Reset user password")
     public ResponseEntity<Object> changeUserPassword(@RequestBody ResetUserPasswordFormDTO resetUserPasswordFormDTO) {
         resetPasswordService.changeUserPassword(resetUserPasswordFormDTO);
         return ResponseEntity.ok().build();
