@@ -2,7 +2,7 @@ package com.aportme.backend.listener;
 
 import com.aportme.backend.event.SendResetPasswordLinkEvent;
 import com.aportme.backend.service.ConfirmResetPasswordEmailBuilderService;
-import com.aportme.backend.service.ResetPasswordTokenService;
+import com.aportme.backend.service.ResetPasswordService;
 import com.aportme.backend.service.MailSenderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,7 +16,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class SendResetPasswordLinkListener implements ApplicationListener<SendResetPasswordLinkEvent> {
 
-    private final ResetPasswordTokenService resetPasswordTokenService;
+    private final ResetPasswordService resetPasswordService;
     private final ConfirmResetPasswordEmailBuilderService confirmResetPasswordEmailBuilderService;
     private final MailSenderService mailSenderService;
     private final PasswordEncoder passwordEncoder;
@@ -35,8 +35,8 @@ public class SendResetPasswordLinkListener implements ApplicationListener<SendRe
     private void sendResetPasswordLink(SendResetPasswordLinkEvent event) {
         String recipient = event.getUser().getEmail();
         String token = passwordEncoder.encode(UUID.randomUUID().toString()).replace("/", "2");
-        resetPasswordTokenService.saveToken(event.getUser(), token);
-        String confirmationUrl = new StringBuilder(frontendUrl).append(confirmResetPasswordTokenUrl).append(token).toString();
+        resetPasswordService.saveToken(event.getUser(), token);
+        String confirmationUrl = String.format("%s%s%s", frontendUrl, confirmResetPasswordTokenUrl, token);
         mailSenderService.sendResetPasswordConfirmMail(recipient, "Zmiana hasła w aplikacji - AportMe",
                 confirmResetPasswordEmailBuilderService.build(confirmationUrl));
     }
