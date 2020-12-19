@@ -41,8 +41,8 @@ public class SearchService {
         return new SearchablePet(prepareSearchableField(searchBreedQuery), prepareSearchableField(searchNameQuery));
     }
 
-    private boolean verifyFoundationCall(Boolean isFoundatioCall, Long foundationId) {
-        if(isFoundatioCall != null && isFoundatioCall) {
+    private boolean verifyFoundationCall(Boolean isFoundationCall, Long foundationId) {
+        if(isFoundationCall != null && isFoundationCall) {
             return foundationId != null && authenticationService.getAuthorities().contains(Role.FOUNDATION);
         }
         return false;
