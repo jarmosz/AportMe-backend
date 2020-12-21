@@ -1,9 +1,6 @@
 package com.aportme.backend.controller;
 
-import com.aportme.backend.entity.dto.pet.AddPetDTO;
-import com.aportme.backend.entity.dto.pet.PetBaseDTO;
-import com.aportme.backend.entity.dto.pet.PetDTO;
-import com.aportme.backend.entity.dto.pet.PetFilters;
+import com.aportme.backend.entity.dto.pet.*;
 import com.aportme.backend.service.PetService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -13,19 +10,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-@AllArgsConstructor
 @RestController
+@AllArgsConstructor
 @RequestMapping("/api/pets")
 public class PetController {
 
     private final PetService petService;
 
     @GetMapping
-    @ApiOperation(value = "Find all pets", response = PetDTO.class)
-    public Page<PetDTO> getAll(
-            Pageable pageable,
-            PetFilters filters) {
+    @ApiOperation(value = "Find all pets for mobile", response = SimplePetDTO.class)
+    public Page<SimplePetDTO> getAll(Pageable pageable, PetFilters filters) {
         return petService.getPets(pageable, filters);
+    }
+
+    @GetMapping("/my")
+    @PreAuthorize("@accessService.isFoundation()")
+    @ApiOperation(value = "Find all logged foundation Pets", response = PetDTO.class)
+    public Page<PetDTO> getAll(Pageable pageable, @RequestParam String search) {
+        return petService.getFoundationPets(pageable, search);
     }
 
     @GetMapping("/{id}")

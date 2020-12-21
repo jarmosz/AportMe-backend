@@ -16,6 +16,8 @@ public class PetDTO extends PetBaseDTO {
 
     private Long id;
 
+    private boolean isLiked;
+
     private FoundationForPetDTO foundation;
 
     private LocalDateTime creationDate;
