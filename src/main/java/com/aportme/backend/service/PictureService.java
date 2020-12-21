@@ -59,6 +59,13 @@ public class PictureService {
         pictureRepository.deleteAll(petPictures);
     }
 
+    public PetPicture findProfilePicture(List<PetPicture> pictures) {
+        return pictures.stream()
+                .filter(PetPicture::getIsProfilePicture)
+                .findFirst()
+                .orElse(pictures.get(0));
+    }
+
     private PetPicture createUploadedPicture(Pet pet, String pictureInBase64) {
         PetPicture dbPicture = new PetPicture();
         dbPicture.setPictureInBase64(pictureInBase64);

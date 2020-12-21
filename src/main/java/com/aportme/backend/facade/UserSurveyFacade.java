@@ -2,6 +2,7 @@ package com.aportme.backend.facade;
 
 import com.aportme.backend.entity.Foundation;
 import com.aportme.backend.entity.Pet;
+import com.aportme.backend.entity.PetPicture;
 import com.aportme.backend.entity.User;
 import com.aportme.backend.entity.dto.survey.CreateSurveyDTO;
 import com.aportme.backend.entity.dto.survey.UserSurveyDTO;
@@ -11,6 +12,7 @@ import com.aportme.backend.entity.survey.UserSurvey;
 import com.aportme.backend.exception.UnableToDeleteNotSubmittedSurveyException;
 import com.aportme.backend.service.AuthenticationService;
 import com.aportme.backend.service.PetService;
+import com.aportme.backend.service.PictureService;
 import com.aportme.backend.service.UserService;
 import com.aportme.backend.service.survey.SurveyAnswerService;
 import com.aportme.backend.service.survey.SurveyQuestionService;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @Transactional
@@ -32,13 +35,14 @@ public class UserSurveyFacade {
     private final PetService petService;
     private final SurveyQuestionService questionService;
     private final UserService userService;
+    private final PictureService pictureService;
 
     public List<UserSurveyDTO> getAll() {
         Long id = authenticationService.getLoggedUserId();
         User user = userService.findById(id);
 
         List<UserSurvey> surveys = userSurveyService.findAllByUser(user);
-        return userSurveyService.mapToSurveyDTO(surveys);
+        return convertToUserSurveyDTO(surveys);
     }
 
     public void createSurvey(CreateSurveyDTO dto) {
@@ -67,4 +71,16 @@ public class UserSurveyFacade {
             throw new UnableToDeleteNotSubmittedSurveyException();
         }
     }
+
+    public List<UserSurveyDTO> convertToUserSurveyDTO(List<UserSurvey> surveys) {
+        return surveys
+                .stream()
+                .map(survey -> {
+                    List<PetPicture> pictures = survey.getPet().getPictures();
+                    PetPicture profilePicture = pictureService.findProfilePicture(pictures);
+                    return userSurveyService.mapToSurveyDTO(survey, profilePicture);
+                })
+                .collect(Collectors.toList());
+    }
+
 }
