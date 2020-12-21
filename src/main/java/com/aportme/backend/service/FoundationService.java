@@ -14,7 +14,6 @@ import com.aportme.backend.utils.ModelMapperUtil;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -36,14 +35,14 @@ public class FoundationService {
 
     public Page<FoundationDTO> getAll(String searchCityQuery, Pageable pageable) {
         String searchedCity = searchService.prepareSearchableField(searchCityQuery);
-        Page<Foundation> foundations = foundationRepository.findAllByAddress_SearchableCityContains(pageable, searchedCity);
-        List<FoundationDTO> foundationDTOs = foundations
+        Page<Foundation> page = foundationRepository.findAllByAddress_SearchableCityContains(pageable, searchedCity);
+        List<FoundationDTO> content = page
                 .getContent()
                 .stream()
                 .map(foundation -> modelMapper.map(foundation, FoundationDTO.class))
                 .collect(Collectors.toList());
 
-        return new PageImpl<>(foundationDTOs, pageable, foundations.getTotalElements());
+        return PaginationService.mapToPageImpl(content, pageable, page.getTotalElements());
     }
 
     public FoundationDTO getById(Long id) {
