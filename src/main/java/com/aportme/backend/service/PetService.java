@@ -46,9 +46,10 @@ public class PetService {
         return PaginationService.mapToPageImpl(content, pageable, page.getTotalElements());
     }
 
-    public Page<PetDTO> getFoundationPets(Pageable pageable, String search) {
+    public Page<PetDTO> getFoundationPets(Pageable pageable, String query) {
         Long foundationId = authenticationService.getLoggedUserId();
-        Page<Pet> page = petRepository.findAllFoundationPets(pageable, foundationId, search.toLowerCase());
+        Foundation foundation = foundationService.findById(foundationId);
+        Page<Pet> page = petRepository.findAllByFoundationAndSearchableNameIsContaining(pageable, foundation, query.toLowerCase());
 
         List<PetDTO> content = page.getContent()
                 .stream()
