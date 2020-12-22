@@ -3,16 +3,14 @@ package com.aportme.backend.service;
 import com.aportme.backend.entity.Foundation;
 import com.aportme.backend.entity.Pet;
 import com.aportme.backend.entity.PetPicture;
-import com.aportme.backend.entity.dto.pet.AddPetDTO;
-import com.aportme.backend.entity.dto.pet.PetBaseDTO;
-import com.aportme.backend.entity.dto.pet.PetDTO;
-import com.aportme.backend.entity.dto.pet.PetFilters;
+import com.aportme.backend.entity.User;
+import com.aportme.backend.entity.dto.pet.*;
 import com.aportme.backend.repository.PetRepository;
+import com.aportme.backend.utils.ModelMapperUtil;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,17 +31,39 @@ public class PetService {
     private final ModelMapper modelMapper;
     private final AuthenticationService authenticationService;
     private final SearchService searchService;
+    private final UserService userService;
     private final CanonicalService canonicalService;
     private PictureService pictureService;
 
-    public Page<PetDTO> getPets(Pageable pageable, PetFilters filters) {
-        Page<Pet> petsPage = searchService.findPetsByFilters(pageable, filters);
-        return convertPetsToPage(pageable, petsPage);
+    public Page<SimplePetDTO> getPets(Pageable pageable, PetFilters filters) {
+        Page<Pet> page = searchService.findPetsByFilters(pageable, filters);
+
+        List<SimplePetDTO> content = page.getContent()
+                .stream()
+                .map(this::convertToSimplePetDTO)
+                .collect(Collectors.toList());
+
+        return PaginationService.mapToPageImpl(content, pageable, page.getTotalElements());
+    }
+
+    public Page<PetDTO> getFoundationPets(Pageable pageable, String query) {
+        Long foundationId = authenticationService.getLoggedUserId();
+        Foundation foundation = foundationService.findById(foundationId);
+        Page<Pet> page = petRepository.findAllByFoundationAndSearchableNameIsContaining(pageable, foundation, query.toLowerCase());
+
+        List<PetDTO> content = page.getContent()
+                .stream()
+                .map(pet -> modelMapper.map(pet, PetDTO.class))
+                .collect(Collectors.toList());
+
+        return PaginationService.mapToPageImpl(content, pageable, page.getTotalElements());
     }
 
     public PetDTO getById(Long id) {
         Pet pet = findById(id);
-        return modelMapper.map(pet, PetDTO.class);
+        PetDTO dto =  modelMapper.map(pet, PetDTO.class);
+        dto.setLiked(isPetLikedByUser(pet));
+        return dto;
     }
 
     public PetDTO update(Long id, PetBaseDTO petDTO) {
@@ -79,13 +99,23 @@ public class PetService {
         return petRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Pet not found"));
     }
 
-    private Page<PetDTO> convertPetsToPage(Pageable pageable, Page<Pet> pets) {
-        List<PetDTO> petDTOs = pets.getContent()
-                .stream()
-                .map(pet -> modelMapper.map(pet, PetDTO.class))
-                .collect(Collectors.toList());
+    private boolean isPetLikedByUser(Pet pet) {
+        Long userId = authenticationService.getLoggedUserId();
+        if (userId == null) {
+            return false;
+        }
+        User user = userService.findById(userId);
+        return pet.getUsers().contains(user);
+    }
 
-        return new PageImpl<>(petDTOs, pageable, pets.getTotalElements());
+    private SimplePetDTO convertToSimplePetDTO(Pet pet) {
+        ModelMapperUtil.mapToSimplePetDTO(modelMapper);
+        SimplePetDTO dto = modelMapper.map(pet, SimplePetDTO.class);
+        PetPicture profilePicture = pictureService.findProfilePicture(pet.getPictures());
+
+        dto.setProfilePicture(profilePicture.getPictureInBase64());
+        dto.setLiked(isPetLikedByUser(pet));
+        return dto;
     }
 
     @Autowired
