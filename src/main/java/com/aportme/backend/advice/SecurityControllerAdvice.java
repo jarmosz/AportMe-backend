@@ -3,7 +3,6 @@ package com.aportme.backend.advice;
 import com.aportme.backend.exception.ResetPasswordLinkTokenHasExpired;
 import com.aportme.backend.exception.WrongResetPasswordDataException;
 import com.aportme.backend.exception.security.*;
-import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -51,10 +50,5 @@ public class SecurityControllerAdvice extends ResponseEntityExceptionHandler {
     @ExceptionHandler(WrongResetPasswordDataException.class)
     public ResponseEntity<String> handleWrongResetPasswordTokenExpiration() {
         return new ResponseEntity<>("Passwords do not match or have invalid format", HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(JWTVerificationException.class)
-    public ResponseEntity<String> handleJWTVerificationException() {
-        return new ResponseEntity<>("JWT verification failed", HttpStatus.UNAUTHORIZED);
     }
 }
