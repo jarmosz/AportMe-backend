@@ -128,7 +128,7 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
         createUser("mateusz.lesiecki@gmail.com", passwordEncoder.encode("Haslo123"));
         createUser("jacek.krakowski@apilia.pl", passwordEncoder.encode("Haslo123"));
         createUser("jarmoszw@gmail.com", passwordEncoder.encode("Haslo123"));
-
+        createAdmin("dawid.wietrzych@gmail.com", passwordEncoder.encode("Haslo123"));
     }
 
     private void createTBBFoundationSurvey() {
@@ -177,6 +177,15 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
         user.setEmail(email);
         user.setPassword(password);
         user.setRole(Role.USER);
+        user.setActive(true);
+        userRepository.save(user);
+    }
+
+    private void createAdmin(String email, String password) {
+        User user = new User();
+        user.setEmail(email);
+        user.setPassword(password);
+        user.setRole(Role.ADMIN);
         user.setActive(true);
         userRepository.save(user);
     }
