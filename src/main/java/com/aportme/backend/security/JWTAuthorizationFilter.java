@@ -35,30 +35,31 @@ public class JWTAuthorizationFilter extends GenericFilterBean {
 
         String token = httpRequest.getHeader(HEADER_STRING);
         if (token != null) {
-            SecurityContextHolder.getContext().setAuthentication(getAuthentication(token));
+            try {
+                SecurityContextHolder.getContext().setAuthentication(getAuthentication(token));
+            } catch (JWTVerificationException e) {
+                httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            }
         }
 
         chain.doFilter(httpRequest, httpResponse);
     }
 
-    private Authentication getAuthentication(String token) {
+    private Authentication getAuthentication(String token) throws JWTVerificationException {
 
         final Long id;
         final Role role;
         final String email;
-        try {
-            String[] tokenParts = token.split(" ");
-            String mainToken = tokenParts[1];
-            DecodedJWT jwt = JWT.require(Algorithm.HMAC256(SECRET.getBytes()))
-                    .build()
-                    .verify(mainToken);
+        String[] tokenParts = token.split(" ");
+        String mainToken = tokenParts[1];
+        DecodedJWT jwt = JWT.require(Algorithm.HMAC256(SECRET.getBytes()))
+                .build()
+                .verify(mainToken);
 
-            id = jwt.getClaim("id").asLong();
-            email = jwt.getSubject();
-            role = jwt.getClaim("role").as(Role.class);
-        } catch (JWTVerificationException e) {
-            return null;
-        }
+        id = jwt.getClaim("id").asLong();
+        email = jwt.getSubject();
+        role = jwt.getClaim("role").as(Role.class);
 
         return new JWTAuthentication(id, email, role);
     }
