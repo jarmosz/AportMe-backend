@@ -3,6 +3,7 @@ package com.aportme.backend.entity;
 import com.aportme.backend.entity.enums.Role;
 import com.aportme.backend.entity.survey.UserSurvey;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,6 +20,13 @@ import java.util.List;
 @NoArgsConstructor
 public class User implements UserDetails {
 
+    @Builder
+    public User(String email, String password, Role role) {
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,7 +38,7 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role = Role.USER;
 
-    private boolean isActive;
+    private boolean isActive = true;
 
     @ManyToMany
     @JoinTable(name = "user_pet",
