@@ -14,12 +14,13 @@ public class AddressService {
     private final AddressRepository addressRepository;
     private final ModelMapper modelMapper;
 
-    public Address save(AddressBaseDTO addressDTO) {
-        Address address = modelMapper.map(addressDTO, Address.class);
+    public Address save(Address address) {
         return addressRepository.save(address);
     }
 
-    public <T> T mapTo(Object src, Class<T> dest) {
-        return modelMapper.map(src, dest);
+    public Address mapToEntity(AddressBaseDTO dto) {
+        Address address = modelMapper.map(dto, Address.class);
+        address.setSearchableCity(dto.getCity().toLowerCase());
+        return address;
     }
 }
