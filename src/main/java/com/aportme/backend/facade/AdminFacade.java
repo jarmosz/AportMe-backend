@@ -33,9 +33,10 @@ public class AdminFacade {
 
         userService.saveUser(foundationUser);
 
-        Address address = addressService.save(dto.getAddress());
-        Foundation foundation = foundationService.mapTo(dto, Foundation.class);
+        Address address = addressService.mapToEntity(dto.getAddress());
+        addressService.save(address);
 
+        Foundation foundation = foundationService.mapTo(dto, Foundation.class);
         foundation.setUser(foundationUser);
         foundation.setAddress(address);
 
