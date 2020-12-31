@@ -26,6 +26,8 @@ public class FoundationService {
     private final SearchService searchService;
 
     public Page<FoundationDTO> getAll(String searchCityQuery, Pageable pageable) {
+        ModelMapperUtil.mapFoundationEmail(modelMapper);
+
         String searchedCity = searchService.prepareSearchableField(searchCityQuery);
         Page<Foundation> page = foundationRepository.findAllByAddress_SearchableCityContains(pageable, searchedCity);
         List<FoundationDTO> content = page
