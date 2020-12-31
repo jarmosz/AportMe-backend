@@ -18,4 +18,8 @@ public class AddressService {
         Address address = modelMapper.map(addressDTO, Address.class);
         return addressRepository.save(address);
     }
+
+    public <T> T mapTo(Object src, Class<T> dest) {
+        return modelMapper.map(src, dest);
+    }
 }
