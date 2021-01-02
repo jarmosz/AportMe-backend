@@ -1,15 +1,12 @@
 package com.aportme.backend.repository;
 
-import com.aportme.backend.entity.Foundation_;
 import com.aportme.backend.entity.Pet;
 import com.aportme.backend.entity.Pet_;
 import com.aportme.backend.entity.User;
-import com.aportme.backend.entity.User_;
 import com.aportme.backend.entity.dto.pet.PetFilters;
-import com.aportme.backend.exception.SearchedPetsNotFoundException;
+import com.aportme.backend.service.PaginationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
@@ -40,16 +37,12 @@ public class SearchPetRepository implements CustomPetRepository {
 
         int totalRows = query.getResultList().size();
 
-        if (totalRows == 0) {
-            throw new SearchedPetsNotFoundException();
-        }
-
-        List<Pet> pets = query
+        List<Pet> content = query
                 .setFirstResult(pageable.getPageNumber() * pageable.getPageSize())
                 .setMaxResults(pageable.getPageSize())
                 .getResultList();
 
-        return new PageImpl<>(pets, pageable, totalRows);
+        return PaginationService.mapToPageImpl(content, pageable, totalRows);
     }
 
     private Predicate buildPredicate(Root<Pet> pet, CriteriaBuilder criteriaBuilder, String name, String breed, PetFilters filters, User user) {
@@ -58,12 +51,12 @@ public class SearchPetRepository implements CustomPetRepository {
         predicates.add(criteriaBuilder.like(pet.get(Pet_.searchableBreed), "%" + breed + "%"));
         if (filters != null) {
             if (filters.getSize() != null) predicates.add(criteriaBuilder.equal(pet.get(Pet_.size), filters.getSize()));
-            if (filters.getAgeCategory() != null) predicates.add(criteriaBuilder.equal(pet.get(Pet_.ageCategory), filters.getAgeCategory()));
-            if (filters.getPetType() != null) predicates.add(criteriaBuilder.equal(pet.get(Pet_.petType), filters.getPetType()));
-            if (filters.getPetSex() != null) predicates.add(criteriaBuilder.equal(pet.get(Pet_.sex), filters.getPetSex()));
-            if (filters.getIsFoundationCall() && user != null) {
-                predicates.add(criteriaBuilder.equal(pet.get(Pet_.FOUNDATION).get(Foundation_.USER).get(User_.ID), user.getId()));
-            }
+            if (filters.getAgeCategory() != null)
+                predicates.add(criteriaBuilder.equal(pet.get(Pet_.ageCategory), filters.getAgeCategory()));
+            if (filters.getPetType() != null)
+                predicates.add(criteriaBuilder.equal(pet.get(Pet_.petType), filters.getPetType()));
+            if (filters.getPetSex() != null)
+                predicates.add(criteriaBuilder.equal(pet.get(Pet_.sex), filters.getPetSex()));
             if (filters.getOnlyLikedPets() && user != null) {
                 predicates.add(criteriaBuilder.isMember(user, pet.get(Pet_.USERS)));
             }

@@ -13,6 +13,8 @@ public class FoundationForPetDTO extends FoundationBaseDTO {
 
     private String foundationLogo;
 
+    private String accountNumber;
+
     private UserDTO user;
 
     private AddressDTO address;

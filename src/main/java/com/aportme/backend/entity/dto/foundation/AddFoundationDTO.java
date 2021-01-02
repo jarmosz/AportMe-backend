@@ -8,6 +8,12 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class AddFoundationDTO extends FoundationBaseDTO {
 
+    private String email;
+
+    private String password;
+
+    private String foundationLogo;
+
     private String accountNumber;
 
     private AddressBaseDTO address;

@@ -1,6 +1,8 @@
 package com.aportme.backend.utils;
 
 import com.aportme.backend.entity.Foundation;
+import com.aportme.backend.entity.Pet;
+import com.aportme.backend.entity.dto.pet.SimplePetDTO;
 import com.aportme.backend.entity.dto.survey.CompletedSurveyDTO;
 import com.aportme.backend.entity.dto.foundation.FoundationDTO;
 import com.aportme.backend.entity.dto.survey.UserSurveyAnswerDTO;
@@ -45,5 +47,17 @@ public class ModelMapperUtil {
 
         modelMapper.typeMap(SurveyAnswer.class, UserSurveyAnswerDTO.class)
                 .addMappings(mapper -> mapper.map(src -> src.getQuestion().getQuestionText(), UserSurveyAnswerDTO::setQuestionText));
+    }
+
+    public static void mapToSimplePetDTO(ModelMapper modelMapper) {
+        modelMapper.typeMap(Pet.class, SimplePetDTO.class)
+                .addMappings(mapper -> {
+                            mapper.map(src -> src.getFoundation().getId(), SimplePetDTO::setFoundationId);
+                            mapper.map(src -> src.getFoundation().getAddress().getCity(), SimplePetDTO::setFoundationCity);
+                            mapper.map(src -> src.getFoundation().getFoundationLogo(), SimplePetDTO::setFoundationLogo);
+                            mapper.map(src -> src.getFoundation().getName(), SimplePetDTO::setFoundationName);
+                        }
+                );
+
     }
 }
