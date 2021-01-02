@@ -23,6 +23,9 @@ public class AuthenticationService {
     }
 
     public Long getLoggedUserId() {
+        if(getAuthentication() == null) {
+            return null;
+        }
         return getLoggedUsername().equals("anonymousUser") ? null : (Long) getAuthentication().getPrincipal();
     }
 }

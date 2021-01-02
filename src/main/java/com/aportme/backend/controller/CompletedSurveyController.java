@@ -24,7 +24,7 @@ public class CompletedSurveyController {
     @ApiOperation(value = "Return all user surveys for foundation", response = CompletedSurveyDTO.class)
     public Page<CompletedSurveyDTO> getCompletedSurveys(
             @RequestParam(required = false) String search,
-            @SortDefault(value = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+            @SortDefault(value = "status", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         return completedSurveyService.getCompletedSurveys(pageable, search);
     }

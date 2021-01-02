@@ -1,6 +1,5 @@
 package com.aportme.backend.controller;
 
-import com.aportme.backend.entity.dto.foundation.AddFoundationDTO;
 import com.aportme.backend.entity.dto.foundation.FoundationDTO;
 import com.aportme.backend.entity.dto.foundation.LoggedFoundationDataDTO;
 import com.aportme.backend.entity.dto.foundation.UpdateFoundationDTO;
@@ -11,7 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.SortDefault;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,13 +47,5 @@ public class FoundationController {
     @ApiOperation(value = "Update foundation")
     public UpdateFoundationDTO updateFoundation(@RequestBody UpdateFoundationDTO updateFoundationDTO) {
         return foundationService.update(updateFoundationDTO);
-    }
-
-    @PostMapping
-    @PreAuthorize("@accessService.isAdmin()")
-    @ApiOperation(value = "Create foundation")
-    public ResponseEntity<Object> createFoundation(@RequestParam Long userId, @RequestBody AddFoundationDTO addFoundationDTO) {
-        foundationService.create(userId, addFoundationDTO);
-        return ResponseEntity.ok().build();
     }
 }

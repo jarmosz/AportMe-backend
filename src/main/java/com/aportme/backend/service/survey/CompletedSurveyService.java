@@ -3,11 +3,11 @@ package com.aportme.backend.service.survey;
 import com.aportme.backend.entity.dto.survey.UpdateSurveyStatusDTO;
 import com.aportme.backend.entity.dto.survey.CompletedSurveyDTO;
 import com.aportme.backend.entity.survey.UserSurvey;
+import com.aportme.backend.service.PaginationService;
 import com.aportme.backend.utils.ModelMapperUtil;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +29,7 @@ public class CompletedSurveyService {
         page = surveyService.findAllByPetName(pageable, search);
 
         List<CompletedSurveyDTO> surveys = convertToCompletedSurveyDTO(page);
-        return new PageImpl<>(surveys, pageable, page.getTotalElements());
+        return PaginationService.mapToPageImpl(surveys, pageable, page.getTotalElements());
     }
 
     private List<CompletedSurveyDTO> convertToCompletedSurveyDTO(Page<UserSurvey> page) {

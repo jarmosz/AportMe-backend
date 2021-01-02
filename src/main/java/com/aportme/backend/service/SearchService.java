@@ -22,14 +22,14 @@ public class SearchService {
     public Page<Pet> findPetsByFilters(Pageable pageable, PetFilters filters) {
         SearchablePet searchablePet = resolveSearchQuery(filters.getSearchBreedQuery(), filters.getSearchNameQuery());
         Long userId = authenticationService.getLoggedUserId();
-        filters.setIsFoundationCall(verifyFoundationCall(filters.getIsFoundationCall(), userId));
         filters.setOnlyLikedPets(verifyUserCall(filters.getOnlyLikedPets(), userId));
+        User user = getUserForSearch(filters);
         return searchPetRepository.findByFilters(
                 pageable,
                 searchablePet.getName(),
                 searchablePet.getBreed(),
                 filters,
-                getUserForSearch(filters));
+                user);
     }
 
     public String prepareSearchableField(String query) {
@@ -41,13 +41,6 @@ public class SearchService {
         return new SearchablePet(prepareSearchableField(searchBreedQuery), prepareSearchableField(searchNameQuery));
     }
 
-    private boolean verifyFoundationCall(Boolean isFoundatioCall, Long foundationId) {
-        if(isFoundatioCall != null && isFoundatioCall) {
-            return foundationId != null && authenticationService.getAuthorities().contains(Role.FOUNDATION);
-        }
-        return false;
-    }
-
     private boolean verifyUserCall(Boolean onlyLikedPets, Long userId) {
         if(onlyLikedPets != null && onlyLikedPets) {
             return userId != null && authenticationService.getAuthorities().contains(Role.USER);
@@ -56,6 +49,6 @@ public class SearchService {
     }
 
     private User getUserForSearch(PetFilters filters) {
-        return filters.getOnlyLikedPets() || filters.getIsFoundationCall() ? userService.getLoggedUser() : null;
+        return filters.getOnlyLikedPets() ? userService.getLoggedUser() : null;
     }
 }
