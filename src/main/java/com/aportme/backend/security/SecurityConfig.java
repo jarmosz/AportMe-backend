@@ -117,7 +117,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
             @Override
             public void addResourceHandlers(ResourceHandlerRegistry registry) {
-                registry.addResourceHandler("/index.html")
+                registry.addResourceHandler("/index.html", "/css/**")
                         .setCacheControl(CacheControl.noStore())
                         .addResourceLocations("classpath:/static/");
             }
