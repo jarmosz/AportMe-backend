@@ -32,6 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/{_:^(?!index\\\\.html|api).*$}",
             "/index.html",
             "/js/**",
+            "/img/**",
             "/css/**",
             "/fonts/**",
             "/assets/**",
