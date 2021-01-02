@@ -12,10 +12,17 @@ import org.springframework.stereotype.Service;
 public class AddressService {
 
     private final AddressRepository addressRepository;
+    private final SearchService searchService;
     private final ModelMapper modelMapper;
 
-    public Address save(AddressBaseDTO addressDTO) {
-        Address address = modelMapper.map(addressDTO, Address.class);
+    public Address save(Address address) {
         return addressRepository.save(address);
+    }
+
+    public Address mapToEntity(AddressBaseDTO dto) {
+        Address address = modelMapper.map(dto, Address.class);
+        String searchableCity = searchService.prepareSearchableField(dto.getCity());
+        address.setSearchableCity(searchableCity);
+        return address;
     }
 }
