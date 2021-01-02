@@ -47,8 +47,8 @@ public class PetService {
     }
 
     public Page<PetDTO> getFoundationPets(Pageable pageable, String query) {
-        Long foundationId = authenticationService.getLoggedUserId();
-        Foundation foundation = foundationService.findById(foundationId);
+        String foundationEmail = authenticationService.getLoggedUsername();
+        Foundation foundation = foundationService.findByEmail(foundationEmail);
         Page<Pet> page = petRepository.findAllByFoundationAndSearchableNameIsContaining(pageable, foundation, query.toLowerCase());
 
         List<PetDTO> content = page.getContent()
