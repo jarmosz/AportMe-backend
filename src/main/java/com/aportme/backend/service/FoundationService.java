@@ -40,8 +40,8 @@ public class FoundationService {
     }
 
     public FoundationDTO getById(Long id) {
-        Foundation foundation = findById(id);
         ModelMapperUtil.mapFoundationEmail(modelMapper);
+        Foundation foundation = findById(id);
         return modelMapper.map(foundation, FoundationDTO.class);
     }
 
