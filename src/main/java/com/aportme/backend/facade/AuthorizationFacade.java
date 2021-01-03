@@ -10,12 +10,10 @@ import com.aportme.backend.exception.WrongChangePasswordDataException;
 import com.aportme.backend.exception.WrongUserCredentialsException;
 import com.aportme.backend.exception.security.RefreshTokenHasExpiredException;
 import com.aportme.backend.exception.security.TokenDoesNotExsistsException;
-import com.aportme.backend.security.SecurityProperties;
 import com.aportme.backend.service.UserService;
 import com.aportme.backend.service.security.SecurityService;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,12 +26,6 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class AuthorizationFacade {
 
-    @Value("${jwt.refresh.token.expiration.seconds}")
-    private int refreshTokenExpirationTime;
-    @Value("${jwt.auth.token.expiration.seconds}")
-    private int authTokenExpirationTime;
-
-    private final SecurityProperties securityProperties;
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
     private final SecurityService securityService;
