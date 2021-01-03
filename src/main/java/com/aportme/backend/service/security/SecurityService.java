@@ -8,7 +8,6 @@ import com.aportme.backend.entity.dto.user.ChangeUserPasswordDTO;
 import com.aportme.backend.exception.security.WrongPasswordException;
 import com.aportme.backend.security.SecurityProperties;
 import com.aportme.backend.security.TokenType;
-import com.aportme.backend.service.UserService;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
@@ -37,13 +36,6 @@ public class SecurityService {
 
     private final SecurityProperties securityProperties;
     private final PasswordEncoder passwordEncoder;
-    private final UserService userService;
-
-    public TokenPairDTO loginUser(UserLoginDTO userLoginDTO) {
-        String userEmail = userLoginDTO.getEmail();
-        User user = userService.findByEmail(userEmail);
-        return checkUserPassword(userLoginDTO, user);
-    }
 
     public TokenPairDTO checkUserPassword(UserLoginDTO userLoginDTO, User user) {
         if (isPasswordMatch(userLoginDTO, user)) {
