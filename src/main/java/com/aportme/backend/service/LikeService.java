@@ -7,14 +7,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class LikeService {
 
     private final UserService userService;
     private final PetService petService;
-    private final AuthenticationService authenticationService;
 
     public ResponseEntity<Object> like(Long petId) {
         Pet pet = petService.findById(petId);
@@ -44,10 +45,11 @@ public class LikeService {
     }
 
     private Boolean isPetLikedByUser(Pet pet) {
-        String loggedUserEmail = authenticationService.getAuthentication().getName();
-        return pet.getUsers()
+        User user = userService.getLoggedUser();
+
+        return user.getLikedPets()
                 .stream()
-                .map(User::getEmail)
-                .anyMatch(userEmail -> userEmail.equals(loggedUserEmail));
+                .map(Pet::getId)
+                .anyMatch(petId -> petId.equals(pet.getId()));
     }
 }
