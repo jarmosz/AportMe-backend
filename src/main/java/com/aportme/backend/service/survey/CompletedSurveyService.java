@@ -1,8 +1,11 @@
 package com.aportme.backend.service.survey;
 
+import com.aportme.backend.entity.Foundation;
 import com.aportme.backend.entity.dto.survey.UpdateSurveyStatusDTO;
 import com.aportme.backend.entity.dto.survey.CompletedSurveyDTO;
 import com.aportme.backend.entity.survey.UserSurvey;
+import com.aportme.backend.service.AuthenticationService;
+import com.aportme.backend.service.FoundationService;
 import com.aportme.backend.service.PaginationService;
 import com.aportme.backend.utils.ModelMapperUtil;
 import lombok.RequiredArgsConstructor;
@@ -19,14 +22,14 @@ import java.util.stream.Collectors;
 public class CompletedSurveyService {
 
     private final ModelMapper modelMapper;
+    private final FoundationService foundationService;
+    private final AuthenticationService authenticationService;
     private final UserSurveyService surveyService;
 
     public Page<CompletedSurveyDTO> getCompletedSurveys(Pageable pageable, String search) {
-        Page<UserSurvey> page;
-        if (search == null) {
-            search = "";
-        }
-        page = surveyService.findAllByPetName(pageable, search);
+        String email = authenticationService.getLoggedUsername();
+        Foundation foundation = foundationService.findByEmail(email);
+        Page<UserSurvey> page = surveyService.findAllByPetNameAndFoundation(pageable, foundation, search);
 
         List<CompletedSurveyDTO> surveys = convertToCompletedSurveyDTO(page);
         return PaginationService.mapToPageImpl(surveys, pageable, page.getTotalElements());

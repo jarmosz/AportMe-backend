@@ -20,9 +20,7 @@ public interface UserSurveyRepository extends JpaRepository<UserSurvey, Long> {
 
     Optional<UserSurvey> findByUserAndPet(User user, Pet pet);
 
-    Page<UserSurvey> findAllByFoundation(Pageable pageable, Foundation foundation);
-
-    Page<UserSurvey> findAllByPet_SearchableNameContains(Pageable pageable, String petName);
+    Page<UserSurvey> findAllByFoundationAndPet_SearchableNameContains(Pageable pageable, Foundation foundation, String petName);
 
     boolean existsByFoundationAndStatus(Foundation foundation, SurveyStatus survey);
 }
