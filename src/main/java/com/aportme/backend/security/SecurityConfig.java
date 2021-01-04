@@ -31,6 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/",
             "/{_:^(?!index\\\\.html|api).*$}",
             "/index.html",
+            "/resetPassword/**",
             "/js/**",
             "/img/**",
             "/static/**",
