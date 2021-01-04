@@ -23,7 +23,7 @@ public class CompletedSurveyController {
     @GetMapping
     @ApiOperation(value = "Return all user surveys for foundation", response = CompletedSurveyDTO.class)
     public Page<CompletedSurveyDTO> getCompletedSurveys(
-            @RequestParam(required = false) String search,
+            @RequestParam(defaultValue = "") String search,
             @SortDefault(value = "status", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         return completedSurveyService.getCompletedSurveys(pageable, search);
