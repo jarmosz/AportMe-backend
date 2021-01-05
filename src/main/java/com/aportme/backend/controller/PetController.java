@@ -3,10 +3,10 @@ package com.aportme.backend.controller;
 import com.aportme.backend.entity.dto.pet.*;
 import com.aportme.backend.service.PetService;
 import io.swagger.annotations.ApiOperation;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -55,6 +55,7 @@ public class PetController {
     @PreAuthorize("@accessService.isFoundation() && @accessService.isFoundationPet(#id)")
     @ApiOperation(value = "Delete pet")
     public ResponseEntity<Object> delete(@PathVariable Long id) {
-        return petService.delete(id);
+        petService.delete(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
