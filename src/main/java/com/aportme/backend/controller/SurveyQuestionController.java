@@ -22,10 +22,7 @@ public class SurveyQuestionController {
 
     @GetMapping
     @PreAuthorize("@accessService.isUser()")
-    @ApiOperation(
-            value = "Get all survey question for pet",
-            response = SurveyQuestionDTO.class
-    )
+    @ApiOperation(value = "Get all survey question for pet", response = SurveyQuestionDTO.class)
     public List<SurveyQuestionDTO> getQuestions(@RequestParam Long petId) {
         return surveyQuestionFacade.getQuestions(petId);
     }

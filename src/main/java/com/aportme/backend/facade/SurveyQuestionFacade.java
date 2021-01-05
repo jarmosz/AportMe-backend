@@ -10,12 +10,10 @@ import com.aportme.backend.entity.enums.QuestionType;
 import com.aportme.backend.entity.survey.SelectValue;
 import com.aportme.backend.entity.survey.SurveyQuestion;
 import com.aportme.backend.entity.survey.UserSurvey;
+import com.aportme.backend.exception.FoundationSurveyInactiveException;
 import com.aportme.backend.exception.UserSurveyAlreadyExistsException;
 import com.aportme.backend.service.*;
-import com.aportme.backend.service.survey.SelectValueService;
-import com.aportme.backend.service.survey.SurveyAnswerService;
-import com.aportme.backend.service.survey.SurveyQuestionService;
-import com.aportme.backend.service.survey.UserSurveyService;
+import com.aportme.backend.service.survey.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -33,6 +31,7 @@ public class SurveyQuestionFacade {
     private final FoundationService foundationService;
     private final SurveyAnswerService surveyAnswerService;
     private final SelectValueService selectValueService;
+    private final FoundationSurveyService foundationSurveyService;
     private final UserService userService;
     private final PetService petService;
 
@@ -40,10 +39,14 @@ public class SurveyQuestionFacade {
         Pet pet = petService.findById(petId);
         Foundation foundation = pet.getFoundation();
 
-        throwExceptionIfUserSurveyAlreadySubmitted(pet);
+        if (foundationSurveyService.isFoundationSurveyActive(foundation)) {
+            throwExceptionIfUserSurveyAlreadySubmitted(pet);
 
-        List<SurveyQuestion> questions = questionService.findAllActiveQuestionByFoundation(foundation);
-        return questionService.mapToSurveyQuestionDTO(questions);
+            List<SurveyQuestion> questions = questionService.findAllActiveQuestionByFoundation(foundation);
+            return questionService.mapToSurveyQuestionDTO(questions);
+        }
+
+        throw new FoundationSurveyInactiveException();
     }
 
     public SurveyQuestionDTO createQuestion(CreateSurveyQuestionDTO dto) {
@@ -87,8 +90,7 @@ public class SurveyQuestionFacade {
     }
 
     private void throwExceptionIfUserSurveyAlreadySubmitted(Pet pet) {
-        String email = authenticationService.getLoggedUsername();
-        User user = userService.findByEmail(email);
+        User user = userService.getLoggedUser();
         UserSurvey survey = surveyService.findByUserAndPetOrNull(user, pet);
 
         if(survey != null) {
