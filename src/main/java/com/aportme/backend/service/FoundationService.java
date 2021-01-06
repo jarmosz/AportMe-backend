@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
 @Transactional
+@AllArgsConstructor
 public class FoundationService {
 
     private final FoundationRepository foundationRepository;
