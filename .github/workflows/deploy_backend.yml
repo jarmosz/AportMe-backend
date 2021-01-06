@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy AportMe backend service
+      - name: Deploy AportMe backend service.
         uses: garygrossgarten/github-action-ssh@release
         with:
           command: cd /home/aportmeadmin/aportme/ && ./backend.sh
