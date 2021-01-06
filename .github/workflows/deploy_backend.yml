@@ -1,0 +1,20 @@
+name: Deploy backend service
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ls -a via ssh
+        uses: garygrossgarten/github-action-ssh@release
+        with:
+          command: cd aportme && ls -a
+          host: ${{ secrets.HOST }}
+          port: ${{ secrets.PORT }}
+          username: ${{ secrets.USERNAME}}
+          privateKey: ${{ secrets.SSHKEY}}
