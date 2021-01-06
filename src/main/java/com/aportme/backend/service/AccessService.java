@@ -9,11 +9,13 @@ import com.aportme.backend.repository.survey.SurveyQuestionRepository;
 import com.aportme.backend.service.survey.UserSurveyService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 @AllArgsConstructor
 public class AccessService {
 
