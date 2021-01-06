@@ -13,7 +13,7 @@ jobs:
       - name: Run bash script for backend building on VPS
         uses: garygrossgarten/github-action-ssh@release
         with:
-          command: ./backend.sh
+          command: ./home/aportmeadmin/aportme/backend.sh
           host: ${{ secrets.HOST }}
           port: ${{ secrets.PORT }}
           username: ${{ secrets.USERNAME}}
