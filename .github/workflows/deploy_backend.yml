@@ -13,7 +13,7 @@ jobs:
       - name: ls -a via ssh
         uses: garygrossgarten/github-action-ssh@release
         with:
-          command: cd aportme && ls -a
+          command: chmod +x /home/aportmeadmin/aportme/backend.sh && cd /home/aportmeadmin/aportme  && sudo ./backend.sh
           host: ${{ secrets.HOST }}
           port: ${{ secrets.PORT }}
           username: ${{ secrets.USERNAME}}
