@@ -6,7 +6,7 @@ import javax.persistence.Lob;
 
 @Data
 public class UploadPictureDTO {
+
     @Lob
     private String base64Picture;
-
 }

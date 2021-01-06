@@ -3,13 +3,14 @@ package com.aportme.backend.controller;
 import com.aportme.backend.entity.dto.pet.*;
 import com.aportme.backend.service.PetService;
 import io.swagger.annotations.ApiOperation;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -44,7 +45,7 @@ public class PetController {
         return petService.update(id, petDTO);
     }
 
-    @PostMapping
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @PreAuthorize("@accessService.isFoundation()")
     @ApiOperation(value = "Create pet")
     public PetDTO create(@RequestBody AddPetDTO petDTO) {

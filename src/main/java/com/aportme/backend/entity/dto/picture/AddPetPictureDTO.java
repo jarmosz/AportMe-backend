@@ -1,9 +1,12 @@
 package com.aportme.backend.entity.dto.picture;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class AddPetPictureDTO extends PictureBaseDTO {
+public class AddPetPictureDTO {
+
+    private MultipartFile picture;
+
+    private Boolean isProfilePicture;
 }

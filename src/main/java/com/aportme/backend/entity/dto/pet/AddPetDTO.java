@@ -12,5 +12,4 @@ import java.util.List;
 public class AddPetDTO extends PetBaseDTO {
 
     private List<AddPetPictureDTO> pictures = new ArrayList<>();
-
 }

@@ -14,7 +14,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.io.IOException;
+import java.security.InvalidParameterException;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,15 +46,13 @@ public class PictureService {
         return pictureRepository.saveAll(pictures);
     }
 
-    public ResponseEntity<Object> setProfilePicture(Long id) {
+    public void setProfilePicture(Long id) {
         PetPicture newProfilePicture = findById(id);
         Pet pet = newProfilePicture.getPet();
         PetPicture oldProfilePicture = findProfilePictureByPet(pet);
 
         switchProfilePicture(oldProfilePicture, newProfilePicture);
         pictureRepository.saveAll(Arrays.asList(newProfilePicture, oldProfilePicture));
-
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     public void deleteAll(Pet pet) {
@@ -66,24 +67,31 @@ public class PictureService {
                 .orElse(pictures.get(0));
     }
 
-    private PetPicture createUploadedPicture(Pet pet, String pictureInBase64) {
-        PetPicture dbPicture = new PetPicture();
-        dbPicture.setPictureInBase64(pictureInBase64);
-        dbPicture.setIsProfilePicture(false);
-        dbPicture.setPet(pet);
-        return dbPicture;
+    private PetPicture createPictureForNewPet(Pet pet, AddPetPictureDTO dto) {
+        PetPicture petPicture = new PetPicture();
+        String encodedString = encodePictureToBase64(dto);
+
+        petPicture.setPictureInBase64(encodedString);
+        petPicture.setIsProfilePicture(dto.getIsProfilePicture());
+        petPicture.setPet(pet);
+
+        return petPicture;
     }
 
-    private PetPicture createPictureForNewPet(Pet pet, AddPetPictureDTO petPictureDTO) {
-        PetPicture petPicture = modelMapper.map(petPictureDTO, PetPicture.class);
-        petPicture.setPet(pet);
-        return petPicture;
+    private String encodePictureToBase64(AddPetPictureDTO dto) {
+        try {
+            byte[] fileContent = dto.getPicture().getBytes();
+            return Base64.getEncoder().encodeToString(fileContent);
+        } catch (IOException ex) {
+            throw new InvalidParameterException("A");
+        }
     }
 
     public PetPictureDTO createPicture(Long petId, UploadPictureDTO pictureDTO) {
         Pet pet = petService.findById(petId);
         PetPicture petPicture = new PetPicture(pictureDTO.getBase64Picture(), false, pet);
-        petPicture = pictureRepository.save(petPicture);
+        pictureRepository.save(petPicture);
+
         return modelMapper.map(petPicture, PetPictureDTO.class);
     }
 

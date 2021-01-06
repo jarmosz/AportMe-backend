@@ -5,6 +5,7 @@ import com.aportme.backend.entity.dto.picture.UploadPictureDTO;
 import com.aportme.backend.service.PictureService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -42,6 +43,7 @@ public class PictureController {
     @PreAuthorize("@accessService.isFoundation() || @accessService.isFoundationPet(#id)")
     @ApiOperation(value = "Set new profile picture")
     public ResponseEntity<Object> setProfilePicture(@PathVariable Long id) {
-        return pictureService.setProfilePicture(id);
+        pictureService.setProfilePicture(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
