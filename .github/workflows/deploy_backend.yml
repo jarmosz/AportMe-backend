@@ -13,7 +13,7 @@ jobs:
       - name: Run bash script for backend building on VPS
         uses: garygrossgarten/github-action-ssh@release
         with:
-          command: sudo chmod +x /home/aportmeadmin/aportme/backend.sh && cd /home/aportmeadmin/aportme  && sudo ./backend.sh
+          command: ./backend.sh
           host: ${{ secrets.HOST }}
           port: ${{ secrets.PORT }}
           username: ${{ secrets.USERNAME}}
