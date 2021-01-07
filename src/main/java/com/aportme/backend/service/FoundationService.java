@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @AllArgsConstructor
-@Transactional
 public class FoundationService {
 
     private final FoundationRepository foundationRepository;
