@@ -27,8 +27,8 @@ public class UserService {
     }
 
     public User getLoggedUser() {
-        String userEmail = authenticationService.getLoggedUsername();
-        return userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
+        String email = authenticationService.getLoggedUsername();
+        return findByEmail(email);
     }
 
     public Boolean isUserExists(String email) {
