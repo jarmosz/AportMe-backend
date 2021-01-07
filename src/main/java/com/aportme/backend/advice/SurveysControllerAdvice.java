@@ -17,8 +17,6 @@ public class SurveysControllerAdvice {
 
     @ExceptionHandler(FoundationSurveyInactiveException.class)
     public ResponseEntity<Object> foundationSurveyInactive() {
-//        Flutter rzuca ExceptionFormat jeżeli idzie tutaj wiadomość nie mam pojęcia dlaczego
-//        return new ResponseEntity<>("Foundation survey is inactive unable to get questions", HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }
