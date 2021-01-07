@@ -3,7 +3,9 @@ package com.aportme.backend.service.survey;
 import com.aportme.backend.entity.Foundation;
 import com.aportme.backend.entity.dto.survey.FoundationSurveyDTO;
 import com.aportme.backend.entity.dto.survey.SurveyQuestionDTO;
+import com.aportme.backend.entity.enums.FoundationSurveyStatus;
 import com.aportme.backend.entity.enums.QuestionStatus;
+import com.aportme.backend.entity.enums.SurveyStatus;
 import com.aportme.backend.entity.survey.FoundationSurvey;
 import com.aportme.backend.repository.FoundationSurveyRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,8 +33,9 @@ public class FoundationSurveyService {
         return foundationSurvey;
     }
 
-    private FoundationSurvey findByFoundationOrElseNull(Foundation foundation) {
-        return foundationSurveyRepository.findByFoundation(foundation).orElse(null);
+    public Boolean isFoundationSurveyActive(Foundation foundation) {
+        FoundationSurvey survey = findByFoundation(foundation);
+        return survey.getSurveyStatus() == FoundationSurveyStatus.ACTIVE;
     }
 
     public FoundationSurveyDTO convertToFoundationSurveyDTO(FoundationSurvey foundationSurvey) {
@@ -62,5 +65,9 @@ public class FoundationSurveyService {
                 .filter(question -> question.getQuestionStatus() == QuestionStatus.ACTIVE)
                 .map(activeQuestion -> modelMapper.map(activeQuestion, SurveyQuestionDTO.class))
                 .collect(Collectors.toList());
+    }
+
+    private FoundationSurvey findByFoundationOrElseNull(Foundation foundation) {
+        return foundationSurveyRepository.findByFoundation(foundation).orElse(null);
     }
 }

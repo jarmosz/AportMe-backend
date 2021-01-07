@@ -62,13 +62,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/authorization/login").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/authorization/refresh-token").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
-                .antMatchers(HttpMethod.GET,"/api/pets").permitAll()
-                .antMatchers(HttpMethod.GET,"/api/pets/{id}").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/pets").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/pets/{id}").permitAll()
                 .antMatchers(HttpMethod.POST,"/api/reset-password/generate-link").permitAll()
                 .antMatchers(HttpMethod.GET,"/api/reset-password/validate-token").permitAll()
                 .antMatchers(HttpMethod.POST,"/api/reset-password").permitAll()
-                .antMatchers(HttpMethod.GET,"/api/foundations").permitAll()
-                .antMatchers(HttpMethod.GET,"/api/foundations/{id}").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/foundations").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/foundations/{id}").permitAll()
                 .anyRequest()
                 .authenticated();
 
