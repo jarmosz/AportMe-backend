@@ -8,7 +8,6 @@ import com.aportme.backend.entity.dto.survey.UserSurveyDTO;
 import com.aportme.backend.entity.enums.SurveyStatus;
 import com.aportme.backend.entity.survey.UserSurvey;
 import com.aportme.backend.repository.survey.UserSurveyRepository;
-import com.aportme.backend.service.PictureService;
 import com.aportme.backend.utils.ModelMapperUtil;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -18,13 +17,13 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UserSurveyService {
 
     private final UserSurveyRepository userSurveyRepository;
+    private final SurveyAnswerService surveyAnswerService;
     private final ModelMapper modelMapper;
 
     public boolean isAnyUserSurveyWithoutDecision(Foundation foundation) {
@@ -49,6 +48,12 @@ public class UserSurveyService {
 
     public UserSurvey save(UserSurvey survey) {
         return userSurveyRepository.save(survey);
+    }
+
+    public void deleteAllByPet(Pet pet) {
+        List<UserSurvey> surveys = userSurveyRepository.findAllByPet(pet);
+        surveys.forEach(surveyAnswerService::deleteAllBySurvey);
+        userSurveyRepository.deleteAll(surveys);
     }
 
     public void delete(UserSurvey survey) {

@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 @AllArgsConstructor
 @Transactional
 public class FoundationService {

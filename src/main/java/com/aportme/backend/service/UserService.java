@@ -7,8 +7,10 @@ import com.aportme.backend.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @AllArgsConstructor
 public class UserService {
 
@@ -25,8 +27,8 @@ public class UserService {
     }
 
     public User getLoggedUser() {
-        String userEmail = authenticationService.getLoggedUsername();
-        return userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
+        String email = authenticationService.getLoggedUsername();
+        return findByEmail(email);
     }
 
     public Boolean isUserExists(String email) {
