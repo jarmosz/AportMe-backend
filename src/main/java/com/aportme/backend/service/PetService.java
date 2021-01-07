@@ -6,14 +6,13 @@ import com.aportme.backend.entity.PetPicture;
 import com.aportme.backend.entity.User;
 import com.aportme.backend.entity.dto.pet.*;
 import com.aportme.backend.repository.PetRepository;
+import com.aportme.backend.service.survey.UserSurveyService;
 import com.aportme.backend.utils.ModelMapperUtil;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +31,7 @@ public class PetService {
     private final AuthenticationService authenticationService;
     private final SearchService searchService;
     private final UserService userService;
+    private final UserSurveyService userSurveyService;
     private final CanonicalService canonicalService;
     private PictureService pictureService;
 
@@ -61,7 +61,7 @@ public class PetService {
 
     public PetDTO getById(Long id) {
         Pet pet = findById(id);
-        PetDTO dto =  modelMapper.map(pet, PetDTO.class);
+        PetDTO dto = modelMapper.map(pet, PetDTO.class);
         dto.setLiked(isPetLikedByUser(pet));
         return dto;
     }
@@ -88,11 +88,12 @@ public class PetService {
         return modelMapper.map(pet, PetDTO.class);
     }
 
-    public ResponseEntity<Object> delete(Long id) {
+    public void delete(Long id) {
         Pet pet = findById(id);
+        pet.getUsers().forEach(user -> user.getLikedPets().remove(pet));
+        userSurveyService.deleteAllByPet(pet);
         pictureService.deleteAll(pet);
         petRepository.delete(pet);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     public Pet findById(Long id) {
