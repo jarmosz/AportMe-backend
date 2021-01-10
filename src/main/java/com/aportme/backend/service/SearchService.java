@@ -24,7 +24,9 @@ public class SearchService {
     public Page<Pet> findPetsByFilters(Pageable pageable, PetFilters filters) {
         SearchablePet searchablePet = resolveSearchQuery(filters.getSearchBreedQuery(), filters.getSearchNameQuery());
         Long userId = authenticationService.getLoggedUserId();
-        filters.setOnlyLikedPets(verifyUserCall(filters.getOnlyLikedPets(), userId));
+        Boolean shouldShowOnlyLikedPets = verifyUserCall(filters.getOnlyLikedPets(), userId);
+        filters.setOnlyLikedPets(shouldShowOnlyLikedPets);
+
         User user = getUserForSearch(filters);
         return searchPetRepository.findByFilters(
                 pageable,
