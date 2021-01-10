@@ -12,12 +12,15 @@ import com.aportme.backend.exception.WrongResetPasswordDataException;
 import com.aportme.backend.repository.ResetPasswordTokenRepository;
 import com.aportme.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Service
 @Transactional
@@ -37,20 +40,22 @@ public class ResetPasswordService {
     public void sendResetPasswordEmail(ResetUserPasswordDTO resetUserPasswordDTO) {
         String userEmail = resetUserPasswordDTO.getEmail();
         User user = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
-        eventPublisher.publishEvent(new SendResetPasswordLinkEvent(user, DateTime.now()));
+        eventPublisher.publishEvent(new SendResetPasswordLinkEvent(user, LocalDate.now()));
     }
 
     public void saveToken(User user, String token) {
-        ResetPasswordLink resetPasswordLink = new ResetPasswordLink();
-        resetPasswordLink.setUser(user);
-        resetPasswordLink.setToken(token);
-        resetPasswordLink.setExpiryDate(new DateTime().plusSeconds(tokenExpirationTime));
+        LocalDateTime expiration = LocalDateTime.now().plus(tokenExpirationTime, ChronoUnit.SECONDS);
+        ResetPasswordLink resetPasswordLink = ResetPasswordLink.builder()
+                .user(user)
+                .token(token)
+                .expiryDate(expiration)
+                .build();
 
         resetPasswordLinkTokenRepository.save(resetPasswordLink);
     }
 
     private boolean isValidToken(ResetPasswordLink token) {
-        return token.getExpiryDate().isBeforeNow();
+        return token.getExpiryDate().isBefore(LocalDateTime.now());
     }
 
     public void checkResetPasswordToken(String linkToken) {
