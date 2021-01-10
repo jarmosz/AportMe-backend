@@ -66,11 +66,11 @@ public class PetService {
         return dto;
     }
 
-    public PetDTO update(Long id, PetBaseDTO petDTO) {
+    public PetBaseDTO update(Long id, PetBaseDTO petDTO) {
         Pet pet = findById(id);
         modelMapper.map(petDTO, pet);
         Pet updatedPet = petRepository.save(pet);
-        return modelMapper.map(updatedPet, PetDTO.class);
+        return modelMapper.map(updatedPet, PetBaseDTO.class);
     }
 
     public PetDTO create(AddPetDTO petDTO) {
