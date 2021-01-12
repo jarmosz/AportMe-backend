@@ -28,6 +28,7 @@ public class Foundation {
 
     private String phoneNumber;
 
+    @Column(length = 1000)
     private String description;
 
     @Lob
