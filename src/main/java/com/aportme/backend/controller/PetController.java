@@ -40,7 +40,7 @@ public class PetController {
     @PutMapping("/{id}")
     @PreAuthorize("@accessService.isFoundation() && @accessService.isFoundationPet(#id)")
     @ApiOperation(value = "Update pet", response = PetDTO.class)
-    public PetDTO update(@PathVariable Long id, @RequestBody PetBaseDTO petDTO) {
+    public PetBaseDTO update(@PathVariable Long id, @RequestBody PetBaseDTO petDTO) {
         return petService.update(id, petDTO);
     }
 

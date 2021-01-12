@@ -1,16 +1,23 @@
 package com.aportme.backend.entity;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Type;
-import org.joda.time.DateTime;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
 @NoArgsConstructor
 public class ResetPasswordLink {
+
+    @Builder
+    public ResetPasswordLink(String token, User user, LocalDateTime expiryDate) {
+        this.token = token;
+        this.user = user;
+        this.expiryDate = expiryDate;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +29,5 @@ public class ResetPasswordLink {
     @JoinColumn(name = "users_id")
     private User user;
 
-    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-    private DateTime expiryDate;
+    private LocalDateTime expiryDate;
 }
