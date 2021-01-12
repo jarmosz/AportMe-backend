@@ -45,7 +45,7 @@ public class PictureService {
         return pictureRepository.saveAll(pictures);
     }
 
-    public ResponseEntity<Object> setProfilePicture(Long id) {
+    public PetPictureDTO setProfilePicture(Long id) {
         PetPicture newProfilePicture = findById(id);
         Pet pet = newProfilePicture.getPet();
         PetPicture oldProfilePicture = findProfilePictureByPet(pet);
@@ -53,7 +53,7 @@ public class PictureService {
         switchProfilePicture(oldProfilePicture, newProfilePicture);
         pictureRepository.saveAll(Arrays.asList(newProfilePicture, oldProfilePicture));
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return modelMapper.map(newProfilePicture, PetPictureDTO.class);
     }
 
     public void deleteAll(Pet pet) {

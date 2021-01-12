@@ -41,7 +41,7 @@ public class PictureController {
     @PatchMapping("/profile/{id}")
     @PreAuthorize("@accessService.isFoundation() || @accessService.isFoundationPet(#id)")
     @ApiOperation(value = "Set new profile picture")
-    public ResponseEntity<Object> setProfilePicture(@PathVariable Long id) {
+    public PetPictureDTO setProfilePicture(@PathVariable Long id) {
         return pictureService.setProfilePicture(id);
     }
 }
