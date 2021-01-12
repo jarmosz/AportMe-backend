@@ -49,7 +49,7 @@ public class PetService {
     public Page<PetDTO> getFoundationPets(Pageable pageable, String query) {
         String foundationEmail = authenticationService.getLoggedUsername();
         Foundation foundation = foundationService.findByEmail(foundationEmail);
-        Page<Pet> page = petRepository.findAllByFoundationAndSearchableNameIsContaining(pageable, foundation, query.toLowerCase());
+        Page<Pet> page = petRepository.findAllByFoundationAndSearchableNameIsContainingOrderByCreationDateDesc(pageable, foundation, query.toLowerCase());
 
         List<PetDTO> content = page.getContent()
                 .stream()
@@ -66,11 +66,11 @@ public class PetService {
         return dto;
     }
 
-    public PetDTO update(Long id, PetBaseDTO petDTO) {
+    public PetBaseDTO update(Long id, PetBaseDTO petDTO) {
         Pet pet = findById(id);
         modelMapper.map(petDTO, pet);
         Pet updatedPet = petRepository.save(pet);
-        return modelMapper.map(updatedPet, PetDTO.class);
+        return modelMapper.map(updatedPet, PetBaseDTO.class);
     }
 
     public PetDTO create(AddPetDTO petDTO) {
