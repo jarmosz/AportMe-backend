@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PetRepository extends JpaRepository<Pet, Long> {
 
-    Page<Pet> findAllByFoundationAndSearchableNameIsContaining(Pageable pageable, Foundation foundation, String searchableName);
+    Page<Pet> findAllByFoundationAndSearchableNameIsContainingOrderByCreationDateDesc(Pageable pageable, Foundation foundation, String searchableName);
 }
