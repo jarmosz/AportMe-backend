@@ -38,7 +38,7 @@ public class UserSurveyService {
     }
 
     public Page<UserSurvey> findAllByPetNameAndFoundation(Pageable pageable, Foundation foundation, String petName) {
-        return userSurveyRepository.findAllByFoundationAndPet_SearchableNameContains(pageable, foundation, petName.toLowerCase());
+        return userSurveyRepository.findAllByFoundationAndPet_SearchableNameContainingIgnoreCase(pageable, foundation, petName.toLowerCase());
     }
 
     public UserSurvey save(UserSurvey survey) {
