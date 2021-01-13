@@ -60,8 +60,9 @@ public class UserSurveyFacade {
 
             List<SurveyQuestion> questions = questionService.findAllActiveQuestionByFoundation(foundation);
             surveyAnswerService.createSurveyAnswers(userSurvey, questions, dto.getAnswers());
+        } else {
+            throw new FoundationSurveyInactiveException();
         }
-        throw new FoundationSurveyInactiveException();
     }
 
     public void delete(Long id) {
