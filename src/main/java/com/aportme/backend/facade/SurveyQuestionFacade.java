@@ -5,12 +5,14 @@ import com.aportme.backend.entity.Pet;
 import com.aportme.backend.entity.User;
 import com.aportme.backend.entity.dto.survey.CreateSurveyQuestionDTO;
 import com.aportme.backend.entity.dto.survey.SurveyQuestionDTO;
+import com.aportme.backend.entity.enums.AdoptionStatus;
 import com.aportme.backend.entity.enums.QuestionStatus;
 import com.aportme.backend.entity.enums.QuestionType;
 import com.aportme.backend.entity.survey.SelectValue;
 import com.aportme.backend.entity.survey.SurveyQuestion;
 import com.aportme.backend.entity.survey.UserSurvey;
 import com.aportme.backend.exception.FoundationSurveyInactiveException;
+import com.aportme.backend.exception.PetAlreadyAdoptedException;
 import com.aportme.backend.exception.UserSurveyAlreadyExistsException;
 import com.aportme.backend.service.*;
 import com.aportme.backend.service.survey.*;
@@ -38,6 +40,10 @@ public class SurveyQuestionFacade {
     public List<SurveyQuestionDTO> getQuestions(Long petId) {
         Pet pet = petService.findById(petId);
         Foundation foundation = pet.getFoundation();
+
+        if(pet.getAdoptionStatus() == AdoptionStatus.ADOPTED) {
+            throw new PetAlreadyAdoptedException();
+        }
 
         if (foundationSurveyService.isFoundationSurveyActive(foundation)) {
             throwExceptionIfUserSurveyAlreadySubmitted(pet);

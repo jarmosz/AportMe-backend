@@ -1,6 +1,7 @@
 package com.aportme.backend.advice;
 
 import com.aportme.backend.exception.FoundationSurveyInactiveException;
+import com.aportme.backend.exception.PetAlreadyAdoptedException;
 import com.aportme.backend.exception.UserSurveyWithoutDecisionException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,5 +19,10 @@ public class SurveysControllerAdvice {
     @ExceptionHandler(FoundationSurveyInactiveException.class)
     public ResponseEntity<Object> foundationSurveyInactive() {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PetAlreadyAdoptedException.class)
+    public ResponseEntity<Object> petAlreadyAdopted() {
+        return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
     }
 }

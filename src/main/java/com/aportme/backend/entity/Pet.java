@@ -33,6 +33,8 @@ public class Pet {
 
     private int age;
 
+    private AdoptionStatus adoptionStatus = AdoptionStatus.FOR_ADOPTION;
+
     private PetType petType;
 
     private AgeSuffix ageSuffix;
