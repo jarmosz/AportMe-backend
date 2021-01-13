@@ -69,8 +69,9 @@ public class PetService {
     public PetBaseDTO update(Long id, PetBaseDTO petDTO) {
         Pet pet = findById(id);
         modelMapper.map(petDTO, pet);
-        Pet updatedPet = petRepository.save(pet);
-        return modelMapper.map(updatedPet, PetBaseDTO.class);
+        save(pet);
+
+        return modelMapper.map(pet, PetBaseDTO.class);
     }
 
     public PetDTO create(AddPetDTO petDTO) {
@@ -80,7 +81,7 @@ public class PetService {
         pet.setFoundation(foundation);
         pet.setSearchableName(canonicalService.replaceCanonicalLetters(pet.getName().toLowerCase()));
         pet.setSearchableBreed(canonicalService.replaceCanonicalLetters(pet.getBreed().toLowerCase()));
-        pet = petRepository.save(pet);
+        save(pet);
 
         List<PetPicture> pictures = pictureService.createPicturesForNewPet(pet, petDTO.getPictures());
 
@@ -94,6 +95,10 @@ public class PetService {
         userSurveyService.deleteAllByPet(pet);
         pictureService.deleteAll(pet);
         petRepository.delete(pet);
+    }
+
+    public Pet save(Pet pet) {
+        return petRepository.save(pet);
     }
 
     public Pet findById(Long id) {
