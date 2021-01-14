@@ -115,7 +115,7 @@ public class SecurityService {
     }
 
     public boolean validateData(AuthUserDTO userDTO) {
-        return validateEmail(userDTO.getEmail()) && validatePassword(userDTO.getPassword());
+        return validateEmail(userDTO.getEmail().toLowerCase()) && validatePassword(userDTO.getPassword());
     }
 
     public boolean isNewPasswordDataValid(ChangeUserPasswordDTO passwords, User loggedUser) {
