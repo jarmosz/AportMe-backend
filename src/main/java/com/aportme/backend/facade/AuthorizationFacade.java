@@ -53,14 +53,16 @@ public class AuthorizationFacade {
     }
 
     public TokenPairDTO registerUser(AuthUserDTO userDTO) {
+        String userEmailInLowerCase = userDTO.getEmail().toLowerCase();
         if (securityService.validateData(userDTO)) {
-            Boolean isUserRegistered = userService.isUserExists(userDTO.getEmail());
+            Boolean isUserRegistered = userService.isUserExists(userEmailInLowerCase);
 
             if (isUserRegistered) {
                 throw new UserAlreadyExistsException();
             }
             User user = userService.mapToUser(userDTO);
             user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setEmail(userEmailInLowerCase);
             userService.saveUser(user);
             return securityService.createTokenPair(user);
         } else {
