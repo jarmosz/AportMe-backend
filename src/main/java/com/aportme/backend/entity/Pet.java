@@ -25,11 +25,13 @@ public class Pet {
     private Long id;
 
     @Size(min = 2, max = 50)
+    @Column(length = 50)
     private String name;
 
     private String searchableName;
 
     @Size(min = 3, max = 50)
+    @Column(length = 50)
     private String breed;
 
     private String searchableBreed;
@@ -49,12 +51,15 @@ public class Pet {
     private PetSize size;
 
     @Column(columnDefinition="text", length = 500)
+    @Size(max = 500)
     private String diseases;
 
     @Column(columnDefinition="text", length = 500)
+    @Size(max = 500)
     private String behaviorToChildren;
 
     @Column(columnDefinition="text", length = 500)
+    @Size(max = 500)
     private String behaviorToAnimals;
 
     private Boolean trainingNeeded;
@@ -62,6 +67,7 @@ public class Pet {
     private Boolean behavioristNeeded;
 
     @Column(columnDefinition="text", length = 1000)
+    @Size(max = 1000)
     private String description;
 
     @CreationTimestamp
