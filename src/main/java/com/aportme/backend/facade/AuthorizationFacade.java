@@ -5,6 +5,7 @@ import com.aportme.backend.entity.dto.TokenPairDTO;
 import com.aportme.backend.entity.dto.UserLoginDTO;
 import com.aportme.backend.entity.dto.user.AuthUserDTO;
 import com.aportme.backend.entity.dto.user.ChangeUserPasswordDTO;
+import com.aportme.backend.entity.enums.Role;
 import com.aportme.backend.exception.UserAlreadyExistsException;
 import com.aportme.backend.exception.WrongChangePasswordDataException;
 import com.aportme.backend.exception.WrongUserCredentialsException;
@@ -31,7 +32,7 @@ public class AuthorizationFacade {
     private final SecurityService securityService;
 
     public TokenPairDTO loginUser(UserLoginDTO userLoginDTO) {
-        String userEmail = userLoginDTO.getEmail();
+        String userEmail = userLoginDTO.getEmail().toLowerCase();
         User user = userService.findByEmail(userEmail);
         return securityService.checkUserPassword(userLoginDTO, user);
     }
@@ -53,14 +54,18 @@ public class AuthorizationFacade {
     }
 
     public TokenPairDTO registerUser(AuthUserDTO userDTO) {
+        String userEmailInLowerCase = userDTO.getEmail().toLowerCase();
         if (securityService.validateData(userDTO)) {
-            Boolean isUserRegistered = userService.isUserExists(userDTO.getEmail());
+            Boolean isUserRegistered = userService.isUserExists(userEmailInLowerCase);
 
             if (isUserRegistered) {
                 throw new UserAlreadyExistsException();
             }
-            User user = userService.mapToUser(userDTO);
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            User user = User.builder()
+                    .email(userDTO.getEmail().toLowerCase())
+                    .role(Role.USER)
+                    .password(passwordEncoder.encode(userDTO.getPassword()))
+                    .build();
             userService.saveUser(user);
             return securityService.createTokenPair(user);
         } else {

@@ -48,7 +48,7 @@ public class User implements UserDetails {
     private List<Pet> likedPets = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private List<UserSurvey> userSurveys;
+    private List<UserSurvey> userSurveys = new ArrayList<>();
 
     @Override
     public Collection<GrantedAuthority> getAuthorities() {
