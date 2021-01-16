@@ -5,7 +5,6 @@ import com.aportme.backend.entity.Pet;
 import com.aportme.backend.entity.PetPicture;
 import com.aportme.backend.entity.User;
 import com.aportme.backend.entity.dto.survey.UserSurveyDTO;
-import com.aportme.backend.entity.enums.SurveyStatus;
 import com.aportme.backend.entity.survey.UserSurvey;
 import com.aportme.backend.repository.survey.UserSurveyRepository;
 import com.aportme.backend.utils.ModelMapperUtil;
@@ -25,10 +24,6 @@ public class UserSurveyService {
     private final UserSurveyRepository userSurveyRepository;
     private final SurveyAnswerService surveyAnswerService;
     private final ModelMapper modelMapper;
-
-    public boolean isAnyUserSurveyWithoutDecision(Foundation foundation) {
-        return userSurveyRepository.existsByFoundationAndStatus(foundation, SurveyStatus.SUBMITTED);
-    }
 
     public UserSurvey findById(Long id) {
         return userSurveyRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Survey not found"));
