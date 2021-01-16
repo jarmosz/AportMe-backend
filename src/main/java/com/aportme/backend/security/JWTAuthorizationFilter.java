@@ -58,7 +58,7 @@ public class JWTAuthorizationFilter extends GenericFilterBean {
                 .verify(mainToken);
 
         id = jwt.getClaim("id").asLong();
-        email = jwt.getSubject();
+        email = jwt.getSubject().toLowerCase();
         role = jwt.getClaim("role").as(Role.class);
 
         return new JWTAuthentication(id, email, role);

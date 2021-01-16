@@ -71,10 +71,11 @@ public class SecurityService {
     private String createTokenByType(User user, long expirationTimeInSeconds, TokenType tokenType) {
         long expirationDateInMillis = System.currentTimeMillis() + expirationTimeInSeconds * 1000;
         Date expirationDate = new Date(expirationDateInMillis);
+        String subject = user.getEmail().toLowerCase();
         switch (tokenType) {
             case AUTH_TOKEN:
                 return JWT.create()
-                        .withSubject(String.valueOf(user.getEmail()))
+                        .withSubject(subject)
                         .withIssuedAt(new Date())
                         .withExpiresAt(expirationDate)
                         .withClaim("id", user.getId())
@@ -82,7 +83,7 @@ public class SecurityService {
                         .sign(Algorithm.HMAC256(securityProperties.getSecret().getBytes()));
             case REFRESH_TOKEN:
                 return JWT.create()
-                        .withSubject(String.valueOf(user.getEmail()))
+                        .withSubject(subject)
                         .withIssuedAt(new Date())
                         .withExpiresAt(expirationDate)
                         .withClaim("id", user.getId())
