@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,17 +19,22 @@ public class Foundation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Size(max = 100)
     private String name;
 
+    @Size(max = 10)
     private String nip;
 
+    @Size(max = 10)
     private String krs;
 
+    @Size(max = 45)
     private String accountNumber;
 
+    @Size(max = 15)
     private String phoneNumber;
 
-    @Column(length = 1000)
+    @Column(columnDefinition="text", length = 1024)
     private String description;
 
     @Lob
