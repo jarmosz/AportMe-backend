@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -32,6 +33,7 @@ public class Address {
     @Size(max = 6)
     private String flatNumber;
 
-    @Size(max = 10)
+    @Size(max = 6)
+    @Pattern(regexp = "^\\d{2}-\\d{3}$")
     private String zipCode;
 }

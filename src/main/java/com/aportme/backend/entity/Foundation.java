@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,19 +23,19 @@ public class Foundation {
     @Size(max = 100)
     private String name;
 
-    @Size(max = 10)
+    @Pattern(regexp = "^\\d{10}$")
     private String nip;
 
-    @Size(max = 10)
+    @Pattern(regexp = "^\\d{10}$")
     private String krs;
 
-    @Size(max = 45)
+    @Pattern(regexp = "^\\d{2} \\d{4} \\d{4} \\d{4} \\d{4} \\d{4} \\d{4}$")
     private String accountNumber;
 
-    @Size(max = 15)
+    @Pattern(regexp = "^\\d{3} \\d{3} \\d{3}$")
     private String phoneNumber;
 
-    @Column(columnDefinition="text", length = 1024)
+    @Column(columnDefinition="text", length = 1000)
     private String description;
 
     @Lob
