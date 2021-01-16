@@ -6,6 +6,7 @@ import com.aportme.backend.entity.User;
 import com.aportme.backend.entity.dto.foundation.AddFoundationDTO;
 import com.aportme.backend.entity.enums.Role;
 import com.aportme.backend.entity.survey.FoundationSurvey;
+import com.aportme.backend.exception.UserAlreadyExistsException;
 import com.aportme.backend.service.AddressService;
 import com.aportme.backend.service.FoundationService;
 import com.aportme.backend.service.UserService;
@@ -27,8 +28,15 @@ public class AdminFacade {
     private final PasswordEncoder passwordEncoder;
 
     public void createFoundation(AddFoundationDTO dto) {
+        String email = dto.getEmail().toLowerCase();
+        Boolean isUserRegistered = userService.isUserExists(email);
+
+        if (isUserRegistered) {
+            throw new UserAlreadyExistsException();
+        }
+
         User foundationUser = User.builder()
-                .email(dto.getEmail())
+                .email(email)
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .role(Role.FOUNDATION)
                 .build();
