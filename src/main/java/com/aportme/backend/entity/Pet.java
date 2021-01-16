@@ -50,15 +50,15 @@ public class Pet {
 
     private PetSize size;
 
-    @Column(columnDefinition="text", length = 500)
+    @Column(length = 500)
     @Size(max = 500)
     private String diseases;
 
-    @Column(columnDefinition="text", length = 500)
+    @Column(length = 500)
     @Size(max = 500)
     private String behaviorToChildren;
 
-    @Column(columnDefinition="text", length = 500)
+    @Column(length = 500)
     @Size(max = 500)
     private String behaviorToAnimals;
 
@@ -66,7 +66,7 @@ public class Pet {
 
     private Boolean behavioristNeeded;
 
-    @Column(columnDefinition="text", length = 1000)
+    @Column(length = 1000)
     @Size(max = 1000)
     private String description;
 
