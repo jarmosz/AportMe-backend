@@ -5,7 +5,6 @@ import com.aportme.backend.entity.Pet;
 import com.aportme.backend.entity.PetPicture;
 import com.aportme.backend.entity.User;
 import com.aportme.backend.entity.dto.survey.UserSurveyDTO;
-import com.aportme.backend.entity.enums.SurveyStatus;
 import com.aportme.backend.entity.survey.UserSurvey;
 import com.aportme.backend.repository.survey.UserSurveyRepository;
 import com.aportme.backend.utils.ModelMapperUtil;
@@ -26,10 +25,6 @@ public class UserSurveyService {
     private final SurveyAnswerService surveyAnswerService;
     private final ModelMapper modelMapper;
 
-    public boolean isAnyUserSurveyWithoutDecision(Foundation foundation) {
-        return userSurveyRepository.existsByFoundationAndStatus(foundation, SurveyStatus.SUBMITTED);
-    }
-
     public UserSurvey findById(Long id) {
         return userSurveyRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Survey not found"));
     }
@@ -43,7 +38,7 @@ public class UserSurveyService {
     }
 
     public Page<UserSurvey> findAllByPetNameAndFoundation(Pageable pageable, Foundation foundation, String petName) {
-        return userSurveyRepository.findAllByFoundationAndPet_SearchableNameContains(pageable, foundation, petName.toLowerCase());
+        return userSurveyRepository.findAllByFoundationAndPet_SearchableNameContainingIgnoreCase(pageable, foundation, petName.toLowerCase());
     }
 
     public UserSurvey save(UserSurvey survey) {

@@ -3,7 +3,6 @@ package com.aportme.backend.repository.survey;
 import com.aportme.backend.entity.Foundation;
 import com.aportme.backend.entity.Pet;
 import com.aportme.backend.entity.User;
-import com.aportme.backend.entity.enums.SurveyStatus;
 import com.aportme.backend.entity.survey.UserSurvey;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,9 +19,7 @@ public interface UserSurveyRepository extends JpaRepository<UserSurvey, Long> {
 
     Optional<UserSurvey> findByUserAndPet(User user, Pet pet);
 
-    Page<UserSurvey> findAllByFoundationAndPet_SearchableNameContains(Pageable pageable, Foundation foundation, String petName);
-
-    boolean existsByFoundationAndStatus(Foundation foundation, SurveyStatus survey);
+    Page<UserSurvey> findAllByFoundationAndPet_SearchableNameContainingIgnoreCase(Pageable pageable, Foundation foundation, String petName);
 
     List<UserSurvey> findAllByPet(Pet pet);
 }
