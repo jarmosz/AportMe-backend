@@ -48,20 +48,20 @@ public class Pet {
 
     private PetSize size;
 
-    @Column(columnDefinition="text", length = 512)
+    @Column(columnDefinition="text", length = 500)
     private String diseases;
 
-    @Column(columnDefinition="text", length = 512)
+    @Column(columnDefinition="text", length = 500)
     private String behaviorToChildren;
 
-    @Column(columnDefinition="text", length = 512)
+    @Column(columnDefinition="text", length = 500)
     private String behaviorToAnimals;
 
     private Boolean trainingNeeded;
 
     private Boolean behavioristNeeded;
 
-    @Column(columnDefinition="text", length = 1024)
+    @Column(columnDefinition="text", length = 1000)
     private String description;
 
     @CreationTimestamp
