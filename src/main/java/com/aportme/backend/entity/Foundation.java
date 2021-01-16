@@ -37,7 +37,7 @@ public class Foundation {
     @Pattern(regexp = "^\\d{3} \\d{3} \\d{3}$")
     private String phoneNumber;
 
-    @Column(columnDefinition="text", length = 1000)
+    @Column(length = 1000)
     @Size(max=1000)
     private String description;
 
