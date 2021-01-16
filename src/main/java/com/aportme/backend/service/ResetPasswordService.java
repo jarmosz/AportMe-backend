@@ -38,7 +38,7 @@ public class ResetPasswordService {
     private final PasswordEncoder passwordEncoder;
 
     public void sendResetPasswordEmail(ResetUserPasswordDTO resetUserPasswordDTO) {
-        String userEmail = resetUserPasswordDTO.getEmail();
+        String userEmail = resetUserPasswordDTO.getEmail().toLowerCase();
         User user = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
         eventPublisher.publishEvent(new SendResetPasswordLinkEvent(user, LocalDate.now()));
     }
