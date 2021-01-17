@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class AddressService {
 
     private final AddressRepository addressRepository;
-    private final SearchService searchService;
     private final ModelMapper modelMapper;
 
     public Address save(Address address) {
@@ -22,9 +21,6 @@ public class AddressService {
     }
 
     public Address mapToEntity(AddressBaseDTO dto) {
-        Address address = modelMapper.map(dto, Address.class);
-        String searchableCity = searchService.prepareSearchableField(dto.getCity());
-        address.setSearchableCity(searchableCity);
-        return address;
+        return modelMapper.map(dto, Address.class);
     }
 }

@@ -215,7 +215,6 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
     private Address createAddress(String city, String street, String houseNumber, String zipCode, String flatNumber) {
         Address address = new Address();
         address.setCity(city);
-        address.setSearchableCity(canonicalService.replaceCanonicalLetters(city.toLowerCase()));
         address.setStreet(street);
         address.setHouseNumber(houseNumber);
         address.setZipCode(zipCode);

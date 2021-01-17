@@ -25,13 +25,11 @@ public class FoundationService {
     private final FoundationRepository foundationRepository;
     private final AuthenticationService authenticationService;
     private final ModelMapper modelMapper;
-    private final SearchService searchService;
 
     public Page<FoundationDTO> getAll(String searchCityQuery, Pageable pageable) {
         ModelMapperUtil.mapFoundationEmail(modelMapper);
 
-        String searchedCity = searchService.prepareSearchableField(searchCityQuery);
-        Page<Foundation> page = foundationRepository.findAllByAddress_SearchableCityContains(pageable, searchedCity);
+        Page<Foundation> page = foundationRepository.findAllWithSearch(pageable, searchCityQuery.toLowerCase());
         List<FoundationDTO> content = page
                 .getContent()
                 .stream()

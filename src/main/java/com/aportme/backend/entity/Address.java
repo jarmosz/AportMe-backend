@@ -20,8 +20,6 @@ public class Address {
     @Column(length = 100)
     private String city;
 
-    private String searchableCity;
-
     @Size(max = 100)
     @Column(length = 100)
     private String street;
