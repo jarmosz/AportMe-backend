@@ -25,6 +25,8 @@ public class Foundation {
     @Column(length = 100)
     private String name;
 
+    private String searchableName;
+
     @Pattern(regexp = "^\\d{10}$")
     private String nip;
 
