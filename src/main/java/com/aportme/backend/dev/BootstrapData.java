@@ -201,6 +201,7 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
         foundationInfo.setName(name);
         foundationInfo.setNip(nip);
         foundationInfo.setKrs(krs);
+        foundationInfo.setSearchableName(canonicalService.replaceCanonicalLetters(name.toLowerCase()));
         foundationInfo.setAccountNumber(accountNumber);
         foundationInfo.setFoundationLogo(logo);
         foundationInfo.setDescription(description);

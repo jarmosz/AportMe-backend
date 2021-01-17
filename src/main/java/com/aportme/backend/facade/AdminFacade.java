@@ -8,6 +8,7 @@ import com.aportme.backend.entity.enums.Role;
 import com.aportme.backend.entity.survey.FoundationSurvey;
 import com.aportme.backend.exception.UserAlreadyExistsException;
 import com.aportme.backend.service.AddressService;
+import com.aportme.backend.service.CanonicalService;
 import com.aportme.backend.service.FoundationService;
 import com.aportme.backend.service.UserService;
 import com.aportme.backend.service.survey.FoundationSurveyService;
@@ -25,6 +26,7 @@ public class AdminFacade {
     private final AddressService addressService;
     private final FoundationSurveyService foundationSurveyService;
     private final UserService userService;
+    private final CanonicalService canonicalService;
     private final PasswordEncoder passwordEncoder;
 
     public void createFoundation(AddFoundationDTO dto) {
@@ -48,6 +50,7 @@ public class AdminFacade {
 
         Foundation foundation = foundationService.mapTo(dto, Foundation.class);
         foundation.setUser(foundationUser);
+        foundation.setSearchableName(canonicalService.replaceCanonicalLetters(dto.getName()));
         foundation.setAddress(address);
 
         foundationService.save(foundation);
