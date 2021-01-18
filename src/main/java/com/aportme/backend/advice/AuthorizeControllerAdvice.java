@@ -1,6 +1,7 @@
 package com.aportme.backend.advice;
 
 import com.aportme.backend.exception.*;
+import com.aportme.backend.exception.security.AccessDeniedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -32,5 +33,10 @@ public class AuthorizeControllerAdvice {
     @ExceptionHandler(WrongLikeRequestDataException.class)
     public ResponseEntity<Object> wrongLikeRequestDataException() {
         return new ResponseEntity<>("You have provided wrong param request data", HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Object> accessDeniedException() {
+        return new ResponseEntity<>("Access denied", HttpStatus.UNAUTHORIZED);
     }
 }
