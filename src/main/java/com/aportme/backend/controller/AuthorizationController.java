@@ -4,6 +4,7 @@ import com.aportme.backend.entity.dto.TokenPairDTO;
 import com.aportme.backend.entity.dto.UserLoginDTO;
 import com.aportme.backend.entity.dto.user.AuthUserDTO;
 import com.aportme.backend.entity.dto.user.ChangeUserPasswordDTO;
+import com.aportme.backend.entity.enums.RequestSource;
 import com.aportme.backend.facade.AuthorizationFacade;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +22,9 @@ public class AuthorizationController {
 
     @PostMapping("/login")
     public TokenPairDTO login(
-            @RequestParam(required = false) Boolean isMobileRequest,
+            @RequestParam(required = false) RequestSource requestSource,
             @RequestBody UserLoginDTO userLoginDTO) {
-        return facade.loginUser(userLoginDTO, isMobileRequest);
+        return facade.loginUser(userLoginDTO, requestSource);
     }
 
     @PostMapping("/refresh-token")
