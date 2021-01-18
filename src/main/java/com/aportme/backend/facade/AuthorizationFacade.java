@@ -5,6 +5,7 @@ import com.aportme.backend.entity.dto.TokenPairDTO;
 import com.aportme.backend.entity.dto.UserLoginDTO;
 import com.aportme.backend.entity.dto.user.AuthUserDTO;
 import com.aportme.backend.entity.dto.user.ChangeUserPasswordDTO;
+import com.aportme.backend.entity.enums.RequestSource;
 import com.aportme.backend.entity.enums.Role;
 import com.aportme.backend.exception.UserAlreadyExistsException;
 import com.aportme.backend.exception.WrongChangePasswordDataException;
@@ -32,10 +33,10 @@ public class AuthorizationFacade {
     private final UserService userService;
     private final SecurityService securityService;
 
-    public TokenPairDTO loginUser(UserLoginDTO userLoginDTO, Boolean isMobileRequest) {
+    public TokenPairDTO loginUser(UserLoginDTO userLoginDTO, RequestSource requestSource) {
         String userEmail = userLoginDTO.getEmail().toLowerCase();
         User user = userService.findByEmail(userEmail);
-        if (isMobileRequest != null && isMobileRequest && user.getRole() != Role.USER) {
+        if (requestSource == RequestSource.MOBILE && user.getRole() != Role.USER) {
             throw new AccessDeniedException();
         }
         return securityService.checkUserPassword(userLoginDTO, user);
