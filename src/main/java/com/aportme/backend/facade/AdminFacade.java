@@ -48,9 +48,11 @@ public class AdminFacade {
         Address address = addressService.mapToEntity(dto.getAddress());
         addressService.save(address);
 
+        String searchableName = canonicalService.replaceCanonicalLetters(dto.getName().toLowerCase());
+
         Foundation foundation = foundationService.mapTo(dto, Foundation.class);
         foundation.setUser(foundationUser);
-        foundation.setSearchableName(canonicalService.replaceCanonicalLetters(dto.getName()));
+        foundation.setSearchableName(searchableName);
         foundation.setAddress(address);
 
         foundationService.save(foundation);
