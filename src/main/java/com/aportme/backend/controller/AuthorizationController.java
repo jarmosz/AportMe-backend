@@ -4,14 +4,12 @@ import com.aportme.backend.entity.dto.TokenPairDTO;
 import com.aportme.backend.entity.dto.UserLoginDTO;
 import com.aportme.backend.entity.dto.user.AuthUserDTO;
 import com.aportme.backend.entity.dto.user.ChangeUserPasswordDTO;
+import com.aportme.backend.entity.enums.RequestSource;
 import com.aportme.backend.facade.AuthorizationFacade;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -23,8 +21,10 @@ public class AuthorizationController {
     private final AuthorizationFacade facade;
 
     @PostMapping("/login")
-    public TokenPairDTO login(@RequestBody UserLoginDTO userLoginDTO) {
-        return facade.loginUser(userLoginDTO);
+    public TokenPairDTO login(
+            @RequestParam(required = false) RequestSource requestSource,
+            @RequestBody UserLoginDTO userLoginDTO) {
+        return facade.loginUser(userLoginDTO, requestSource);
     }
 
     @PostMapping("/refresh-token")
