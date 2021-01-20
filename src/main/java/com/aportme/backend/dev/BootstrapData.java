@@ -198,11 +198,13 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
         foundation.setEmail(email);
         foundation.setPassword(password);
         foundation.setRole(Role.FOUNDATION);
+        foundation.setActive(true);
         userRepository.save(foundation);
         Foundation foundationInfo = new Foundation();
         foundationInfo.setName(name);
         foundationInfo.setNip(nip);
         foundationInfo.setKrs(krs);
+        foundationInfo.setSearchableName(canonicalService.replaceCanonicalLetters(name.toLowerCase()));
         foundationInfo.setAccountNumber(accountNumber);
         foundationInfo.setFoundationLogo(logo);
         foundationInfo.setDescription(description);

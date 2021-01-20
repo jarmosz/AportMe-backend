@@ -5,10 +5,12 @@ import com.aportme.backend.entity.dto.TokenPairDTO;
 import com.aportme.backend.entity.dto.UserLoginDTO;
 import com.aportme.backend.entity.dto.user.AuthUserDTO;
 import com.aportme.backend.entity.dto.user.ChangeUserPasswordDTO;
+import com.aportme.backend.entity.enums.RequestSource;
 import com.aportme.backend.entity.enums.Role;
 import com.aportme.backend.exception.UserAlreadyExistsException;
 import com.aportme.backend.exception.WrongChangePasswordDataException;
 import com.aportme.backend.exception.WrongUserCredentialsException;
+import com.aportme.backend.exception.security.AccessDeniedException;
 import com.aportme.backend.exception.security.RefreshTokenHasExpiredException;
 import com.aportme.backend.exception.security.TokenDoesNotExsistsException;
 import com.aportme.backend.service.UserService;
@@ -31,9 +33,12 @@ public class AuthorizationFacade {
     private final UserService userService;
     private final SecurityService securityService;
 
-    public TokenPairDTO loginUser(UserLoginDTO userLoginDTO) {
+    public TokenPairDTO loginUser(UserLoginDTO userLoginDTO, RequestSource requestSource) {
         String userEmail = userLoginDTO.getEmail().toLowerCase();
         User user = userService.findByEmail(userEmail);
+        if (requestSource == RequestSource.MOBILE && user.getRole() != Role.USER) {
+            throw new AccessDeniedException();
+        }
         return securityService.checkUserPassword(userLoginDTO, user);
     }
 
