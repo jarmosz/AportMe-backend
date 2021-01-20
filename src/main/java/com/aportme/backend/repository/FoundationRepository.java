@@ -18,7 +18,8 @@ public interface FoundationRepository extends JpaRepository<Foundation, Long> {
     Optional<Foundation> findByEmail(String email);
 
     @Query(value = "SELECT f FROM Foundation f " +
-            "WHERE lower(f.address.searchableCity) LIKE %:search% OR " +
+            "INNER JOIN f.address a " +
+            "WHERE lower(a.searchableCity) LIKE %:search% OR " +
             "lower(f.searchableName) LIKE %:search% " +
             "ORDER BY f.name ASC")
     Page<Foundation> findAllWithSearch(Pageable pageable, @Param("search") String search);
