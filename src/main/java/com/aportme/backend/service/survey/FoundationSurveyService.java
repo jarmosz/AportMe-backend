@@ -51,7 +51,7 @@ public class FoundationSurveyService {
     }
 
     public FoundationSurvey findByFoundation(Foundation foundation) {
-        return foundationSurveyRepository.findByFoundation(foundation)
+        return foundationSurveyRepository.findByFoundationOrderBySurveyQuestionsId(foundation)
                 .orElseThrow(() -> new EntityNotFoundException("Foundation survey not found"));
     }
 
@@ -68,6 +68,6 @@ public class FoundationSurveyService {
     }
 
     private FoundationSurvey findByFoundationOrElseNull(Foundation foundation) {
-        return foundationSurveyRepository.findByFoundation(foundation).orElse(null);
+        return foundationSurveyRepository.findByFoundationOrderBySurveyQuestionsId(foundation).orElse(null);
     }
 }
