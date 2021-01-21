@@ -14,7 +14,7 @@ import java.util.Optional;
 @Repository
 public interface FoundationRepository extends JpaRepository<Foundation, Long> {
 
-    @Query("SELECT f FROM Foundation f INNER JOIN User u ON u.id = f.user.id WHERE u.email = ?1")
+    @Query("SELECT f FROM Foundation f INNER JOIN users u ON u.id = f.user.id WHERE u.email = ?1")
     Optional<Foundation> findByEmail(String email);
 
     @Query(value = "select f from Foundation f " +

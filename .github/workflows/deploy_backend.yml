@@ -1,0 +1,18 @@
+name: Deploy backend service
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy AportMe.com backend service
+        uses: garygrossgarten/github-action-ssh@release
+        with:
+          command: cd /home/aportmeadmin/aportme/ && ./backend.sh
+          host: ${{ secrets.HOST }}
+          port: ${{ secrets.PORT }}
+          username: ${{ secrets.USERNAME}}
+          privateKey: ${{ secrets.SSHKEY}}
