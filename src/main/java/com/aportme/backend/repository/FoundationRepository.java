@@ -17,10 +17,12 @@ public interface FoundationRepository extends JpaRepository<Foundation, Long> {
     @Query("SELECT f FROM Foundation f INNER JOIN User u ON u.id = f.user.id WHERE u.email = ?1")
     Optional<Foundation> findByEmail(String email);
 
-    @Query(value = "SELECT f FROM Foundation f " +
-            "INNER JOIN f.address a " +
-            "WHERE lower(a.searchableCity) LIKE %:search% OR " +
-            "lower(f.searchableName) LIKE %:search% " +
-            "ORDER BY f.name ASC")
+    @Query(value = "select f from Foundation f " +
+            "inner join f.address a " +
+            "where lower(a.searchableCity) like %:search% or " +
+            "lower(a.city) like %:search% or " +
+            "lower(f.searchableName) like %:search% or " +
+            "lower(f.name) like %:search% " +
+            "order by f.name asc")
     Page<Foundation> findAllWithSearch(Pageable pageable, @Param("search") String search);
 }
