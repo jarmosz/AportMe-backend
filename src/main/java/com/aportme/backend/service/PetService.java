@@ -66,9 +66,11 @@ public class PetService {
         return dto;
     }
 
-    public PetBaseDTO update(Long id, PetBaseDTO petDTO) {
+    public PetBaseDTO update(Long id, PetBaseDTO dto) {
         Pet pet = findById(id);
-        modelMapper.map(petDTO, pet);
+        modelMapper.map(dto, pet);
+        pet.setSearchableName(canonicalService.replaceCanonicalLetters(dto.getName().toLowerCase()));
+        pet.setSearchableBreed(canonicalService.replaceCanonicalLetters(dto.getBreed().toLowerCase()));
         Pet updatedPet = petRepository.save(pet);
         return modelMapper.map(updatedPet, PetBaseDTO.class);
     }
