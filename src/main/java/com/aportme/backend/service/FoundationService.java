@@ -25,6 +25,7 @@ public class FoundationService {
     private final FoundationRepository foundationRepository;
     private final AuthenticationService authenticationService;
     private final SearchService searchService;
+    private final CanonicalService canonicalService;
     private final ModelMapper modelMapper;
 
     public Page<FoundationDTO> getAll(String query, Pageable pageable) {
@@ -47,10 +48,16 @@ public class FoundationService {
         return modelMapper.map(foundation, FoundationDTO.class);
     }
 
-    public UpdateFoundationDTO update(UpdateFoundationDTO foundationDTO) {
+    public UpdateFoundationDTO update(UpdateFoundationDTO dto) {
         String email = authenticationService.getLoggedUsername();
         Foundation foundation = findByEmail(email);
-        modelMapper.map(foundationDTO, foundation);
+        modelMapper.map(dto, foundation);
+        
+        String searchableCity = canonicalService.replaceCanonicalLetters(dto.getAddress().getCity().toLowerCase());
+        String searchableName = canonicalService.replaceCanonicalLetters(dto.getName().toLowerCase());
+        foundation.getAddress().setSearchableCity(searchableCity);
+        foundation.setSearchableName(searchableName);
+
         foundation = foundationRepository.save(foundation);
         return modelMapper.map(foundation, UpdateFoundationDTO.class);
     }
