@@ -5,7 +5,6 @@ import com.aportme.backend.entity.dto.survey.FoundationSurveyDTO;
 import com.aportme.backend.entity.dto.survey.SurveyQuestionDTO;
 import com.aportme.backend.entity.enums.FoundationSurveyStatus;
 import com.aportme.backend.entity.enums.QuestionStatus;
-import com.aportme.backend.entity.enums.SurveyStatus;
 import com.aportme.backend.entity.survey.FoundationSurvey;
 import com.aportme.backend.repository.FoundationSurveyRepository;
 import lombok.RequiredArgsConstructor;
