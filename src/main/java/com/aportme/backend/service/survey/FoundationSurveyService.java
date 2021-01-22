@@ -5,7 +5,6 @@ import com.aportme.backend.entity.dto.survey.FoundationSurveyDTO;
 import com.aportme.backend.entity.dto.survey.SurveyQuestionDTO;
 import com.aportme.backend.entity.enums.FoundationSurveyStatus;
 import com.aportme.backend.entity.enums.QuestionStatus;
-import com.aportme.backend.entity.enums.SurveyStatus;
 import com.aportme.backend.entity.survey.FoundationSurvey;
 import com.aportme.backend.repository.FoundationSurveyRepository;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +50,7 @@ public class FoundationSurveyService {
     }
 
     public FoundationSurvey findByFoundation(Foundation foundation) {
-        return foundationSurveyRepository.findByFoundationOrderBySurveyQuestionsId(foundation)
+        return foundationSurveyRepository.findByFoundation(foundation)
                 .orElseThrow(() -> new EntityNotFoundException("Foundation survey not found"));
     }
 
@@ -68,6 +67,6 @@ public class FoundationSurveyService {
     }
 
     private FoundationSurvey findByFoundationOrElseNull(Foundation foundation) {
-        return foundationSurveyRepository.findByFoundationOrderBySurveyQuestionsId(foundation).orElse(null);
+        return foundationSurveyRepository.findByFoundation(foundation).orElse(null);
     }
 }

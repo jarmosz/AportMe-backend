@@ -24,6 +24,7 @@ public class FoundationSurvey {
     @OneToOne
     private Foundation foundation;
 
+    @OrderBy
     @OneToMany(mappedBy = "foundationSurvey")
     private List<SurveyQuestion> surveyQuestions = new ArrayList<>();
 }
