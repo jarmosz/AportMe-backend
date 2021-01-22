@@ -10,5 +10,5 @@ import java.util.Optional;
 @Repository
 public interface FoundationSurveyRepository extends JpaRepository<FoundationSurvey, Long> {
 
-    Optional<FoundationSurvey> findByFoundationOrderBySurveyQuestionsId(Foundation foundation);
+    Optional<FoundationSurvey> findByFoundation(Foundation foundation);
 }
