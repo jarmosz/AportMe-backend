@@ -2,6 +2,7 @@ package com.aportme.backend.service;
 
 import com.aportme.backend.entity.Foundation;
 import com.aportme.backend.entity.dto.foundation.FoundationDTO;
+import com.aportme.backend.entity.dto.foundation.FoundationForPetDTO;
 import com.aportme.backend.entity.dto.foundation.LoggedFoundationDataDTO;
 import com.aportme.backend.entity.dto.foundation.UpdateFoundationDTO;
 import com.aportme.backend.repository.FoundationRepository;
@@ -28,15 +29,15 @@ public class FoundationService {
     private final CanonicalService canonicalService;
     private final ModelMapper modelMapper;
 
-    public Page<FoundationDTO> getAll(String query, Pageable pageable) {
+    public Page<FoundationForPetDTO> getAll(String query, Pageable pageable) {
         ModelMapperUtil.mapFoundationEmail(modelMapper);
 
         query = searchService.prepareSearchableField(query);
         Page<Foundation> page = foundationRepository.findAllWithSearch(pageable, query);
-        List<FoundationDTO> content = page
+        List<FoundationForPetDTO> content = page
                 .getContent()
                 .stream()
-                .map(foundation -> modelMapper.map(foundation, FoundationDTO.class))
+                .map(foundation -> modelMapper.map(foundation, FoundationForPetDTO.class))
                 .collect(Collectors.toList());
 
         return PaginationService.mapToPageImpl(content, pageable, page.getTotalElements());
