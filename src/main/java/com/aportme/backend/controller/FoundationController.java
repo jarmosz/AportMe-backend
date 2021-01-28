@@ -1,6 +1,7 @@
 package com.aportme.backend.controller;
 
 import com.aportme.backend.entity.dto.foundation.FoundationDTO;
+import com.aportme.backend.entity.dto.foundation.FoundationForPetDTO;
 import com.aportme.backend.entity.dto.foundation.LoggedFoundationDataDTO;
 import com.aportme.backend.entity.dto.foundation.UpdateFoundationDTO;
 import com.aportme.backend.service.FoundationService;
@@ -22,7 +23,7 @@ public class FoundationController {
 
     @GetMapping
     @ApiOperation(value = "Find all foundations", response = FoundationDTO.class)
-    public Page<FoundationDTO> getAllFoundations(@RequestParam String query, Pageable pageable) {
+    public Page<FoundationForPetDTO> getAllFoundations(@RequestParam String query, Pageable pageable) {
         return foundationService.getAll(query, pageable);
     }
 
