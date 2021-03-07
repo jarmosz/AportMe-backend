@@ -38,7 +38,7 @@ public class PetPictureController {
         petPictureFacade.deletePicture(id);
     }
 
-    @PatchMapping("/profile")
+    @PatchMapping("/change-profile-picture")
     @PreAuthorize("@accessService.isFoundation()")
     @ApiOperation(value = "Set new profile picture")
     public PetPictureDTO setProfilePicture(@RequestBody ChangeProfilePictureDTO dto) {
