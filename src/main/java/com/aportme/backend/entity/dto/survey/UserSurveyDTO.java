@@ -25,8 +25,7 @@ public class UserSurveyDTO {
 
     private String breed;
 
-    @Lob
-    private String picture;
+    private String dowloadUrl;
 
     private List<UserSurveyAnswerDTO> answers;
 }

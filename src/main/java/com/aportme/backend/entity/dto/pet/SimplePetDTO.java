@@ -16,7 +16,7 @@ public class SimplePetDTO {
 
     private AgeSuffix ageSuffix;
 
-    private String profilePicture;
+    private String downloadUrl;
 
     private boolean isLiked = false;
 

@@ -12,7 +12,7 @@ import com.aportme.backend.entity.survey.UserSurvey;
 import com.aportme.backend.exception.FoundationSurveyInactiveException;
 import com.aportme.backend.exception.UnableToDeleteNotSubmittedSurveyException;
 import com.aportme.backend.service.PetService;
-import com.aportme.backend.service.PictureService;
+import com.aportme.backend.service.PetPictureService;
 import com.aportme.backend.service.UserService;
 import com.aportme.backend.service.survey.FoundationSurveyService;
 import com.aportme.backend.service.survey.SurveyAnswerService;
@@ -36,7 +36,7 @@ public class UserSurveyFacade {
     private final SurveyQuestionService questionService;
     private final FoundationSurveyService foundationSurveyService;
     private final UserService userService;
-    private final PictureService pictureService;
+    private final PetPictureService petPictureService;
 
     public List<UserSurveyDTO> getAll() {
         User user = userService.getLoggedUser();
@@ -79,7 +79,7 @@ public class UserSurveyFacade {
         return surveys.stream()
                 .map(survey -> {
                     List<PetPicture> pictures = survey.getPet().getPictures();
-                    PetPicture profilePicture = pictureService.findProfilePicture(pictures);
+                    PetPicture profilePicture = petPictureService.findProfilePicture(pictures);
                     return userSurveyService.mapToSurveyDTO(survey, profilePicture);
                 })
                 .collect(Collectors.toList());

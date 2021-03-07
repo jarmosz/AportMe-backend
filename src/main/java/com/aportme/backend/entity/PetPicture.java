@@ -1,25 +1,31 @@
 package com.aportme.backend.entity;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Entity
 @Data
+@Entity
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class PetPicture {
+
+    @Builder
+    public PetPicture(String fileName, boolean isProfilePicture, Pet pet) {
+        this.fileName = fileName;
+        this.isProfilePicture = isProfilePicture;
+        this.pet = pet;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Lob
     @NonNull
-    private String pictureInBase64;
+    private String fileName;
+
+    @NonNull
+    private String downloadUrl;
 
     @NonNull
     private Boolean isProfilePicture;

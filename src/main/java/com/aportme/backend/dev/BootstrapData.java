@@ -157,7 +157,7 @@ public class BootstrapData implements ApplicationListener<ContextRefreshedEvent>
 
     private void createPicture(Pet pet, String base64image, Boolean isProfilePicture) {
         PetPicture picture = new PetPicture();
-        picture.setPictureInBase64(base64image);
+//        picture.setPictureUrl();
         picture.setPet(pet);
         picture.setIsProfilePicture(isProfilePicture);
         pictureRepository.save(picture);

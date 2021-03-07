@@ -58,7 +58,8 @@ public class UserSurveyService {
     public UserSurveyDTO mapToSurveyDTO(UserSurvey userSurvey, PetPicture profilePicture) {
         ModelMapperUtil.mapUserSurveyDTO(modelMapper);
         UserSurveyDTO dto = modelMapper.map(userSurvey, UserSurveyDTO.class);
-        dto.setPicture(profilePicture.getPictureInBase64());
+        dto.setDowloadUrl(profilePicture.getDownloadUrl());
+
         return dto;
     }
 }

@@ -1,12 +1,11 @@
 package com.aportme.backend.entity.dto.picture;
 
 import lombok.Data;
-
-import javax.persistence.Lob;
+import lombok.EqualsAndHashCode;
 
 @Data
-public class UploadPictureDTO {
-    @Lob
-    private String base64Picture;
+@EqualsAndHashCode(callSuper = true)
+public class UploadPictureDTO extends PictureBaseDTO {
 
+    private Long petId;
 }

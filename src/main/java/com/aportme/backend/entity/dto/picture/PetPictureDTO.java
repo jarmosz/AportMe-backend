@@ -9,4 +9,5 @@ public class PetPictureDTO extends PictureBaseDTO {
 
     private Long id;
 
+    private String downloadUrl;
 }

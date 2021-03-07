@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class PictureBaseDTO {
 
-    private String pictureInBase64;
+    private String base64Picture = "";
 
-    private Boolean isProfilePicture;
+    private Boolean isProfilePicture = false;
 }

@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
@@ -40,7 +39,7 @@ public class Foundation {
     private String phoneNumber;
 
     @Column(length = 1000)
-    @Size(max=1000)
+    @Size(max = 1000)
     private String description;
 
     @Lob

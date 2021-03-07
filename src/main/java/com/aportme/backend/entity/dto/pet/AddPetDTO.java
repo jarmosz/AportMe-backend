@@ -1,6 +1,6 @@
 package com.aportme.backend.entity.dto.pet;
 
-import com.aportme.backend.entity.dto.picture.AddPetPictureDTO;
+import com.aportme.backend.entity.dto.picture.PictureBaseDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -11,6 +11,6 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class AddPetDTO extends PetBaseDTO {
 
-    private List<AddPetPictureDTO> pictures = new ArrayList<>();
+    private List<PictureBaseDTO> petPictures = new ArrayList<>();
 
 }
