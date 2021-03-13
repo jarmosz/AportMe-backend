@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 @Configuration
@@ -30,8 +29,8 @@ public class FirebaseConfig {
 
         FirebaseOptions options = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                .setProjectId(projectId)
                 .setStorageBucket(bucketName)
+                .setProjectId(projectId)
                 .build();
 
         return FirebaseApp.initializeApp(options);
@@ -45,6 +44,5 @@ public class FirebaseConfig {
                 .setProjectId(projectId)
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                 .build();
-
     }
 }

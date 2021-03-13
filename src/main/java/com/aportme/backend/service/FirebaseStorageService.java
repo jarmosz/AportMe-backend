@@ -5,8 +5,10 @@ import com.google.firebase.cloud.StorageClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.net.URL;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +30,9 @@ public class FirebaseStorageService {
                 .build();
 
         Blob blob = storage.create(blobInfo, content);
-        return blob.getMediaLink();
+        URL url = blob.signUrl(1024, TimeUnit.DAYS);
+
+        return String.format("%s://%s%s", url.getProtocol(), url.getHost(), url.getFile());
     }
 
     public boolean delete(String resourceName) {
