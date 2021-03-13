@@ -24,6 +24,7 @@ public class PetPicture {
     @NonNull
     private String fileName;
 
+    @Lob
     @NonNull
     private String downloadUrl;
 
